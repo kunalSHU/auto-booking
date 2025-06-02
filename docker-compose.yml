@@ -1,7 +1,22 @@
 services:
-    auto-booking-app:
-        container_name: auto-booking
+    auto-booking-frontend:
+        container_name: auto-booking-frontend
         ports: 
           - "3000:3000"
-        image: auto-booking
-        build: ./
+        image: auto-booking-frontend
+        build:
+          context: ./
+          dockerfile: Dockerfile.frontend
+        environment:
+          - REACT_APP_BACKEND_URL=http://auto-booking-backend:4201
+    auto-booking-backend:
+        container_name: auto-booking-backend
+        ports: 
+          - "4201:4201"
+        image: auto-booking-backend
+        build:
+          context: ./
+          dockerfile: Dockerfile.backend
+
+    
+    
