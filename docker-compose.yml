@@ -1,0 +1,7 @@
+services:
+    auto-booking-app:
+        container_name: auto-booking
+        ports: 
+          - "3000:3000"
+        image: auto-booking
+        build: ./
