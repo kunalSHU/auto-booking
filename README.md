@@ -5,7 +5,7 @@ This project consists of a React frontend and a Node.js (Express) backend, conta
 ## How to run locally
  To run this project locally, here are the details below:
     1. Frontend - 
-        a. First run npm install which will generate the node_modules folder which will have all the dependecies
+        a. First run npm install which will generate the node_modules folder which will have all the dependencies
         b. Then do npm start
         c. Then go to this link in the browser http://localhost:3000. By default react apps run on port 3000
     1. Backend - 
