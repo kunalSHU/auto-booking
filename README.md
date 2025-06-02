@@ -2,16 +2,33 @@
 
 This project consists of a React frontend and a Node.js (Express) backend, containerized using Docker.
 
-## How to run locally
- To run this project locally, here are the details below:
-    1. Frontend:
--       First run npm install which will generate the node_modules folder which will have all the dependencies
--       Then do npm start
--       Then go to this link in the browser http://localhost:3000. By default react apps run on port 3000
-    2. Backend: 
--       Run node server.js 
--       Then go to this link in the browser http://localhost:4201. By default react apps run on port 4201
--       You should see Hello World
+## Running Locally (Without Docker)
+
+To run the frontend and backend services directly on your local machine without using Docker, follow these steps.
+
+### 1. Frontend (React App)
+
+Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
+
+1.  **Install dependencies** (if you haven't already):
+    ```bash
+    npm install
+    ```
+2.  **Start the development server**:
+    ```bash
+    npm start
+    ```
+3.  Open your web browser and navigate to http://localhost:3000.
+
+### 2. Backend (Node.js Server)
+
+Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
+
+1.  **Start the server**:
+    ```bash
+    node server/app.js
+    ```
+2.  The server will listen on http://localhost:4201. You can test it by navigating to this URL in your browser or using a tool like `curl`. You should see a "Hello World" JSON response.
     
 
 ## Prerequisites
