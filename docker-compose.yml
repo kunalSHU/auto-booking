@@ -1,5 +1,7 @@
 services:
     auto-booking-frontend:
+        networks:
+          - app-network
         container_name: auto-booking-frontend
         ports: 
           - "3000:3000"
@@ -9,9 +11,11 @@ services:
           dockerfile: Dockerfile.frontend
         environment:
           # For setupProxy.js when dev server runs in this container
-          - BACKEND_PROXY_TARGET=http://auto-booking-backend:4201
+          - REACT_APP_BACKEND_PROXY_TARGET=http://auto-booking-backend:4201
           - REACT_APP_BACKEND_URL=http://auto-booking-backend:4201
     auto-booking-backend:
+        networks:
+          - app-network
         container_name: auto-booking-backend
         ports: 
           - "4201:4201"
@@ -19,6 +23,9 @@ services:
         build:
           context: ./
           dockerfile: Dockerfile.backend
+networks:
+  app-network:
+    driver: bridge
 
     
     

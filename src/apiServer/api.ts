@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const backendTarget = process.env.BACKEND_PROXY_TARGET || 'http://localhost:4201';
-
 export const callNodeHelloWorld = async () => {
     try {
-        return await axios.get(backendTarget + "/api/test")
+        // const url = backendTarget + "/api/test"
+        const url = "/api/test";
+        console.log("This is the test url: ", url)
+        return await axios.get(url)
     } catch (error) {
         console.log(error)
     }
