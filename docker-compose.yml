@@ -8,6 +8,8 @@ services:
           context: ./
           dockerfile: Dockerfile.frontend
         environment:
+          # For setupProxy.js when dev server runs in this container
+          - BACKEND_PROXY_TARGET=http://auto-booking-backend:4201
           - REACT_APP_BACKEND_URL=http://auto-booking-backend:4201
     auto-booking-backend:
         container_name: auto-booking-backend
