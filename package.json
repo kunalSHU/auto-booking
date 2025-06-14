@@ -13,8 +13,10 @@
     "@types/react-dom": "^19.1.5",
     "axios": "^1.9.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^5.1.0",
     "http-proxy-middleware": "^3.0.5",
+    "pg-promise": "^11.14.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
@@ -22,6 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm start\"",
+    "server": "nodemon server/app.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -44,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

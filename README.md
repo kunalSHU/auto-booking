@@ -10,6 +10,9 @@ To run the frontend and backend services directly on your local machine without 
 
 Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
 
+## UPDATE:
+** Can now run both using `npm run dev` **
+
 1.  **Install dependencies** (if you haven't already):
     ```bash
     npm install
@@ -29,7 +32,7 @@ Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
     node server/app.js
     ```
 2.  The server will listen on http://localhost:4201. You can test it by navigating to this URL in your browser or using a tool like `curl`. You should see a "Hello World" JSON response.
-    
+
 
 ## Prerequisites
 
