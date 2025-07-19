@@ -1,0 +1,986 @@
+name	estimated_time	tools_required	difficulty	avg_cost	service_id
+					
+General maintenance					
+Oil Change	30-45 min	"Oil filter, wrench, drain pan, jack"	Easy	$40-$75	MT-01-OCH
+Brake Pad Replacement	1-2 hours	"Jack, lug wrench, brake pads, caliper tool"	Medium	$100-$300	MT-02-BPR
+Battery Replacement	15-30 min	"Wrench, battery, gloves"	Easy	$60-$200	MT-03-BTRY
+Air Filter Replacement	10-15 min	"Screwdriver (if needed), new filter"	Easy	$10-$40	MT-04-AFR
+Spark Plug Replacement	30-60 min	"Socket wrench, spark plugs"	Medium	$50-$150	MT-05-SPRK
+Tire Rotation	30-45 min	"Jack, lug wrench"	Medium	$20-$50	MT-06-TRT
+Coolant Flush	45-60 min	"Drain pan, coolant, funnel"	Medium	$50-$150	MT-07-CFL
+Transmission Fluid Change	1-2 hours	"Drain pan, transmission fluid, wrench"	Hard	$80-$250	MT-08-TFC
+Serpentine Belt Replacement	45-90 min	"Wrench, belt"	Medium	$50-$200	MT-09-SBR
+Headlight/Taillight Replacement	15-30 min	"Screwdriver, replacement bulb"	Easy	$20-$100	MT-10-HLTL
+Windshield Wiper Replacement	10-15 min	New wipers	Easy	$10-$50	MT-11-WWR
+Power Steering Fluid Top-Up	10-15 min	"Power steering fluid, funnel"	Easy	$10-$40	MT-12-PSF
+Brake Fluid Flush	30-60 min	"Brake fluid, wrench, drain pan"	Medium	$50-$150	MT-13-BFL
+Fuel Filter Replacement	45-90 min	"Wrench, new filter"	Medium	$50-$150	MT-14-FFR
+Alternator Replacement	1-2 hours	"Wrench, new alternator"	Hard	$300-$600	MT-15-ALT
+Battery Boost	15-30 mins	"Jumper cables, multimeter"	Easy	20?20?50	MT-16-BBOOST
+Battery Cable Replacement	30-60 mins	"Wrench set, pliers, wire brush"	Moderate	50?50?100	MT-17-BCR
+Battery Replacement	20-40 mins	"Wrench set, battery terminal cleaner"	Easy	100?100?200	MT - 18 - BR
+Battery Temperature Sensor Replacement	30-60 mins	"Screwdriver, wrench set, multimeter"	Moderate	50?50?150	MT-19-BTS
+Negative Battery Terminal Replacement	20-40 mins	"Wrench set, pliers"	Easy	20?20?50	MT-20-BNT
+Positive Battery Terminal Replacement	20-40 mins	"Wrench set, pliers"	Easy	20?20?50	MT-21-BPT
+Service Battery And Cables	30-60 mins	"Wrench set, wire brush, multimeter"	Moderate	50?50?100	MT-22-SBC
+					
+					
+Belts					
+Drive Belt Tensioner Replacement	1-2 hours	"Socket set, wrench, belt tensioner tool"	Moderate	100?100?200	BL-01-DBT
+Timing Belt Replacement	2-4 hours	"Socket set, torque wrench, timing light"	Difficult	300?300?700	BL-02-TBR
+					
+Brakes					
+ABS Control Module Replacement	1-2 hours	"Socket set, wrench, multimeter"	Difficult	200?200?500	BR-01-ABS
+ABS Control Module System Reset	30-60 mins	OBD-II scanner	Moderate	50?50?100	BR-02-ABSR
+ABS Speed Sensor Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	100?100?200	BR-03-ABSS
+Anti Lock Brake (ABS) Fluid Level Sensor Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	100?100?200	BR-04-ABFL
+Anti Lock Control Relay Replacement	30-60 mins	"Screwdriver, multimeter"	Moderate	50?50?100	BR-05-ABCR
+Anti Lock Fuses Or Relay Replacement	15-30 mins	"Screwdriver, fuse puller"	Easy	20?20?50	BR-06-ABFR
+Anti Lock Pressure Switch Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	100?100?200	BR-07-ABPS
+Brake Booster Replacement	2-3 hours	"Socket set, wrench, pliers"	Difficult	200?200?400	BR-08-BB
+Brake Booster Vacuum Sensor Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	100?100?200	BR-09-BBVS
+Brake Caliper Replacement	1-2 hours	"Socket set, wrench, C-clamp"	Moderate	150?150?300	BR-10-BCR
+Brake Drums Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	150?150?300	BR-11-BDR
+Brake Hose Replacement	1-2 hours	"Socket set, wrench, brake line wrench"	Moderate	100?100?200	BR-12-BHR
+Brake Line Repair	1-2 hours	"Brake line wrench, flaring tool, tubing cutter"	Difficult	100?100?300	BR-13-BLR
+Brake Master Cylinder Replacement	1-2 hours	"Socket set, wrench, brake bleeder kit"	Moderate	150?150?300	BR-14-BMC
+Brake Pads And Rotors Replacement	1-2 hours	"Socket set, wrench, C-clamp"	Moderate	200?200?400	BR-15-BPRR
+Brake Pads Replacement	1-2 hours	"Socket set, wrench, C-clamp"	Moderate	100?100?200	BR-16-BPR
+Brake Rotors Replacement	1-2 hours	"Socket set, wrench, brake rotor puller"	Moderate	150?150?300	BR-17-BRR
+Brake Service	1-2 hours	"Socket set, wrench, brake cleaner"	Moderate	100?100?200	BR-18-BSV
+Brake Shoes (Rear) Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	150?150?300	BR-19-BSR
+Brake Shoes And Drums (Rear) Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	200?200?400	BR-20-BSD
+Brake System Flush	1-2 hours	"Brake bleeder kit, wrench"	Moderate	100?100?200	BR-21-BSF
+Brake Vacuum Pump Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	150?150?300	BR-22-BVPR
+Brake Wheel Cylinder Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	100?100?200	BR-23-BWC
+Emergency Brake Control Replacement	1-2 hours	"Socket set, wrench, pliers"	Moderate	100?100?200	
+Parking (Emergency) Brake Cable Replacement	1-2 hours	"Socket set, wrench, pliers"	Moderate	100?100?200	BR-25-PBC
+Parking (Emergency) Brake Shoe Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	150?150?300	BR-26-PBS
+Parking Brake Drum Replacement	1-2 hours	"Socket set, wrench, brake spring tool"	Moderate	150?150?300	BR-27-PBD
+Parking Brake Release Cable Replacement	1-2 hours	"Socket set, wrench, pliers"	Moderate	100?100?200	BR-28-PBR
+Proportioning (Combination) Valve Replacement	1-2 hours	"Socket set, wrench, brake line wrench"	Moderate	100?100?200	
+Vacuum Brake Booster Check Valve Replacement	30-60 mins	"Screwdriver, pliers"	Easy	20?20?50	BR-30-VBCV
+Wheel Hub Assembly Replacement	1-2 hours	"Socket set, wrench, hub puller"	Moderate	150?150?300	BR-31-WHA
+					
+					
+Car Buying					
+Pre Purchase Car Inspection	1-2 hours	"OBD-II scanner, flashlight, jack, and stands"	Moderate	100?100?200	CB-01-PPI
+Used Car Inspection	1-2 hours	"OBD-II scanner, flashlight, jack, and stands"	Moderate	100?100?200	CB-02-UCI
+					
+					
+Clutch and Transmission					
+Axle Shaft Seal Replacement	1-2 hours	"Socket set, pry bar, seal puller"	Moderate	100?100?200	CT-01-ASS
+CV Axle Shaft Assembly Replacement	1-2 hours	"Socket set, pry bar, axle nut socket"	Moderate	150?150?300	CT-02-CVA
+Center Support Bearing Replacement	1-2 hours	"Socket set, pry bar, bearing puller"	Moderate	100?100?200	CT-03-CSB
+Clutch Cable Adjuster Replacement	1-2 hours	"Socket set, pliers, wrench"	Moderate	50?50?100	CT-04-CCA
+Clutch Cable Replacement	1-2 hours	"Socket set, pliers, wrench"	Moderate	50?50?100	CT-05-CCL
+Clutch Fluid Replacement	30-60 mins	"Brake bleeder kit, wrench"	Easy	50?50?100	CT-06-CFLD
+Clutch Master Cylinder Replacement	1-2 hours	"Socket set, wrench, brake bleeder kit"	Moderate	100?100?200	
+Clutch Slave Cylinder Replacement	1-2 hours	"Socket set, wrench, brake bleeder kit"	Moderate	100?100?200	
+Clutch Switch Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	
+Cruise Control Clutch Release Switch Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	
+Differential Gasket Replacement	1-2 hours	"Socket set, gasket scraper, sealant"	Moderate	100?100?200	CT-11-DGR
+Differential Output Seal Replacement	1-2 hours	"Socket set, pry bar, seal puller"	Moderate	100?100?200	CT-12-DOS
+Downshift Solenoid Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	CT-13-DSR
+Flexible Clutch Hose Replacement	1-2 hours	"Socket set, wrench, brake line wrench"	Moderate	50?50?100	CT-14-FCH
+Front Axle Engagement Switch Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	
+Kick Down Cable Replacement	1-2 hours	"Socket set, pliers, wrench"	Moderate	50?50?100	
+Pinion Seal Replacement	1-2 hours	"Socket set, pry bar, seal puller"	Moderate	100?100?200	
+Shift Indicator (Automatic Transmission) Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	50?50?100	
+Shift Interlock Solenoid Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	
+Shift Selector Cable Replacement	1-2 hours	"Socket set, pliers, wrench"	Moderate	50?50?100	
+Speed Sensor Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	CT-21-SSR
+Speedometer Cable Replacement	1-2 hours	"Socket set, pliers, wrench"	Moderate	50?50?100	CT-22-SMC
+Transfer Case Fluid Replacement	30-60 mins	"Socket set, fluid pump"	Easy	50?50?100	CT-23-TCF
+Transfer Case Output Shaft Seal Replacement	1-2 hours	"Socket set, pry bar, seal puller"	Moderate	100?100?200	CT-24-TCS
+Transmission Fluid Flush	1-2 hours	"Socket set, fluid pump"	Moderate	100?100?200	CT-25-TFF
+Transmission Fluid Service	30-60 mins	"Socket set, fluid pump"	Easy	50?50?100	CT-26-TFS
+Transmission Oil Pressure Switch Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	CT-27-TOS
+Transmission Position Sensor (Switch) Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	
+Transmission Speed Sensor Replacement	1-2 hours	"Socket set, multimeter"	Moderate	100?100?200	
+					
+Diagnostics and Inspection					
+Runner Service	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-01-RUN
+Diagnostics And Inspections	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-02-DIAG
+Arbitration Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-03-ARB
+Car Is Leaking Fluids Inspection	1-2 hours	"Flashlight, jack, and stands"	Moderate	100?100?200	DI-04-LFI
+Car Is Not Starting Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-05-NSI
+Car Is Overheating Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-06-OHI
+Car Is Shaking (Vibrating) Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-07-SHI
+Check Engine Light Is On Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-08-CELI
+Drive Clean Test	30-60 mins	OBD-II scanner	Easy	50?50?100	DI-09-DCT
+Emissions Test	30-60 mins	OBD-II scanner	Easy	50?50?100	DI-10-EMT
+Follow Up Service	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-11-FUS
+General Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-12-GINSP
+Pre Sale Inspection - Bottom End Check	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-13-PSI-B
+Pre Sale Inspection - Top End Check	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-14-PSI-T
+Safety Standards Certificate Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-15-SSC
+Uber Vehicle Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-16-UBI
+Vehicle Not Found	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	
+Warning Light Is On Inspection	1-2 hours	"OBD-II scanner, multimeter, flashlight"	Moderate	100?100?200	DI-18-WLI
+					
+					
+Doors					
+Door Latch Replacement	1-2 hours	"Screwdriver, socket set, pliers"	Moderate	100?100?200	DL-01-DLR
+Door Lock Actuator Replacement	1-2 hours	"Screwdriver, socket set, multimeter"	Moderate	100?100?200	DL-02-DLA
+Door Lock Relay Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	DL-03-DLRL
+Door Lock Switch Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	DL-04-DLSW
+Door Striker Plate Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	50?50?100	DL-05-DSP
+Exterior Door Handle Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-06-EDH
+Hatch Lock Cylinder Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-07-HLC
+Hood Latch Repair	1-2 hours	"Screwdriver, socket set"	Moderate	50?50?100	DL-08-HLR
+Hood Lift Support Shocks Replacement	30-60 mins	"Screwdriver, pliers"	Easy	20?20?50	DL-09-HSS
+Interior Door Handle Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-10-IDH
+Lubricate Doors	15-30 mins	"Lubricant, rag"	Easy	10?10?20	DL-11-LD
+Lubricate Hood Hinge	15-30 mins	"Lubricant, rag"	Easy	10?10?20	DL-12-LHH
+Lubricate Trunk	15-30 mins	"Lubricant, rag"	Easy	10?10?20	DL-13-LTR
+Sliding Door Motor Assembly Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-14-SDM
+Tailgate Lock Cylinder Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-15-TLC
+Tailgate Lock Solenoid Replacement	1-2 hours	"Screwdriver, socket set, multimeter"	Moderate	100?100?200	DL-16-TLS
+Tailgate Locking Assembly Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-17-TLA
+Trunk Latch Adjustment	30-60 mins	"Screwdriver, socket set"	Easy	20?20?50	DL-18-TLAJ
+Trunk Latch Release Cable Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	50?50?100	DL-19-TLRC
+Trunk Latch Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-20-TLR
+Trunk Lift Support Shocks Replacement	30-60 mins	"Screwdriver, pliers"	Easy	20?20?50	DL-21-TLSS
+Trunk Lock Actuator Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	DL-22-TLACT
+Trunk Striker Plate Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	50?50?100	DL-23-TSP
+					
+					
+Engine (Under the Hood)					
+Accelerator Cable Replacement	1-2 hours	"Screwdriver, pliers, wrench"	Moderate	50?50?100	EN-01-ACR  
+Accelerator Pump Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	EN-02-APR  
+Air Bleed Housing Assembly Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	EN-03-ABH  
+Air Diverter Valve Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	EN-04-ADV  
+Air Pump Check Valve Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	EN-05-APCV  
+Air Pump Replacement	1-2 hours	"Screwdriver, socket set"	Moderate	100?100?200	EN-06-APR2  
+Alternator Replacement	1-2 hours	"Socket set, wrench, multimeter"	Moderate	150?150?300	EN-07-ALT  
+Automatic Shutdown Relay Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	
+Automatic Timing Advance Unit Replacement	1-2 hours	"Socket set, wrench, timing light"	Moderate	100?100?200	
+Battery Terminal Ends Replacement	30-60 mins	"Wrench set, pliers"	Easy	20?20?50	EN-10-BTE  
+Camshaft Seal Replacement	1-2 hours	"Socket set, seal puller"	Moderate	100?100?200	EN-11-CMS  
+Carburetor Replacement	2-3 hours	"Socket set, screwdriver, carburetor cleaner"	Difficult	200?200?400	EN-12-CBR  
+Cold Air Intake Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-13-CAI  
+Cold Start Injector Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-14-CSI  
+Connector Hose Heater Control Valve Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-15-CHH  
+Coolant Reservoir Replacement	30-60 mins	"Socket set, screwdriver"	Easy	50?50?100	EN-16-CRR  
+Coolant Temperature Switch (Sensor) Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-17-CTS  
+Coolant Tube Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-18-CTU  
+Coolant Vacuum Valve Switch Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-19-CVVS  
+Cooling (Radiator) Fan Motor Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-20-RFM  
+Cooling Fan Relay Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	EN-21-CFR  
+Cooling Fan Resistor Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	EN-22-CFRS  
+Cooling System Flush	1-2 hours	"Socket set, coolant flush kit"	Moderate	100?100?200	EN-23-CSF  
+Crankshaft Harmonic Balancer Replacement	1-2 hours	"Socket set, puller"	Moderate	100?100?200	
+Cruise Control Vacuum Reservoir Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	
+Cylinder Head Temperature Sensor Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-26-CHTS  
+Distributor O Ring Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-27-DOR  
+Distributor Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-28-DIS  
+Distributor Rotor And Cap Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-29-DRC  
+ECM Power Relay Replacement	30-60 mins	"Screwdriver, multimeter"	Easy	20?20?50	EN-30-EPR  
+EGR Cooler Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-31-EGRC  
+Electronic Ignition Pickup Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-32-EIP  
+Electronic Spark Control Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-33-ESC  
+Engine Cooling Fan Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-34-ECF  
+Engine Mount Replacement	1-2 hours	"Socket set, jack, and stands"	Moderate	100?100?200	EN-35-EMT  
+Exhaust Flex Pipe Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-36-EFP  
+Exhaust Gas Recirculation (EGR) Tube Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-37-EGRT  
+Exhaust Gas Recirculation (EGR) Valve Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-38-EGRV  
+Exhaust Manifold Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-39-EMG  
+Exhaust Manifold Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-40-EMR  
+Fan Clutch Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-41-FCL  
+Front Crankshaft Seal Replacement	1-2 hours	"Socket set, seal puller"	Moderate	100?100?200	
+Fuse Replacement	15-30 mins	"Screwdriver, fuse puller"	Easy	10?10?20	EN-43-FSR  
+Head Gasket Replacement	4-6 hours	"Socket set, torque wrench, gasket scraper"	Difficult	500?500?1000	
+Heater Bypass Tube Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-45-HBT  
+Heater Hoses Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-46-HHR  
+High Pressure Safety Valve Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-47-HPSV  
+Idle Control Valve Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-48-ICV  
+Idler Pulley Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-49-IDP  
+Intake Manifold Gaskets Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-50-IMG  
+Intake Manifold Runner Control Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-51-IMRC  
+Manifold Absolute Pressure Sensor (MAP Sensor) Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-52-MAP  
+Oil Cooler Hose (Automatic Transmission) Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-53-OCH  
+Oil Cooler Lines Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-54-OCL  
+Oil Cooler Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-55-OCR  
+Oil Filter Housing Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-56-OFG  
+Oil Pan Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-57-OPG  
+Oil Pan Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-58-OPR  
+Oil Pressure Sensor Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-59-OPS  
+Oil Pump Cover Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-60-OPC  
+Oil Pump O Ring Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-61-OPR2  
+Oil Return Hose Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-62-ORH  
+PCV Valve Hose Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-63-PCVH  
+Points And Condenser Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-64-PAC  
+Positive Crankcase Ventilation (PCV) Valve Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-65-PCV  
+Pre Heater Hose Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-66-PHH  
+Pressure Test Radiator Cap Replacement	30-60 mins	Pressure tester	Easy	20?20?50	EN-67-PTRC  
+Radiator Drain Cock Replacement	30-60 mins	"Socket set, screwdriver"	Easy	20?20?50	EN-68-RDC  
+Radiator Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-69-RAD  
+Serpentine (Drive) Belt Replacement	1-2 hours	"Socket set, belt tensioner tool"	Moderate	100?100?200	EN-70-SDB  
+Speed Control Assembly Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-71-SCA  
+Starter Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-72-STR  
+Stay Rod Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-73-SRD  
+Supercharger Belt Replacement	1-2 hours	"Socket set, belt tensioner tool"	Moderate	100?100?200	EN-74-SCB  
+Surge Tank Hose Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-75-STH  
+Thermo Coolant Fan Switch Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-76-TFS  
+Thermostat Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-77-THR  
+Throttle Body Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-78-TBOD  
+Throttle Kicker Actuator Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-79-TKA  
+Throttle Return Spring Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-80-TRS  
+Timing Chain Replacement	4-6 hours	"Socket set, timing light, torque wrench"	Difficult	500?500?1000	
+Timing Cover Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-82-TCG  
+Timing Cover Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-83-TCO  
+Timing Gears (Gear To Gear) Replacement	4-6 hours	"Socket set, timing light, torque wrench"	Difficult	500?500?1000	
+Top Dead Center (TDC) Sensor Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-85-TDC  
+Tune Up Service	1-2 hours	"Socket set, screwdriver, spark plug socket"	Moderate	100?100?200	EN-86-TUNE  
+Valve Cover Gasket Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-87-VCG  
+Variable Valve Timing (VVT) Solenoid Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-88-VVTS  
+Vent Oil Separator Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-89-VOS  
+Washer Fluid Level Switch Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-90-WFLS  
+Wastegate Hose Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-91-WGH  
+Water Pump (Auxiliary) Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-92-WPA  
+Water Pump Pulley Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-93-WPP  
+Water Pump Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-94-WPR  
+Windshield Washer Reservoir Replacement	1-2 hours	"Socket set, screwdriver"	Moderate	100?100?200	EN-95-WWR  
+					
+					
+Detailing/Washing 					
+Interior Cleaning & Extraction					CD-01-ICE  
+Interior Detailing & Vacuum					CD-02-IDV  
+Interior Detailing with Steam					CD-03-IDS  
+Deep Seat & Leather Cleaning					CD-04-DSL  
+Shampoo Carpet & Seats					CD-05-SCS  
+Leather Cleaning & Conditioning					CD-06-LLC  
+Odor Removal & Deodorizing					CD-07-ODB  
+Interior Ceramic Detailing					CD-08-ICD  
+Window & Glass Cleaning (Inside & Out)					CD-09-WCW  
+Engine Detailing & Cleaning					CD-10-EDC  
+Exterior Detailing & Wash					CD-11-EDW  
+Hand Wash & Polish					CD-12-HWP  
+Full Wash & Dry					CD-13-FWD  
+Clay Bar Wash & Contaminant Removal					CD-14-CWC  
+Hand Wax Application					CD-15-WAX  
+Paint Correction & Polish					CD-16-PCP  
+Ceramic Paint Coating					CD-17-CPC  
+Headlight Restoration					CD-18-HLR  
+Tire Dressing & Cleaning					CD-19-TDC  
+Rim & Chrome Wheel Cleaning					CD-20-RCW  
+Underbody Cleaning					CD-21-UDC  
+Wax & Sealant Package					CD-22-WAX2  
+Deluxe Protection Package (interior + exterior)					CD-23-DPP  
+Mobile Detailing Service					CD-24-MDS  
+Regular Detailing Subscription					CD-25-RDS  
+Exterior Only Detailing					CD-26-EXO  
+Interior Only Detailing					CD-27-INO  
+Floor Mat Deep Clean					CD-28-MAT  
+Vehicle Disinfection & Sanitization					CD-29-VDC  
+Pet Hair Removal					CD-30-PET  
+					
+					
+Performance and Modification					
+Cold Air Intake Installation	1-2 hours	"Socket set, screwdriver"	Moderate	$200-$400	PM-01-CAI
+Cat-Back Exhaust System Installation	2-3 hours	"Socket set, jack stands, wrench"	Moderate	"$300-$1,000"	PM-02-CBE
+Performance Chip/Tuner Installation	30-60 mins	Laptop/OBD-II interface	Easy	$200-$600	PM-03-PCT
+Turbocharger Kit Installation	6-12 hours	"Full socket/wrench set, engine hoist, tuning tools"	Difficult	"$2,000-$6,000"	PM-04-TKI
+Supercharger Kit Installation	8-12 hours	"Socket set, torque wrench, serpentine belt tools"	Difficult	"$3,000-$7,000"	PM-05-SCI
+Coilover Suspension Installation	3-5 hours	"Spring compressor, torque wrench, jack stands"	Moderate	"$600-$2,000"	PM-06-CSI
+Performance Brake Kit Installation (Pads + Rotors)	2-3 hours	"Socket set, C-clamp, jack stands"	Moderate	$300-$800	PM-07-PBK
+Performance Spark Plug Upgrade	30-60 mins	"Spark plug socket, torque wrench"	Easy	$50-$150	PM-08-PSP
+ECU Remapping/Tuning	1-2 hours	"Tuning software, OBD-II tool, laptop"	Moderate	$300-$800	PM-09-ECU
+Limited Slip Differential (LSD) Install	6-8 hours	"Torque wrench, lift, differential tools"	Difficult	"$1,000-$2,500"	PM-10-LSD
+Lightweight Flywheel Installation	4-6 hours	"Socket set, transmission jack"	Difficult	"$600-$1,200"	PM-11-LFW
+Short Shifter Installation	1-2 hours	"Socket set, screwdriver"	Moderate	$100-$300	PM-12-SSI
+Throttle Body Spacer Install	30-60 mins	"Socket set, wrench"	Easy	$50-$100	PM-13-TBS
+Upgraded Fuel Injectors Installation	2-3 hours	"Fuel rail tools, socket set"	Moderate	$300-$800	PM-14-UFI
+Suspension Lowering Kit Installation	3-5 hours	"Spring compressor, torque wrench"	Moderate	"$400-$1,000"	PM-15-SLK
+Cold Start Injector Upgrade	1-2 hours	"Socket set, multimeter"	Moderate	$150-$300	PM-16-CSIU
+High Performance Radiator Install	2-3 hours	"Socket set, coolant, funnel"	Moderate	$300-$600	PM-17-HPR
+Strut Bar Installation	1 hour	Socket wrench	Easy	$100-$200	PM-18-SBI
+Lightweight Pulley Kit Install	2-3 hours	"Torque wrench, pulley tool"	Moderate	$200-$500	PM-19-LPK
+Engine Mount Upgrade (Performance Polyurethane)	2-3 hours	"Socket set, jack"	Moderate	$200-$400	PM-20-EMU
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
