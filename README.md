@@ -2,63 +2,15 @@
 
 This project consists of a React frontend and a Node.js (Express) backend, containerized using Docker.
 
-## Running Locally (Without Docker)
+## TO Run both Front-end and Back-end:
+** `npm run dev` **
 
-To run the frontend and backend services directly on your local machine without using Docker, follow these steps.
-
-### 1. Frontend (React App)
-
-Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
-
-## UPDATE:
-** Can now run both using `npm run dev` **
-
-1.  **Install dependencies** (if you haven't already):
-    ```bash
-    npm install
-    ```
-2.  **Start the development server**:
-    ```bash
-    npm start
-    ```
-3.  Open your web browser and navigate to http://localhost:3000.
-
-### 2. Backend (Node.js Server)
-
-Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`).
-
-1.  **Start the server**:
-    ```bash
-    node server/app.js
-    ```
-2.  The server will listen on http://localhost:4201. You can test it by navigating to this URL in your browser or using a tool like `curl`. You should see a "Hello World" JSON response.
+## Setup Database in your local machine
+RUN `server/db_schema/schema_override.sh` from project directory
+* Make sure to change .env credentials to yours
 
 
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your system:
-
--   **Node.js and npm (or yarn)**: Required for installing project dependencies. You can download Node.js from [nodejs.org](https://nodejs.org/).
--   **Docker**: Required for building and running the application containers. You can download Docker Desktop from [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop).
--   **Docker Compose**: Usually comes bundled with Docker Desktop. This is used to manage multi-container Docker applications.
-
-### Backend Dependencies
-
-The Node.js backend server (`server/app.js`) requires the `express` package. Ensure it is listed in the `dependencies` section of the main `package.json` file. If not, install it from the project root:
-
-```bash
-npm install express
-# or if you use yarn:
-# yarn add express
-```
-
-Then, install all project dependencies (if you haven't already):
-```bash
-npm install
-# or
-# yarn install
-```
-
+# EXTRA INFO:
 ## Project Structure
 
 -   `Dockerfile.frontend`: Defines the Docker image for the React frontend.
@@ -68,11 +20,9 @@ npm install
 -   `server/`: Contains the Node.js backend application code.
 
 ## Building Docker Images
-
 You can build the Docker images for the frontend and backend services individually using the `docker build` command.
 
 **1. Build the Frontend Image:**
-
 Navigate to the project root directory (`/Users/kunalshukla/auto-booking/`) and run:
 
 ```bash
@@ -85,7 +35,6 @@ This command:
 -   `.`: Sets the build context to the current directory.
 
 **2. Build the Backend Image:**
-
 From the project root directory, run:
 
 ```bash
@@ -120,30 +69,8 @@ Docker Compose is the recommended way to run both the frontend and backend servi
     docker-compose up -d
     ```
 
-## Verifying the Application
-
-Once the containers are running, you can access the services:
-
-*   **Frontend (React App):**
-    Open your web browser and navigate to:
-    http://localhost:3000
-    You should see your React application.
-
-*   **Backend (Node.js API):**
-    Open your web browser or use a tool like `curl` or Postman to access:
-    http://localhost:4201/
-    You should receive a JSON response:
-    ```json
-    {
-      "message": "Hello World"
-    }
-    ```
-    The React frontend is configured via `REACT_APP_BACKEND_URL` to communicate with the backend at `http://auto-booking-backend:4201` (this hostname is resolved within Docker's internal network).
-
 ## Stopping the Application
-
 To stop the running services managed by Docker Compose, navigate to the project root directory and run:
-
 ```bash
 docker-compose down
 ```
