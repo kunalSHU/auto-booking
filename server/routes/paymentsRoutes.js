@@ -1,10 +1,13 @@
 const db = require('../db');
 const express = require('express');
 const router = express.Router();
+const errorHandler = require('../middleware/errorHandler');
 
 // POST /api/payments
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     const { booking_id, amount, payment_method, payment_status, transaction_id } = req.body;
+
+    /* Connect with Stripe - If success then insert record into db otherwise return failure */
 
     try {
         const newPayment = await db.one(
@@ -15,9 +18,10 @@ router.post('/', async (req, res) => {
             [booking_id, amount, payment_method, payment_status, transaction_id]
         );
 
+
         res.status(201).json({ payment: newPayment });
-    } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (err) {
+        next(err)
     }
 });
 
