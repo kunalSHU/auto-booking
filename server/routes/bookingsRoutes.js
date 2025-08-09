@@ -3,30 +3,33 @@ const express = require('express');
 const router = express.Router();
 
 // POST /api/bookings
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const {
     user_id, vehicle_id, service_id, detailing_id, location_type,
     travel_km, water_supply, electric_supply,
     booking_date, time_slot, total_price, status
   } = req.body;
-
-  const newBooking = await db.one(
-    `INSERT INTO "Bookings" (
-      user_id, vehicle_id, service_id, detailing_id, location_type,
-      travel_km, water_supply, electric_supply,
-      booking_date, time_slot, total_price, status, created_at
-    ) VALUES (
-      $1, $2, $3, $4, $5,
-      $6, $7, $8,
-      $9, $10, $11, $12, NOW()
-    ) RETURNING *`,
-    [
-      user_id, vehicle_id, service_id, detailing_id, location_type,
-      travel_km, water_supply, electric_supply,
-      booking_date, time_slot, total_price, status
-    ]
-  );
-  res.status(201).json({ booking: newBooking });
+  try {
+    const newBooking = await db.one(
+      `INSERT INTO "Bookings" (
+        user_id, vehicle_id, service_id, detailing_id, location_type,
+        travel_km, water_supply, electric_supply,
+        booking_date, time_slot, total_price, status, created_at
+      ) VALUES (
+        $1, $2, $3, $4, $5,
+        $6, $7, $8,
+        $9, $10, $11, $12, NOW()
+      ) RETURNING *`,
+      [
+        user_id, vehicle_id, service_id, detailing_id, location_type,
+        travel_km, water_supply, electric_supply,
+        booking_date, time_slot, total_price, status
+      ]
+    );
+    res.status(201).json({ booking: newBooking });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /api/bookings/user/:userId

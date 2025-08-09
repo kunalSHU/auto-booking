@@ -17,7 +17,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // GET /api/services/category/:category - get services by category
-router.get('category/:category', async (req, res) => {
+router.get('category/:category', async (req, res, next) => {
     const { category } = req.params;
     try {
         const services = await db.multi(
@@ -26,9 +26,8 @@ router.get('category/:category', async (req, res) => {
         );
 
         res.json({ services });
-    } catch (error) {
-        console.error('Error fetching services by category:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (err) {
+        next(err);
     }
 });
 
