@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Box, Container, CssBaseline, Typography } from '@mui/material';
 import Footer from './Footer';
 import { callNodeHelloWorld } from './apiServer/api';
 
 const App: React.FC = () => {
+
+  const [nodeResponse, setNodeResponse] = useState();
 
   useEffect(() => {
     testApiCall();
@@ -66,7 +68,3 @@ const App: React.FC = () => {
 }
 
 export default App;
-function setNodeResponse(message: any) {
-  throw new Error('Function not implemented.');
-}
-
