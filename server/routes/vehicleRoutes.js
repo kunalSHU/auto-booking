@@ -57,28 +57,29 @@ router.post('/', async (req, res, next) => {
       }
 
       // Construct vehicleDetails from foundModel or just save make/model/year from user input
-      vehicleDetails = {
-        Make: make,
-        Model: model,
-        ModelYear: year,
-        // can add other details here that are necessary like engine type etc... ex: foundModel.engine
-      };
+      // vehicleDetails = {
+      //   Make: make,
+      //   Model: model,
+      //   ModelYear: year,
+      //   // can add other details here that are necessary like engine type etc... ex: foundModel.engine
+      // };
+      vehicleDetails = modelData.Results;
     }
 
     // Now insert into your database using vehicleDetails or original user's info
-    const newVehicle = await db.one(
-      `INSERT INTO "Vehicles" (user_id, vin_number, make, model, year, created_at)
-      VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
-      [
-        user_id,
-        vin_number || null,
-        vehicleDetails.Make || make,
-        vehicleDetails.Model || model,
-        vehicleDetails.ModelYear || year,
-      ]
-    );
+    // const newVehicle = await db.one(
+    //   `INSERT INTO "Vehicles" (user_id, vin_number, make, model, year, created_at)
+    //   VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+    //   [
+    //     user_id,
+    //     vin_number || null,
+    //     vehicleDetails.Make || make,
+    //     vehicleDetails.Model || model,
+    //     vehicleDetails.ModelYear || year,
+    //   ]
+    // );
 
-    res.status(201).json({ vehicle: newVehicle });
+    res.status(201).json({ vehicle: vehicleDetails });
   } catch (err) {
     next(err);
   }

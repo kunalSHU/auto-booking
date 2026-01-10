@@ -1,69 +1,60 @@
 import React from 'react';
-import { Box, Container, Grid, Link, Typography, IconButton } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <Box
-      component="footer"
-      sx={{
-        py: 3,
-        px: 2,
-        mt: 'auto',
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light'
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
-      }}
-    >
-      <Container maxWidth="lg">
-        <Grid container spacing={5}>
-          <Grid size="grow">
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              About Us
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              We are a company dedicated to providing the best service.
-            </Typography>
-          </Grid>
-          <Grid size="grow">
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Contact Us
-            </Typography>
-            <Link href="mailto:contact@example.com" color="inherit">
-              contact@example.com
-            </Link>
-          </Grid>
-          <Grid size="grow">
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Follow Us
-            </Typography>
-            <IconButton aria-label="Facebook" color="inherit" component="a" href="https://facebook.com">
-              <FacebookIcon />
-            </IconButton>
-            <IconButton aria-label="Twitter" color="inherit" component="a" href="https://twitter.com">
-              <TwitterIcon />
-            </IconButton>
-            <IconButton aria-label="Instagram" color="inherit" component="a" href="https://instagram.com">
-              <InstagramIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Box mt={5}>
-          <Typography variant="body2" color="text.secondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://example.com/">
-              Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-          </Typography>
-        </Box>
-      </Container>
-    </Box>
+    <footer className="w-full border-t border-gray-200 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex justify-between items-start">
+          {/* Left Section */}
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2">
+              <h3 className="text-xl font-bold text-black">APEX Auto Hub</h3>
+            </div>
+            <div className="flex items-start gap-8">
+              <RouterLink
+                to="/features"
+                className="text-base font-medium text-gray-500 hover:text-black transition"
+              >
+                Features
+              </RouterLink>
+              <RouterLink
+                to="/learn"
+                className="text-base font-medium text-gray-500 hover:text-black transition"
+              >
+                Learn more
+              </RouterLink>
+              <RouterLink
+                to="/support"
+                className="text-base font-medium text-gray-500 hover:text-black transition"
+              >
+                Support
+              </RouterLink>
+            </div>
+          </div>
+
+          {/* Social Icons */}
+          <div className="flex items-center gap-6">
+            <a
+              href="#facebook"
+              className="w-6 h-6 bg-gray-500 rounded hover:bg-gray-700 transition"
+              aria-label="Facebook"
+            />
+            <a
+              href="#twitter"
+              className="w-6 h-6 bg-white border border-gray-300 rounded hover:bg-gray-100 transition"
+              aria-label="Twitter"
+            />
+            <a
+              href="#instagram"
+              className="w-6 h-6 bg-gray-500 rounded hover:bg-gray-700 transition"
+              aria-label="Instagram"
+            />
+          </div>
+        </div>
+      </div>
+    </footer>
   );
-}
+};
 
 export default Footer;

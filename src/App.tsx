@@ -12,12 +12,12 @@ const App: React.FC = () => {
   useEffect(() => {
     testApiCall();
   },[]);
-  
+
   const testApiCall = async () => {
     let response = await callNodeHelloWorld();
     setNodeResponse(response?.data.message);
   }
-  
+
   return (
     <div className='App'>
       <Router>
@@ -28,6 +28,6 @@ const App: React.FC = () => {
       </Router>
     </div>
   )
-  
+
 }
 export default App;
