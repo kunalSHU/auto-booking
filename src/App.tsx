@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Box, Container, CssBaseline, Typography } from '@mui/material';
+import { AppBar, Box, Button, Card, CardContent, CardMedia, Container, CssBaseline, Grid, Toolbar, Typography } from '@mui/material';
 import Footer from './Footer';
 import { callNodeHelloWorld } from './apiServer/api';
 
 const App: React.FC = () => {
 
-  const [nodeResponse, setNodeResponse] = useState();
+  const [nodeResponse, setNodeResponse] = useState<string>();
 
   useEffect(() => {
     testApiCall();
@@ -26,45 +26,78 @@ const App: React.FC = () => {
       }}
     >
       <CssBaseline/>
-      <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-        <Typography variant="h2" component="h1" gutterBottom>
-          Welcome to Our Website!
-        </Typography>
-        <Typography variant="h5" component="h2" gutterBottom>
-          {'This is the main content area. You can put anything you want here.'}
-        </Typography>
-        <Typography paragraph>
-          Here is some text to demonstrate scrolling. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Nullamiquet, purus ut convallis laoreet, est mi maximus nisl, vitae
-          sodales justo quam eget ex. Curabitur et orci in nunc commodo placerat.
-          Donec ac feugiat mi.
-        </Typography>
-        
-        <Box sx={{ my: 4, display: 'flex', justifyContent: 'center' }}>
-          <img
-            src="https://via.placeholder.com/600x400"
-            alt="placeholder"
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
+      <AppBar position="relative">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" noWrap>
+            APEX Auto Hub
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <main>
+        {/* Hero unit */}
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            pt: 8,
+            pb: 6,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              APEX Auto Hub
+            </Typography>
+            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+              Your premium destination for auto booking and services.
+              {nodeResponse && <><br/>Backend Status: {nodeResponse}</>}
+            </Typography>
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2 }}>
+              <Button variant="contained">Book Service</Button>
+              <Button variant="outlined">Contact Us</Button>
+            </Box>
+          </Container>
         </Box>
-
-        <Typography paragraph>
-          More content to ensure the page scrolls...
-          Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-          Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-          Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-          Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-          Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.
-          Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci,
-          sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis.
-          Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue,
-          eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis,
-          accumsan porttitor, facilisis luctus, metus.
-        </Typography>
-      </Container>
+        <Container sx={{ py: 8 }} maxWidth="md">
+          {/* End hero unit */}
+          <Grid container spacing={4}>
+            {[1, 2, 3].map((card) => (
+              <Grid key={card} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Card
+                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                >
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      // 16:9
+                      pt: '56.25%',
+                    }}
+                    image={`https://source.unsplash.com/random?car&sig=${card}`}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      Service {card}
+                    </Typography>
+                    <Typography>
+                      Description for service {card}. We provide top-notch auto care.
+                    </Typography>
+                  </CardContent>
+                  <Box sx={{ p: 2 }}>
+                    <Button size="small">View</Button>
+                    <Button size="small">Edit</Button>
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
       <Footer />
     </Box>
   )
 }
-
 export default App;
