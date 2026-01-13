@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, Typography, Stepper, Step, StepLabel, StepIconProps, Divider } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Typography, Stepper, Step, StepLabel, StepIconProps, Divider, LinearProgress } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Dayjs } from 'dayjs';
 
-const steps = ['Service Selection', 'Date & Time', 'Personal Details'];
+const steps = [1, 2, 3, 4, 5];
 
 const CustomStepIcon = (props: StepIconProps) => {
     const { active, icon } = props;
@@ -16,8 +16,8 @@ const CustomStepIcon = (props: StepIconProps) => {
                 width: 30,
                 height: 30,
                 borderRadius: '50%',
-                bgcolor: active ? '#56680e' : '#e0e0e0',
-                color: active ? '#fff' : '#000',
+                bgcolor: active ? 'lightgreen' : '#e0e0e0',
+                color: '#000',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -39,6 +39,7 @@ const BookingAppointment: React.FC = () => {
     const staticPackageAndPrices = [{serviceName: 'Silver Package', servicePrice: 1400}, {serviceName: 'Oil Service', servicePrice: 50}, {serviceName: 'Coolant Service', servicePrice: 50}]
     const [value, setValue] = useState<Dayjs | null>(null);
     const [isSelected, setIsSelected] = useState(false);
+    const [activeStep, setActiveStep] = useState(0);
 
     useEffect(() => {
         if (value) {
@@ -101,13 +102,6 @@ const BookingAppointment: React.FC = () => {
                                     <Typography variant="body2" sx={{ color: 'grey.600', fontWeight: 'bold' }}>${totalServicePrice(staticPackageAndPrices)}</Typography>
                                 </Box>
                             </Box>
-
-                            {/* Mobile Content */}
-                            <Box sx={{ display: { xs: 'block', sm: 'flex' }, mt: {xs: 2} }}>
-                                <Button fullWidth variant="contained" sx={{ bgcolor: 'lightgreen', color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
-                                    Continue Booking
-                                </Button>
-                            </Box>
                         </CardContent>
                         {/* Desktop Edit Button */}
                         <CardActions sx={{ justifyContent: 'flex-end', display: { xs: 'none', sm: 'flex' }, width: '100%' }}>
@@ -117,16 +111,19 @@ const BookingAppointment: React.FC = () => {
             </Box>
             <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 5 }, display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
                 <Card sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
-                    <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#394508' }}>APEX Auto Hub</Typography>
-                    <Typography variant="subtitle1" sx={{ mb: 4, color: 'text.secondary' }}>Book your maintanence appointment</Typography>
+                    <Typography variant="h5" sx={{ position:'relative', fontWeight: 'bold', color: '#394508', paddingLeft:'5%' }}>APEX Auto Hub</Typography>
+                    <Typography variant="subtitle1" sx={{ mb: 3, color: 'text.secondary' }}>Book your maintanence appointment</Typography>
 
-                    <Stepper activeStep={0} alternativeLabel sx={{ mb: 5 }}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel StepIconComponent={CustomStepIcon}>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                    <Box sx={{ mb: 5 }}>
+                        <Stepper activeStep={activeStep} alternativeLabel connector={null}>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel StepIconComponent={CustomStepIcon} />
+                                </Step>
+                            ))}
+                        </Stepper>
+                        <LinearProgress variant="determinate" value={(activeStep / steps.length) * 100} sx={{ mt: 1, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: 'lightgreen' } }} />
+                    </Box>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -141,10 +138,10 @@ const BookingAppointment: React.FC = () => {
                     </Box>
                     {isSelected ? <Box sx={{ display: { xs: 'block', sm: 'block' }, mt: {xs: 2, sm: 2} }}>
                         Selected: {value?.format('dddd, MMMM D, YYYY')}
-                                <Button fullWidth variant="contained" sx={{ bgcolor: 'lightgreen', color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
-                                    Next
-                                </Button>
-                            </Box>: <></>
+                            <Button fullWidth variant="contained" sx={{ bgcolor: 'lightgreen', mt:{xs: 2, sm: 2}, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                                Next
+                            </Button>
+                        </Box>: <></>
                     }
                 </Card>
             </Box>
