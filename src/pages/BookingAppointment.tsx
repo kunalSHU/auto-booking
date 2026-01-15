@@ -4,6 +4,10 @@ import BookingSidebar from './bookingappointment/BookingSidebar';
 import Calendar from './bookingappointment/calendar';
 import TimeSelection from './bookingappointment/timeSelection';
 import { Dayjs } from 'dayjs';
+import UserInformation from './bookingappointment/userInformation';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import XIcon from '@mui/icons-material/X';
 
 const steps = [1, 2, 3, 4, 5];
 
@@ -31,6 +35,7 @@ const CustomStepIcon = (props: StepIconProps) => {
 const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+    const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -62,8 +67,22 @@ const BookingAppointment: React.FC = () => {
                     </Box>
 
                     {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
-                    {activeStep === 1 && <TimeSelection onBack={handleBack} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                </Card>
+                    {activeStep === 1 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
+                    {activeStep === 2 && <UserInformation onBack={handleBack} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}               
+                    </Card>
+                <Box sx={{ mt: 5, textAlign: 'center' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 1 }}>
+                        <Typography variant="body2">Feature</Typography>
+                        <Typography variant="body2">Learn more</Typography>
+                        <Typography variant="body2">Support</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 1 }}>
+                        <InstagramIcon />
+                        <LinkedInIcon />
+                        <XIcon />
+                    </Box>
+                </Box>
             </Box>
         </Box>
     )
