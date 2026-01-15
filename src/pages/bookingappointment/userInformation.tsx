@@ -28,11 +28,12 @@ const UserInformation: React.FC<IProps> = (props) => {
                         fullName: props.userInformation.fullName,
                         email: props.userInformation.email,
                         phoneNumber: props.userInformation.phoneNumber,
-                        additionalNotes: props.userInformation.additionalNotes
+                        additionalNotes: props.userInformation.additionalNotes,
                     }}
                     onSubmit={(values, formikHelpers) => {
                         console.log(values);
                         props.setUserInformation(values)
+                        props.nextToReviewBooking();
                         // formikHelpers.resetForm();
                     }}
                     validationSchema={
@@ -108,7 +109,7 @@ const UserInformation: React.FC<IProps> = (props) => {
                             </CardContent>
                             <Box sx={{ pl: 3, pb: 3 }}>
                                 <Button variant="outlined" sx={{ color: 'black', borderColor: 'black' }} onClick={props.onBack}>Back</Button>
-                                <Button disabled={!isValid} type="submit" onClick={props.nextToReviewBooking} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                                <Button disabled={!isValid || !dirty} type="submit" /*onClick={props.nextToReviewBooking} */variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
                                     Review Booking
                                 </Button>
                             </Box>

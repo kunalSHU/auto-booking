@@ -26,7 +26,7 @@ const UserInformationSummary: React.FC<IProps> = (props) => {
                     <Typography sx={{ display: 'flex', mb: 1 }}>Phone</Typography>
                     <Typography sx={{ display: 'flex', fontWeight: 'bold', mb: 1 }}>{props.userInformation.phoneNumber}</Typography>
                     <Typography sx={{ display: 'flex', mb: 1 }}>Additional Notes</Typography>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold' }}>{props.userInformation.additionalNotes}</Typography>
+                    <Typography sx={{ display: 'flex', fontWeight: 'bold' }}>{props.userInformation.additionalNotes ? props.userInformation.additionalNotes : 'None'}</Typography>
                 </Box>
             </Box>
   )
