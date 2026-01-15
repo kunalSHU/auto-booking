@@ -8,6 +8,7 @@ import UserInformation from './bookingappointment/userInformation';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
+import ReviewBooking from './bookingappointment/reviewBooking';
 
 const steps = [1, 2, 3, 4, 5];
 
@@ -36,6 +37,12 @@ const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [userInformation, setUserInformation] = useState({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        additionalNotes: ''
+    });
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -68,7 +75,8 @@ const BookingAppointment: React.FC = () => {
 
                     {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
                     {activeStep === 1 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                    {activeStep === 2 && <UserInformation onBack={handleBack} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}               
+                    {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
+                    {activeStep === 3 && <ReviewBooking onBack={handleBack} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}            
                     </Card>
                 <Box sx={{ mt: 5, textAlign: 'center' }}>
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>
