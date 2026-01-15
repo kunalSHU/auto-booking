@@ -3,6 +3,7 @@ import { Box, Card, Typography, Stepper, Step, StepLabel, StepIconProps, LinearP
 import BookingSidebar from './bookingappointment/BookingSidebar';
 import Calendar from './bookingappointment/calendar';
 import TimeSelection from './bookingappointment/timeSelection';
+import { Dayjs } from 'dayjs';
 
 const steps = [1, 2, 3, 4, 5];
 
@@ -29,9 +30,14 @@ const CustomStepIcon = (props: StepIconProps) => {
 
 const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
+    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
     // xs = mobile screens
@@ -41,7 +47,7 @@ const BookingAppointment: React.FC = () => {
             <BookingSidebar />
             <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 5 }, display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
                 <Card sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ position:'relative', fontWeight: 'bold', color: '#394508', paddingLeft:'5%' }}>APEX Auto Hub</Typography>
+                    <Typography variant="h5" sx={{ position: 'relative', fontWeight: 'bold', color: '#394508', paddingLeft: '5%' }}>APEX Auto Hub</Typography>
                     <Typography variant="subtitle1" sx={{ mb: 3, color: 'text.secondary' }}>Book your maintanence appointment</Typography>
 
                     <Box sx={{ mb: 5 }}>
@@ -55,8 +61,8 @@ const BookingAppointment: React.FC = () => {
                         <LinearProgress variant="determinate" value={(activeStep / steps.length) * 100} sx={{ mt: 1, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: 'lightgreen' } }} />
                     </Box>
 
-                    {activeStep === 0 && <Calendar onNext={handleNext} />}
-                    {activeStep === 1 && <TimeSelection />}
+                    {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
+                    {activeStep === 1 && <TimeSelection onBack={handleBack} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
                 </Card>
             </Box>
         </Box>
