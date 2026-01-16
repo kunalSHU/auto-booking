@@ -9,6 +9,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import ReviewBooking from './bookingappointment/reviewBooking';
+import BookingConfirmed from './bookingappointment/bookingConfirmed';
 
 const steps = [1, 2, 3, 4, 5];
 
@@ -70,13 +71,14 @@ const BookingAppointment: React.FC = () => {
                                 </Step>
                             ))}
                         </Stepper>
-                        <LinearProgress variant="determinate" value={(activeStep / steps.length) * 100} sx={{ mt: 1, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: 'lightgreen' } }} />
+                        <LinearProgress variant="determinate" value={activeStep < 4 ? (activeStep / steps.length) * 100 : 100} sx={{ mt: 1, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: 'lightgreen' } }} />
                     </Box>
 
                     {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
                     {activeStep === 1 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
                     {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
-                    {activeStep === 3 && <ReviewBooking onBack={handleBack} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}            
+                    {activeStep === 3 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
+                    {activeStep === 4 && <BookingConfirmed selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email}/>}            
                     </Card>
                 <Box sx={{ mt: 5, textAlign: 'center' }}>
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>

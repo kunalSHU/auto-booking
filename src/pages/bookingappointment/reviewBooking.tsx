@@ -14,6 +14,7 @@ interface IProps {
         phoneNumber: string;
         additionalNotes: string;
     }
+    nextToBookingConfirmed: () => void;
 }
 
 const ReviewBooking: React.FC<IProps> = (props) => {
@@ -31,7 +32,7 @@ const ReviewBooking: React.FC<IProps> = (props) => {
             </CardContent>
             <Box sx={{ pl: 3, pb: 3 }}>
                 <Button onClick={props.onBack} variant="outlined" sx={{ color: 'black', borderColor: 'black' }}>Back</Button>
-                <Button disabled={props.selectedTime ? false : true} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
                     Confirm Booking
                 </Button>
             </Box>

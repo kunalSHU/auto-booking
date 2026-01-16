@@ -18,15 +18,23 @@ const UserInformationSummary: React.FC<IProps> = (props) => {
                 }}>
                     Your Information
                 </Typography>
-                <Box sx={{ gap: 1 }}>
-                    <Typography sx={{ display: 'flex', mb: 1 }}>Name</Typography>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold', mb: 1 }}>{props.userInformation.fullName}</Typography>
-                    <Typography sx={{ display: 'flex', mb: 1 }}>Email</Typography>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold', mb: 1 }}>{props.userInformation.email}</Typography>
-                    <Typography sx={{ display: 'flex', mb: 1 }}>Phone</Typography>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold', mb: 1 }}>{props.userInformation.phoneNumber}</Typography>
-                    <Typography sx={{ display: 'flex', mb: 1 }}>Additional Notes</Typography>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold' }}>{props.userInformation.additionalNotes ? props.userInformation.additionalNotes : 'None'}</Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                    <Box>
+                        <Typography sx={{ mb: 1, display: {xs:'flex', sm:'block'}}}>Name</Typography>
+                        <Typography sx={{ fontWeight: 'bold', display: {xs:'flex', sm:'block'}}}>{props.userInformation.fullName}</Typography>
+                    </Box>
+                    <Box>
+                        <Typography sx={{ mb: 1, display: {xs:'flex', sm:'block'} }}>Email</Typography>
+                        <Typography sx={{ fontWeight: 'bold', display: {xs:'flex', sm:'block'}}}>{props.userInformation.email}</Typography>
+                    </Box>
+                    <Box>
+                        <Typography sx={{ mb: 1, display: {xs:'flex', sm:'block'} }}>Phone</Typography>
+                        <Typography sx={{ fontWeight: 'bold', display: {xs:'flex', sm:'block'}}}>{props.userInformation.phoneNumber}</Typography>
+                    </Box>
+                    <Box>
+                        <Typography sx={{ mb: 1, display: {xs:'flex', sm:'block'} }}>Additional Notes</Typography>
+                        <Typography sx={{ fontWeight: 'bold', display: {xs:'flex', sm:'block'}}}>{props.userInformation.additionalNotes ? props.userInformation.additionalNotes : 'None'}</Typography>
+                    </Box>
                 </Box>
             </Box>
   )
