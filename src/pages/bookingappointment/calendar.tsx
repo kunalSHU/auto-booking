@@ -35,7 +35,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                     </Box>
                     {value ? <Box sx={{ display: { xs: 'block', sm: 'block' }, mt: { xs: 2, sm: 2 } }}>
                         Selected: {value?.format('dddd, MMMM D, YYYY')}
-                        <Button fullWidth onClick={onNext} variant="contained" sx={{ bgcolor: 'lightgreen', mt: { xs: 2, sm: 2 }, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                        <Button fullWidth onClick={onNext} variant="contained" sx={{ bgcolor: 'lightgreen', mt: { xs: 2, sm: 2 }, textTransform: 'none', color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
                             Next
                         </Button>
                     </Box> : <></>

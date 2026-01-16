@@ -108,8 +108,8 @@ const UserInformation: React.FC<IProps> = (props) => {
                                 </Box>
                             </CardContent>
                             <Box sx={{ pl: 3, pb: 3 }}>
-                                <Button variant="outlined" sx={{ color: 'black', borderColor: 'black' }} onClick={props.onBack}>Back</Button>
-                                <Button disabled={!isValid || !dirty} type="submit" /*onClick={props.nextToReviewBooking} */variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                                <Button variant="outlined" sx={{ color: 'black', borderColor: 'black', textTransform: 'none' }} onClick={props.onBack}>Back</Button>
+                                <Button disabled={!isValid || !dirty} type="submit" /*onClick={props.nextToReviewBooking} */variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, textTransform: 'none', color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
                                     Review Booking
                                 </Button>
                             </Box>

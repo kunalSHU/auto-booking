@@ -28,7 +28,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                 <Typography sx={{ mt: 4, textAlign: 'center' }}>
                     A confirmation email has been sent to {props.email}
                 </Typography>
-                <Button variant="contained" sx={{ bgcolor: 'lightgreen', mt: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                <Button variant="contained" sx={{ bgcolor: 'lightgreen', mt: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' }, textTransform: 'none' }}>
                     Book another appointment
                 </Button>
             </CardContent>

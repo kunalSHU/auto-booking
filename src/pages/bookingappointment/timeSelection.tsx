@@ -74,8 +74,8 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props: ITimeSelectionProps
                             {renderTimeButtons(afternoonLst)}
                         </Box>
                     </Box>
-                    <Button onClick={backToCalendar} variant="outlined" sx={{ color: 'black', borderColor: 'black' }}>Back</Button>
-                    <Button disabled={props.selectedTime ? false : true} onClick={nextToYourInformation} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                    <Button onClick={backToCalendar} variant="outlined" sx={{ color: 'black', borderColor: 'black', textTransform: 'none' }}>Back</Button>
+                    <Button disabled={props.selectedTime ? false : true} onClick={nextToYourInformation} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black',textTransform: 'none', '&:hover': { bgcolor: '#90ee90' } }}>
                         Next
                     </Button>
                 </CardContent>

@@ -31,8 +31,8 @@ const ReviewBooking: React.FC<IProps> = (props) => {
                 <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Please review your appointment details above. Once confirmed, we'll send a confirmation email to {props.userInformation.email}.</Typography>
             </CardContent>
             <Box sx={{ pl: 3, pb: 3 }}>
-                <Button onClick={props.onBack} variant="outlined" sx={{ color: 'black', borderColor: 'black' }}>Back</Button>
-                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                <Button onClick={props.onBack} variant="outlined" sx={{ color: 'black', borderColor: 'black',textTransform: 'none' }}>Back</Button>
+                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: 'lightgreen', textTransform: 'none', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
                     Confirm Booking
                 </Button>
             </Box>
