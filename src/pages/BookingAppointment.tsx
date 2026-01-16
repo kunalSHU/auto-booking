@@ -46,7 +46,14 @@ const BookingAppointment: React.FC = () => {
     });
 
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+        // Need to send notification if active step equals 4
+
+        setActiveStep((prevActiveStep: any) => {
+            let currentStep = prevActiveStep + 1;
+            console.log("this is the activeStep " + activeStep)
+            return currentStep;
+        });
     };
 
     const handleBack = () => {
@@ -78,7 +85,7 @@ const BookingAppointment: React.FC = () => {
                     {activeStep === 1 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
                     {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
                     {activeStep === 3 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
-                    {activeStep === 4 && <BookingConfirmed selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email}/>}            
+                    {activeStep === 4 && <BookingConfirmed activeStep={activeStep} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email}/>}            
                     </Card>
                 <Box sx={{ mt: 5, textAlign: 'center' }}>
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>

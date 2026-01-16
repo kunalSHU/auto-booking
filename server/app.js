@@ -7,6 +7,7 @@ const detailingRoutes = require('./routes/detailingRoutes');
 const bookingsRoutes = require('./routes/bookingsRoutes');
 const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
+const pubsubRoutes = require('./routes/pubsubRoutes');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -24,6 +25,7 @@ app.use('/api/detailing', detailingRoutes);       // Handles GET /api/detailing/
 app.use('/api/bookings', bookingsRoutes);         // Handles GET /api/bookings/
 app.use('/api/payments', paymentsRoutes);         // Handles GET /api/payments/
 app.use('/api/users', userRoutes);                // Handles GET /api/users/
+app.use('/api/pubsub', pubsubRoutes)
 app.use('/api', router)
 
 // For testing, temporary
