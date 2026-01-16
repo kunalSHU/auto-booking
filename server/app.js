@@ -8,6 +8,7 @@ const bookingsRoutes = require('./routes/bookingsRoutes');
 const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const pubsubRoutes = require('./routes/pubsubRoutes');
+const listenForMessages = require('./subscribers/emailSubscriber');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -43,4 +44,7 @@ app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
+  
+  // Start the Pub/Sub worker
+  listenForMessages();
 });
