@@ -10,6 +10,50 @@ router.get('/', async (req, res) => {
     res.json({ vehicles });
 });
 
+/* Makes */
+app.get("/api/makes", async (req, res) => {
+  const r = await fetch(
+    "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
+  );
+  const data = await r.json();
+
+  const makes = data.Results.map(m => m.MakeName).sort();
+  res.json(makes);
+});
+
+/* make + year */
+app.get("/api/models", async (req, res) => {
+  const { make, year } = req.query;
+
+  const r = await fetch(
+    `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${make}/modelyear/${year}?format=json`
+  );
+  const data = await r.json();
+
+  const models = data.Results.map(m => m.Model_Name).sort();
+  res.json(models);
+});
+
+/* Trims (CarQuery) */
+app.get("/api/trims", async (req, res) => {
+  const { year, make, model } = req.query;
+
+  const url = `https://www.carqueryapi.com/api/0.3/?year=${year}&make=${make}&model=${model}`;
+
+  const r = await fetch(url);
+  const data = await r.json();
+
+  const trims = data.Trims.map(t => ({
+    trim: t.model_trim,
+    engine: t.model_engine_power_ps,
+    drive: t.model_drive,
+    transmission: t.model_transmission_type
+  }));
+
+  res.json(trims);
+});
+
+
 /* GET /api/vehicles/:id - get vehicle by ID */
 router.get('/:id', async (req, res) => {
     const vehicle = await db.oneOrNone('SELECT * FROM "Vehicles" WHERE vehicle_id = $1', [req.params.id]);

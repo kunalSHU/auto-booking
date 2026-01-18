@@ -10,6 +10,10 @@ const VehiclePage: React.FC = () => {
         trim: "",
         year: "",
     });
+    const startYear = 1971;
+    const currentYear = new Date().getFullYear();
+
+    const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
 
     const handleInputChange = (field: string, value: string) => {
         setVehicleData((prev) => ({
@@ -67,6 +71,16 @@ const VehiclePage: React.FC = () => {
                             className="w-38 h-9 px-2 py-3 border-b border-gray-300 text-sm focus:outline-none bg-white flex-shrink-0"
                         />
                         <select
+                            value={years}
+                            onChange={(e) => handleInputChange("year", e.target.value)}
+                            className="px-4 py-3 border-b border-gray-300 text-sm focus:outline-none bg-transparent min-w-max cursor-pointer flex-shrink-0"
+                        >
+                            <option value="">Select Year</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
+                        <select
                             value={vehicleData.make}
                             onChange={(e) => handleInputChange("make", e.target.value)}
                             className="px-4 py-3 border-b border-gray-300 text-sm focus:outline-none bg-transparent min-w-max cursor-pointer flex-shrink-0"
@@ -94,16 +108,6 @@ const VehiclePage: React.FC = () => {
                             <option value="">Select Trim</option>
                             <option value="Standard">Standard</option>
                             <option value="Premium">Premium</option>
-                        </select>
-                        <select
-                            value={vehicleData.year}
-                            onChange={(e) => handleInputChange("year", e.target.value)}
-                            className="px-4 py-3 border-b border-gray-300 text-sm focus:outline-none bg-transparent min-w-max cursor-pointer flex-shrink-0"
-                        >
-                            <option value="">Select Year</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
                         </select>
                         <button className="px-6 py-2 bg-lime-300 text-black font-semibold text-sm rounded hover:bg-lime-800 whitespace-nowrap flex-shrink-0">
                             Select Your Service
