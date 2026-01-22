@@ -32,9 +32,9 @@ const LandingPage: React.FC = () => {
             <Typography
               component="h1"
               variant="h2"
-              align="center"
               color="text.primary"
               gutterBottom
+              display='flex'
             >
               APEX Auto Hub
             </Typography>

@@ -16,6 +16,9 @@ const listenForMessages = () => {
             const payload = JSON.parse(dataString);
             
             console.log(`\tProcessing email for: ${payload.toEmail}`);
+            if (payload.ccEmail && payload.ccEmail.length > 0) {
+                console.log(`\tCCing: ${payload.ccEmail.join(', ')}`);
+            }
             console.log(`\tSubject: ${payload.subject}`);
             // TODO: Add actual email sending logic here (e.g. Nodemailer, SendGrid)
             

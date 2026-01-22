@@ -26,6 +26,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DateCalendar
+                                disablePast
                                 value={value}
                                 onChange={(newValue) => {
                                     setValue(newValue)

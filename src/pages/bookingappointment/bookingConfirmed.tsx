@@ -8,6 +8,7 @@ interface IProps {
     selectedTime: string | null;
     email: string;
     activeStep: number;
+    resetStepper: () => void;
 }
 
 interface ISMSNotifcation {
@@ -17,6 +18,7 @@ interface ISMSNotifcation {
 
 export interface IEmailNotification {
     toEmail: string;
+    ccEmail?: string[];
     message: string;
     subject: string;
 }
@@ -41,6 +43,10 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
     const emailNotificationApiCall = async (notification: IEmailNotification) => {
         let res = await publishEmailNotifcation(notification);
         setIsLoading(false);
+    }
+
+    const bookingConfirmedClick = () => {
+        props.resetStepper();
     }
 
     return (
@@ -68,7 +74,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                         <Typography sx={{ mt: 4, textAlign: 'center' }}>
                             A confirmation email has been sent to {props.email}
                         </Typography>
-                        <Button variant="contained" sx={{ bgcolor: 'lightgreen', mt: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' }, textTransform: 'none' }}>
+                        <Button variant="contained" onClick={bookingConfirmedClick} sx={{ bgcolor: 'lightgreen', mt: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' }, textTransform: 'none' }}>
                             Book another appointment
                         </Button>
                     </>
