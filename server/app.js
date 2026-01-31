@@ -9,6 +9,7 @@ const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const pubsubRoutes = require('./routes/pubsubRoutes');
 const listenForMessages = require('./subscribers/emailSubscriber');
+const { initializeOCR } = require('./utils/ocrService');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -42,9 +43,18 @@ app.use((req, res) => {
 // Centralized error-handling middleware (last)
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server is listening on port ${port}`);
   
   // Start the Pub/Sub worker
   listenForMessages();
+
+  // Initialize OCR service (downloads models on first run)
+  try {
+    await initializeOCR();
+    console.log('[SERVER] OCR service initialized successfully');
+  } catch (err) {
+    console.warn('[SERVER] OCR service initialization failed:', err.message);
+    console.warn('[SERVER] VIN scanning will not be available');
+  }
 });

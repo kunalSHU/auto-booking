@@ -1,135 +1,229 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const fetch = require('node-fetch');
+const { spawn } = require('child_process');
+const path = require('path');
 
-/* GET /api/vehicle/ */
-router.get('/', async (req, res) => {
-    // res.json({ vehicle: { make: 'Toyota', model: 'Camry', year: 2020 } });
-    const vehicles = await db.multi('SELECT * FROM "Vehicles"');
-    res.json({ vehicles });
-});
+let fetch;
 
-/* Makes */
-app.get("/api/makes", async (req, res) => {
-  const r = await fetch(
-    "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
-  );
-  const data = await r.json();
+(async () => {
+  const module = await import('node-fetch');
+  fetch = module.default;
+})();
 
-  const makes = data.Results.map(m => m.MakeName).sort();
-  res.json(makes);
-});
-
-/* make + year */
-app.get("/api/models", async (req, res) => {
-  const { make, year } = req.query;
-
-  const r = await fetch(
-    `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${make}/modelyear/${year}?format=json`
-  );
-  const data = await r.json();
-
-  const models = data.Results.map(m => m.Model_Name).sort();
-  res.json(models);
-});
-
-/* Trims (CarQuery) */
-app.get("/api/trims", async (req, res) => {
+router.get("/", async (req, res) => {
   const { year, make, model } = req.query;
 
-  const url = `https://www.carqueryapi.com/api/0.3/?year=${year}&make=${make}&model=${model}`;
-
-  const r = await fetch(url);
-  const data = await r.json();
-
-  const trims = data.Trims.map(t => ({
-    trim: t.model_trim,
-    engine: t.model_engine_power_ps,
-    drive: t.model_drive,
-    transmission: t.model_transmission_type
-  }));
-
-  res.json(trims);
-});
+  console.log("--->" + year );
+  console.log("--->" + make );
+  console.log("--->" + model );
 
 
-/* GET /api/vehicles/:id - get vehicle by ID */
-router.get('/:id', async (req, res) => {
-    const vehicle = await db.oneOrNone('SELECT * FROM "Vehicles" WHERE vehicle_id = $1', [req.params.id]);
-    res.json({ vehicle });
-});
+  if (!year) {
+    return res.status(400).json({ error: "year is required" });
+  }
 
-/* GET /api/vehicles/user/:userId - get all vehicles for a user */
-router.get('/user/:userId', async (req, res) => {
-    const vehicles = await db.multi('SELECT * FROM "Vehicles" WHERE user_id = $1', [req.params.userId]);
-    res.json({ vehicles });
-});
+  if (year) {
+    console.log("make found: " + year);
+  }
 
-/* POST /api/vehicles - create new vehicle */
-router.post('/', async (req, res, next) => {
-  try {
-    const { user_id, vin_number, make, model, year } = req.body;
-    let vehicleDetails;
+  // STEP 3: YEAR + MAKE + MODELS -> TRIMS
+  if (make && model) {
+    const r = await fetch(
+      `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${make}&model=${model}`
+    );
+    const data = await r.json();
 
-    if (vin_number && vin_number.trim() !== '') {
-      // Fetch vehicle info by VIN
-      const vinResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin_number}?format=json`);
-      const vinData = await vinResponse.json();
+    const result = data.trims.map(t => ({
+      make: t.make,
+      model: t.model,
+      model_trim: t,
+      model_year: Number(t.model_year),
+    }));
 
-      if (!vinData || !vinData.Results || vinData.Results.length === 0) {
-        return res.status(400).json({ error: 'Invalid VIN' });
-      }
+    return res.json(result);
+  }
 
-      // You can pick relevant fields from vinData.Results[0] as needed
-      vehicleDetails = vinData.Results[0];
-    } else {
-      // Search by make, model, year using vPIC API
-      // Unfortunately, this API does not have a direct model/year search endpoint;
-      // so may have query models for make and filter which vehicle it is:
-      const modelResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformakeyear/make/${make}/modelyear/${year}?format=json`);
-      const modelData = await modelResponse.json();
+  // STEP 2: YEAR + MAKE -> MODELS
+  if (make) {
+    const r = await fetch(
+      `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${make}`
+    );
+    const data = await r.json();
 
-      if (!modelData || !modelData.Results || modelData.Results.length === 0) {
-        return res.status(400).json({ error: 'No matching vehicles found for make and year' });
-      }
+    const result = data.models.map(t => ({
+      make: t.make,
+      model: t,
+      model_trim: null,
+      model_year: Number(t.model_year),
+    }));
 
-      const foundModel = modelData.Results.find(m => m.Model_Name.toLowerCase().includes(model.toLowerCase()));
+    return res.json(result);
+  }
 
-      if (!foundModel) {
-        return res.status(400).json({ error: 'Model not found for given make and year' });
-      }
+  // STEP 1: YEAR ONLY -> MAKES
+  if (year) {
+    const r = await fetch(
+      `https://carsapi-7lpja5voja-uc.a.run.app/cars/makes?year=${year}`
+    );
 
-      // Construct vehicleDetails from foundModel or just save make/model/year from user input
-      // vehicleDetails = {
-      //   Make: make,
-      //   Model: model,
-      //   ModelYear: year,
-      //   // can add other details here that are necessary like engine type etc... ex: foundModel.engine
-      // };
-      vehicleDetails = modelData.Results;
+    const data = await r.json();
+
+    console.log("API Response:", JSON.stringify(data, null, 2));
+
+    if (!data || !data.makes || data.makes.length === 0) {
+      console.warn(`No makes found for year ${year}. API may not support this year yet.`);
+      return res.json([]);
     }
 
-    // Now insert into your database using vehicleDetails or original user's info
-    // const newVehicle = await db.one(
-    //   `INSERT INTO "Vehicles" (user_id, vin_number, make, model, year, created_at)
-    //   VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
-    //   [
-    //     user_id,
-    //     vin_number || null,
-    //     vehicleDetails.Make || make,
-    //     vehicleDetails.Model || model,
-    //     vehicleDetails.ModelYear || year,
-    //   ]
-    // );
+    const result = data.makes.map(m => ({
+      make: m,
+      model: null,
+      model_trim: null,
+      model_year: Number(year),
+    }));
+
+    return res.json(result);
+  }
+
+});
+
+/* Get car by VIN */
+router.get("/vin", async (req, res) => {
+  const { vin } = req.params;
+
+  const r = await fetch(
+    `https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`
+  );
+  const data = await r.json();
+
+  return res.json(data);
+});
+
+/* POST /api/vehicle/scan-vin - OCR endpoint to scan VIN from image */
+router.post("/scan-vin", async (req, res, next) => {
+  try {
+    const { image } = req.body;
+
+    if (!image) {
+      return res.status(400).json({ error: "Image is required" });
+    }
+
+    // Call Python OCR script
+    const pythonScript = path.join(__dirname, '../utils/ocr.py');
+    const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
+
+    const pythonProcess = spawn(pythonCommand, [pythonScript], {
+      timeout: 60000, // 60 second timeout (models already downloaded at server startup)
+      shell: process.platform === 'win32'
+    });
+
+    let output = '';
+    let errorOutput = '';
+    let responseHandled = false;
+
+    pythonProcess.on('error', (error) => {
+      console.error(`Failed to spawn ${pythonCommand} process:`, error.message);
+      if (!responseHandled) {
+        responseHandled = true;
+        res.status(500).json({
+          error: 'Python OCR not available',
+          details: `Make sure Python 3 is installed. Run: pip install easyocr pillow`
+        });
+      }
+    });
+
+    pythonProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    pythonProcess.on('close', (code) => {
+      if (responseHandled) return;
+      responseHandled = true;
+
+      if (code !== 0) {
+        console.error('Python OCR Error (exit code ' + code + '):', errorOutput);
+        return res.status(500).json({
+          error: 'Failed to process image',
+          details: errorOutput || 'Python process exited with code ' + code
+        });
+      }
+
+      try {
+        if (!output) {
+          return res.status(500).json({
+            error: 'No output from OCR process'
+          });
+        }
+        const result = JSON.parse(output);
+        res.json(result);
+      } catch (parseError) {
+        console.error('Failed to parse Python output:', output);
+        res.status(500).json({
+          error: 'Failed to parse OCR result',
+          details: output
+        });
+      }
+    });
+
+    pythonProcess.stdin.on('error', (error) => {
+      console.error('stdin error:', error.message);
+      if (!responseHandled) {
+        responseHandled = true;
+        res.status(500).json({
+          error: 'Failed to send data to OCR process',
+          details: error.message
+        });
+      }
+    });
+
+    // Write image and close stdin
+    pythonProcess.stdin.write(image);
+    pythonProcess.stdin.end();
+  } catch (err) {
+    next(err);
+  }
+});
+
+/* POST /api/vehicle - Save vehicle information */
+router.post("/", async (req, res, next) => {
+  try {
+    const { vin, make, model, year } = req.body;
+
+    if (!vin && (!make || !model || !year)) {
+      return res.status(400).json({ error: "Either VIN or make/model/year is required" });
+    }
+
+    // If VIN provided, decode it to get vehicle details
+    let vehicleDetails = { make, model, year };
+    if (vin) {
+      try {
+        const vinResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
+        const vinData = await vinResponse.json();
+
+        if (vinData && vinData.Results && vinData.Results.length > 0) {
+          vehicleDetails = {
+            vin: vin,
+            make: vinData.Results[0].Make || make,
+            model: vinData.Results[0].Model || model,
+            year: vinData.Results[0].ModelYear || year,
+            ...vinData.Results[0]
+          };
+        }
+      } catch (vinErr) {
+        console.warn('Failed to decode VIN from NHTSA API:', vinErr.message);
+      }
+    }
 
     res.status(201).json({ vehicle: vehicleDetails });
   } catch (err) {
     next(err);
   }
 });
-
-/* PUT /api/vehicles/:id - update vehicle */
 router.put('/:id', async (req, res, next) => {
     try {
         const { make, model, year } = req.body;

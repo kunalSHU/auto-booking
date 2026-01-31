@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { callNodeHelloWorld } from './apiServer/api';
 import LandingPage from './pages/LandingPage';
 import BookingAppointment from './pages/BookingAppointment';
-
+import VehiclePage from './pages/VehiclePage';
 const App: React.FC = () => {
 
   const [nodeResponse, setNodeResponse] = useState<string>();
@@ -20,12 +19,11 @@ const App: React.FC = () => {
 
   return (
     <div className='App'>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/booking-appointment" element={<BookingAppointment />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<VehiclePage />} />
+        {/* <Route path="/" element={<LandingPage />} /> */}
+        {/* <Route path="/booking-appointment" element={<BookingAppointment />} /> */}
+      </Routes>
     </div>
   )
 
