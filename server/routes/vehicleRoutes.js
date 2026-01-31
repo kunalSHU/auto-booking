@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { spawn } = require('child_process');
-const path = require('path');
 
 let fetch;
 
@@ -30,9 +28,15 @@ router.get("/", async (req, res) => {
   // STEP 3: YEAR + MAKE + MODELS -> TRIMS
   if (make && model) {
     const r = await fetch(
-      `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${make}&model=${model}`
+      `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`
     );
     const data = await r.json();
+
+    if (!data || !data.trims || data.trims.length === 0) {
+      console.warn(`No trims found for year ${year}, make ${make}, model ${model}`);
+      console.log('API Response:', JSON.stringify(data, null, 2));
+      return res.json([]);
+    }
 
     const result = data.trims.map(t => ({
       make: t.make,
@@ -47,9 +51,15 @@ router.get("/", async (req, res) => {
   // STEP 2: YEAR + MAKE -> MODELS
   if (make) {
     const r = await fetch(
-      `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${make}`
+      `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${encodeURIComponent(make)}`
     );
     const data = await r.json();
+
+    if (!data || !data.models || data.models.length === 0) {
+      console.warn(`No models found for year ${year}, make ${make}`);
+      console.log('API Response:', JSON.stringify(data, null, 2));
+      return res.json([]);
+    }
 
     const result = data.models.map(t => ({
       make: t.make,
@@ -100,101 +110,29 @@ router.get("/vin", async (req, res) => {
   return res.json(data);
 });
 
-/* POST /api/vehicle/scan-vin - OCR endpoint to scan VIN from image */
-router.post("/scan-vin", async (req, res, next) => {
-  try {
-    const { image } = req.body;
-
-    if (!image) {
-      return res.status(400).json({ error: "Image is required" });
+router.put('/:id', async (req, res, next) => {
+    try {
+        const { make, model, year } = req.body;
+        const updated = await db.one(
+            `UPDATE "Vehicles" SET make = $1, model = $2, year = $3
+            WHERE vehicle_id = $4 RETURNING *`,
+            [make, model, year, req.params.id]
+        );
+        res.status(201).json({ vehicle: updated });
+    } catch (err) {
+        next(err);
     }
-
-    // Call Python OCR script
-    const pythonScript = path.join(__dirname, '../utils/ocr.py');
-    const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
-
-    const pythonProcess = spawn(pythonCommand, [pythonScript], {
-      timeout: 60000, // 60 second timeout (models already downloaded at server startup)
-      shell: process.platform === 'win32'
-    });
-
-    let output = '';
-    let errorOutput = '';
-    let responseHandled = false;
-
-    pythonProcess.on('error', (error) => {
-      console.error(`Failed to spawn ${pythonCommand} process:`, error.message);
-      if (!responseHandled) {
-        responseHandled = true;
-        res.status(500).json({
-          error: 'Python OCR not available',
-          details: `Make sure Python 3 is installed. Run: pip install easyocr pillow`
-        });
-      }
-    });
-
-    pythonProcess.stdout.on('data', (data) => {
-      output += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-      errorOutput += data.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-      if (responseHandled) return;
-      responseHandled = true;
-
-      if (code !== 0) {
-        console.error('Python OCR Error (exit code ' + code + '):', errorOutput);
-        return res.status(500).json({
-          error: 'Failed to process image',
-          details: errorOutput || 'Python process exited with code ' + code
-        });
-      }
-
-      try {
-        if (!output) {
-          return res.status(500).json({
-            error: 'No output from OCR process'
-          });
-        }
-        const result = JSON.parse(output);
-        res.json(result);
-      } catch (parseError) {
-        console.error('Failed to parse Python output:', output);
-        res.status(500).json({
-          error: 'Failed to parse OCR result',
-          details: output
-        });
-      }
-    });
-
-    pythonProcess.stdin.on('error', (error) => {
-      console.error('stdin error:', error.message);
-      if (!responseHandled) {
-        responseHandled = true;
-        res.status(500).json({
-          error: 'Failed to send data to OCR process',
-          details: error.message
-        });
-      }
-    });
-
-    // Write image and close stdin
-    pythonProcess.stdin.write(image);
-    pythonProcess.stdin.end();
-  } catch (err) {
-    next(err);
-  }
 });
 
 /* POST /api/vehicle - Save vehicle information */
 router.post("/", async (req, res, next) => {
   try {
-    const { vin, make, model, year } = req.body;
+    const { vin, make, model, trim, year } = req.body;
 
-    if (!vin && (!make || !model || !year)) {
+    console.log(req.body);
+
+
+    if (!vin && (!make || !model || !year || !trim)) {
       return res.status(400).json({ error: "Either VIN or make/model/year is required" });
     }
 
@@ -219,23 +157,14 @@ router.post("/", async (req, res, next) => {
       }
     }
 
-    res.status(201).json({ vehicle: vehicleDetails });
+
+    // Construct the car image URL with proper encoding for special characters and spaces
+    const imageUrl = `https://cdn.imagin.studio/getImage?customer=pandahub-ca&make=${encodeURIComponent(make)}&modelFamily=${encodeURIComponent(model)}&modelYear=${year}&trim=${encodeURIComponent(trim)}&angle=28&zoomLevel=30&width=500&countryCode=us&paintdescription=white`;
+
+    res.status(201).json({ vehicle: vehicleDetails, imageUrl: imageUrl });
   } catch (err) {
     next(err);
   }
-});
-router.put('/:id', async (req, res, next) => {
-    try {
-        const { make, model, year } = req.body;
-        const updated = await db.one(
-            `UPDATE "Vehicles" SET make = $1, model = $2, year = $3
-            WHERE vehicle_id = $4 RETURNING *`,
-            [make, model, year, req.params.id]
-        );
-        res.status(201).json({ vehicle: updated });
-    } catch (err) {
-        next(err);
-    }
 });
 
 /* DELETE /api/vehicles/:id */
