@@ -22,6 +22,10 @@ router.post('/email-notification', async (req, res) => {
             ccEmail: INTERNAL_CC_LIST
         };
         const dataBuffer = Buffer.from(JSON.stringify(notificationPayload));
+
+        // Would need to publish 3 messages (customer, technician and booking email)
+        // notification payload would need to change so we set the msg to the proper email template based on the msg key
+        // only metadata information is recieved from the api call
         const messageId = await pubSubClient.topic(topicName).publishMessage({ data: dataBuffer });
         console.log(`Message ${messageId} published.`);
         res.status(200).json({ success: true, message: 'Notification received', messageId });

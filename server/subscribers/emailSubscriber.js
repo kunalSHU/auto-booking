@@ -68,8 +68,7 @@ const sendEmailLogic = async (payload) => {
         Destination: { // Destination
             ToAddresses: [ // AddressList
                 payload.toEmail,
-            ],
-            CcAddresses: payload.ccEmail || []
+            ]
         },
         Message: { // Message
             Subject: { // Content
