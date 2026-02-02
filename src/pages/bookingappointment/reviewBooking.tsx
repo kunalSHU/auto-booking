@@ -32,7 +32,7 @@ const ReviewBooking: React.FC<IProps> = (props) => {
             </CardContent>
             <Box sx={{ pl: 3, pb: 3 }}>
                 <Button onClick={props.onBack} variant="outlined" sx={{ color: 'black', borderColor: 'black',textTransform: 'none' }}>Back</Button>
-                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: 'lightgreen', textTransform: 'none', ml: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' } }}>
+                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: '#bef264', textTransform: 'none', ml: 2, color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' } }}>
                     Confirm Booking
                 </Button>
             </Box>

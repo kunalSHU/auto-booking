@@ -11,6 +11,12 @@ interface IProps {
     resetStepper: () => void;
 }
 
+const EmailTemplates = {
+    customerEmail: 'customerEmail',
+    technicianEmail: 'technicianEmail',
+    adminEmail: 'adminEmail'
+};
+
 interface ISMSNotifcation {
     phoneNumber: string;
     message: string;
@@ -19,8 +25,9 @@ interface ISMSNotifcation {
 export interface IEmailNotification {
     toEmail: string;
     ccEmail?: string[];
-    message: string;
-    subject: string;
+    date: string | undefined;
+    time: string | null;
+    templateType: string;
 }
 
 const BookingConfirmed: React.FC<IProps> = (props) => {
@@ -31,13 +38,29 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
         console.log("Booking confirmed use effect")
     
         // Construct the payload matching your Avro schema
-        const notification: IEmailNotification = {
+        const customerNotification: IEmailNotification = {
             toEmail: props.email,
-            message: `Your appointment is confirmed for ${props.selectedDate} at ${props.selectedTime}`,
-            subject: "Booking Confirmation"
+            date: props.selectedDate,
+            time: props.selectedTime,
+            templateType: EmailTemplates.customerEmail
         };
-        console.log("Payload ready for Pub/Sub:", notification);
-        emailNotificationApiCall(notification);
+        const technicianNotification: IEmailNotification = {
+            toEmail: props.email,
+            date: props.selectedDate,
+            time: props.selectedTime,
+            templateType: EmailTemplates.technicianEmail
+        };
+        const adminNotification: IEmailNotification = {
+            toEmail: props.email,
+            date: props.selectedDate,
+            time: props.selectedTime,
+            templateType: EmailTemplates.adminEmail
+        };
+        console.log("Payload ready for Pub/Sub:", customerNotification);
+        emailNotificationApiCall(customerNotification);
+        emailNotificationApiCall(technicianNotification);
+        emailNotificationApiCall(adminNotification);
+       // setIsLoading(false)
     }, [props.email, props.selectedDate, props.selectedTime])
 
     const emailNotificationApiCall = async (notification: IEmailNotification) => {
@@ -74,7 +97,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                         <Typography sx={{ mt: 4, textAlign: 'center' }}>
                             A confirmation email has been sent to {props.email}
                         </Typography>
-                        <Button variant="contained" onClick={bookingConfirmedClick} sx={{ bgcolor: 'lightgreen', mt: 2, color: 'black', '&:hover': { bgcolor: '#90ee90' }, textTransform: 'none' }}>
+                        <Button variant="contained" onClick={bookingConfirmedClick} sx={{ bgcolor: '#bef264', mt: 2, color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' }, textTransform: 'none' }}>
                             Book another appointment
                         </Button>
                     </>

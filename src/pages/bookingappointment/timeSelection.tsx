@@ -25,6 +25,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props: ITimeSelectionProps
     }
 
     const renderTimeButtons = (times: string[]) => (
+        
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mt: 1 }}>
             {times.map((time, index) => (
                 <Button
@@ -75,7 +76,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props: ITimeSelectionProps
                         </Box>
                     </Box>
                     <Button onClick={backToCalendar} variant="outlined" sx={{ color: 'black', borderColor: 'black', textTransform: 'none' }}>Back</Button>
-                    <Button disabled={props.selectedTime ? false : true} onClick={nextToYourInformation} variant="contained" sx={{ bgcolor: 'lightgreen', ml: 2, color: 'black',textTransform: 'none', '&:hover': { bgcolor: '#90ee90' } }}>
+                    <Button disabled={props.selectedTime ? false : true} onClick={nextToYourInformation} variant="contained" sx={{ bgcolor: '#bef264', ml: 2, color: 'black', textTransform: 'none', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' } }}>
                         Next
                     </Button>
                 </CardContent>

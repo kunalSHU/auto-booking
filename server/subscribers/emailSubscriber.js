@@ -1,6 +1,7 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses'); // ES Modules import
 const path = require('path');
+const { emailTemplate, EmailTemplates } = require('../emailTemplates/emails');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const pubSubClient = new PubSub();
@@ -63,6 +64,24 @@ const listenForMessages = () => {
 };
 
 const sendEmailLogic = async (payload) => {
+
+    console.log("Here is the payload: ", payload)
+    // Get the details based on the template type in the payload
+    if (payload.templateType === EmailTemplates.adminEmail) {
+        console.log("admin email")
+        payload.subject = emailTemplate.adminEmail.subject;
+        payload.message = emailTemplate.adminEmail.body(payload.date, payload.time);
+    } else if (payload.templateType === EmailTemplates.technicianEmail) {
+         console.log("technician email")
+        payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
+        payload.message = emailTemplate.technicianEmail.body(payload.date, payload.time);
+        payload.toEmail = "autotechnicianx@gmail.com";
+    } else if (payload.templateType === EmailTemplates.customerEmail) {
+        console.log("booking email")
+        payload.subject = emailTemplate.customerEmail.subject;
+        payload.message = emailTemplate.customerEmail.body(payload.date, payload.time);
+    }
+
     const input = { // SendEmailRequest
         Source: "kunalshukla@hotmail.com", // required TODO: Ensure this email is verified in AWS SES
         Destination: { // Destination

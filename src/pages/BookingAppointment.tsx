@@ -10,6 +10,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import ReviewBooking from './bookingappointment/reviewBooking';
 import BookingConfirmed from './bookingappointment/bookingConfirmed';
+import Union from '../Assets/Union.svg';
 
 const steps = [1, 2, 3, 4, 5];
 
@@ -73,7 +74,10 @@ const BookingAppointment: React.FC = () => {
             <BookingSidebar />
             <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 5 }, display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
                 <Card sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ position: 'relative', fontWeight: 'bold', color: '#394508', paddingLeft: '5%' }}>APEX Auto Hub</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <img src={Union} alt="APEX logo" className="h-8 w-8" />
+                        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#394508' }}>APEX Auto Hub</Typography>
+                    </Box>
                     <Typography variant="subtitle1" sx={{ mb: 3, color: 'text.secondary' }}>Book your maintanence appointment</Typography>
 
                     <Box sx={{ mb: 5 }}>
@@ -94,7 +98,10 @@ const BookingAppointment: React.FC = () => {
                     {activeStep === 4 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email}/>}            
                     </Card>
                 <Box sx={{ mt: 5, textAlign: 'center' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+                        <img src={Union} alt="APEX logo" className="h-6 w-6" />
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 1 }}>
                         <Typography variant="body2">Feature</Typography>
                         <Typography variant="body2">Learn more</Typography>
