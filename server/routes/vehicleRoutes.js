@@ -9,24 +9,35 @@ let fetch;
   fetch = module.default;
 })();
 
+// Helper function to fetch with timeout
+const fetchWithTimeout = (url, options = {}, timeoutMs = 10000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
+    )
+  ]);
+};
+
 router.get("/", async (req, res) => {
-  const { year, make, model } = req.query;
+  try {
+    const { year, make, model } = req.query;
 
-  console.log("--->" + year );
-  console.log("--->" + make );
-  console.log("--->" + model );
+    console.log("--->" + year );
+    console.log("--->" + make );
+    console.log("--->" + model );
 
 
-  if (!year) {
-    return res.status(400).json({ error: "year is required" });
-  }
+    if (!year) {
+      return res.status(400).json({ error: "year is required" });
+    }
 
-  if (year) {
-    console.log("make found: " + year);
-  }
+    if (year) {
+      console.log("make found: " + year);
+    }
 
-  // STEP 3: YEAR + MAKE + MODELS -> TRIMS
-  if (make && model) {
+    // STEP 3: YEAR + MAKE + MODELS -> TRIMS
+    if (make && model) {
     const r = await fetch(
       `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`
     );
@@ -95,7 +106,10 @@ router.get("/", async (req, res) => {
 
     return res.json(result);
   }
-
+  } catch (error) {
+    console.error("Error in vehicle route:", error);
+    return res.status(504).json({ error: error.message || "Request timeout or external API error" });
+  }
 });
 
 /* Get car by VIN */
@@ -127,7 +141,7 @@ router.put('/:id', async (req, res, next) => {
 /* POST /api/vehicle - Save vehicle information */
 router.post("/", async (req, res, next) => {
   try {
-    const { vin, make, model, trim, year } = req.body;
+    let { vin, make, model, trim, year } = req.body;
 
     console.log(req.body);
 
@@ -143,14 +157,27 @@ router.post("/", async (req, res, next) => {
         const vinResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
         const vinData = await vinResponse.json();
 
+        // console.log(vinData);
+
+
         if (vinData && vinData.Results && vinData.Results.length > 0) {
-          vehicleDetails = {
-            vin: vin,
-            make: vinData.Results[0].Make || make,
-            model: vinData.Results[0].Model || model,
-            year: vinData.Results[0].ModelYear || year,
-            ...vinData.Results[0]
-          };
+
+          make = vinData.Results[0].Make || make;
+          model = vinData.Results[0].Model || model;
+          year = vinData.Results[0].ModelYear || year;
+          // trim = vinData.Results[0].Trim || trim;
+
+          console.log(make);
+          console.log(model);
+          console.log(year);
+          // console.log(trim);
+          // vehicleDetails = {
+          //   vin: vin,
+          //   make: vinData.Results[0].Make || make,
+          //   model: vinData.Results[0].Model || model,
+          //   year: vinData.Results[0].ModelYear || year,
+          //   ...vinData.Results[0]
+          // };
         }
       } catch (vinErr) {
         console.warn('Failed to decode VIN from NHTSA API:', vinErr.message);
@@ -161,7 +188,19 @@ router.post("/", async (req, res, next) => {
     // Construct the car image URL with proper encoding for special characters and spaces
     const imageUrl = `https://cdn.imagin.studio/getImage?customer=pandahub-ca&make=${encodeURIComponent(make)}&modelFamily=${encodeURIComponent(model)}&modelYear=${year}&trim=${encodeURIComponent(trim)}&angle=28&zoomLevel=30&width=500&countryCode=us&paintdescription=white`;
 
-    res.status(201).json({ vehicle: vehicleDetails, imageUrl: imageUrl });
+    // Fetch the actual image and convert to base64
+    let imageBase64 = null;
+    try {
+      const imageResponse = await fetchWithTimeout(imageUrl);
+      if (imageResponse.ok) {
+        const imageBuffer = await imageResponse.buffer();
+        imageBase64 = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
+      }
+    } catch (imgErr) {
+      console.warn('Failed to fetch image from Imagin Studio:', imgErr.message);
+    }
+
+    res.status(201).json({ vehicle: vehicleDetails, imageBase64: imageBase64 });
   } catch (err) {
     next(err);
   }

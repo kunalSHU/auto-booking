@@ -4,6 +4,7 @@ import { callNodeHelloWorld } from './apiServer/api';
 import LandingPage from './pages/LandingPage';
 import BookingAppointment from './pages/BookingAppointment';
 import VehiclePage from './pages/VehiclePage';
+import ServiceSelection from './pages/ServiceSelectionPage';
 const App: React.FC = () => {
 
   const [nodeResponse, setNodeResponse] = useState<string>();
@@ -20,9 +21,10 @@ const App: React.FC = () => {
   return (
     <div className='App'>
       <Routes>
-        <Route path="/" element={<VehiclePage />} />
+        <Route path="/select-vehicle" element={<VehiclePage />} />
+        <Route path="/" element={<ServiceSelection />} />
         {/* <Route path="/" element={<LandingPage />} /> */}
-        <Route path="/booking-appointment" element={<BookingAppointment />} />
+        {/* <Route path="/booking-appointment" element={<BookingAppointment />} /> */}
       </Routes>
     </div>
   )

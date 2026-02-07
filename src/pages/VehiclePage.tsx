@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import vehicleImage from '../Assets/vehicle_image.png';
 import Union from '../Assets/Union.svg';
 
@@ -10,6 +11,7 @@ interface VehicleOption {
 }
 
 const VehiclePage: React.FC = () => {
+    const navigate = useNavigate();
     // State for Mobile Menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -42,6 +44,7 @@ const VehiclePage: React.FC = () => {
             setLoadingMakes(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}`);
+
                 const data = await response.json();
                 setMakes(data);
                 setModels([]); setTrims([]);
@@ -61,6 +64,7 @@ const VehiclePage: React.FC = () => {
             setLoadingModels(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
+
                 const data = await response.json();
                 setModels(data);
                 setTrims([]);
@@ -104,6 +108,14 @@ const VehiclePage: React.FC = () => {
             });
             const result = await response.json();
             console.log('Vehicle submission response:', result);
+
+            // Navigate to ServiceSelectionPage with vehicle data and image
+            navigate('/', {
+                state: {
+                    vehicle: vehicleData,
+                    imageBase64: result.imageBase64,
+                }
+            });
         } catch (error) {
             console.error('Error submitting vehicle data:', error);
         }
@@ -260,20 +272,20 @@ const VehiclePage: React.FC = () => {
                             <div className="font-semibold text-black text-sm">APEX Auto Hub</div>
                         </div>
                         <div className="flex items-center gap-6">
-                            <a href="#" className="text-[10px] md:text-xs text-gray-600 hover:text-black">Features</a>
-                            <a href="#" className="text-[10px] md:text-xs text-gray-600 hover:text-black">Learn More</a>
-                            <a href="#" className="text-[10px] md:text-xs text-gray-600 hover:text-black">Support</a>
+                            <a href="#/features" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Features</a>
+                            <a href="#/learn" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Learn More</a>
+                            <a href="#/support" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Support</a>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <a href="#" className="text-gray-500 hover:text-black transition-colors">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
                         </a>
-                        <a href="#" className="text-gray-500 hover:text-black transition-colors">
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M16 11.5v5.5"></path><path d="M8 11.5v5.5"></path><path d="M12 7.5a2 2 0 0 1 2 2v2"></path></svg>
                         </a>
-                        <a href="#" className="text-gray-500 hover:text-black transition-colors">
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.82 1.08A4.48 4.48 0 0 0 16.11 0c-2.63 0-4.73 2.59-4.07 5.08A12.94 12.94 0 0 1 1.64 1.15 4.48 4.48 0 0 0 2.9 7.86 4.41 4.41 0 0 1 .89 7v.06A4.48 4.48 0 0 0 4.48 11a4.52 4.52 0 0 1-2 .08 4.48 4.48 0 0 0 4.18 3.12A9 9 0 0 1 0 19.54a12.75 12.75 0 0 0 6.92 2.03c8.3 0 12.84-6.88 12.84-12.84v-.58A9.18 9.18 0 0 0 23 3z"></path></svg>
                         </a>
                     </div>
