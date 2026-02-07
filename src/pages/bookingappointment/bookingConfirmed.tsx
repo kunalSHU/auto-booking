@@ -1,13 +1,15 @@
 import { Box, Button, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { publishEmailNotifcation } from '../../apiServer/api';
+import { publishEmailNotifcation, publishSmsNotifcation } from '../../apiServer/api';
 
 interface IProps {
     selectedDate: string | undefined;
     selectedTime: string | null;
     email: string;
     activeStep: number;
+    phoneNumber: string;
+    customerName: string;
     resetStepper: () => void;
 }
 
@@ -17,9 +19,17 @@ const EmailTemplates = {
     adminEmail: 'adminEmail'
 };
 
-interface ISMSNotifcation {
-    phoneNumber: string;
-    message: string;
+const SmsTemplates = {
+    customerConfirmationSms: 'customerConfirmationSms',
+    adminSms: 'adminSms'
+};
+
+export interface ISMSNotification {
+    date: string | undefined;
+    time: string | null;
+    toNumber: string;
+    templateType: string;
+    customerName?: string;
 }
 
 export interface IEmailNotification {
@@ -36,7 +46,14 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
 
     useEffect(()=> {
         console.log("Booking confirmed use effect")
+        prepareEmailNotification();
+        prepareSmsNotifcation();
     
+       // setIsLoading(false)
+    }, [props.email, props.selectedDate, props.selectedTime])
+
+
+    const prepareEmailNotification = () => {
         // Construct the payload matching your Avro schema
         const customerNotification: IEmailNotification = {
             toEmail: props.email,
@@ -56,15 +73,42 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             time: props.selectedTime,
             templateType: EmailTemplates.adminEmail
         };
-        console.log("Payload ready for Pub/Sub:", customerNotification);
+        console.log("Email Notification Payload ready for Pub/Sub:", customerNotification);
         emailNotificationApiCall(customerNotification);
         emailNotificationApiCall(technicianNotification);
         emailNotificationApiCall(adminNotification);
-       // setIsLoading(false)
-    }, [props.email, props.selectedDate, props.selectedTime])
+    }
+
+    const prepareSmsNotifcation = () => {
+        // Construct the payload matching your Avro schema
+        const customerConfirmationSms: ISMSNotification = {
+            toNumber: props.phoneNumber,
+            date: props.selectedDate,
+            time: props.selectedTime,
+            templateType: SmsTemplates.customerConfirmationSms,
+            customerName: props.customerName
+        };
+        const adminNotification: ISMSNotification = {
+            toNumber: props.phoneNumber,
+            date: props.selectedDate,
+            time: props.selectedTime,
+            templateType: SmsTemplates.adminSms,
+            customerName: props.customerName
+        };
+
+        console.log("SMS Notification Payload ready for Pub/Sub");
+        smsNotificationApiCall(customerConfirmationSms);
+        smsNotificationApiCall(adminNotification);
+        
+    }
 
     const emailNotificationApiCall = async (notification: IEmailNotification) => {
         let res = await publishEmailNotifcation(notification);
+        setIsLoading(false);
+    }
+
+    const smsNotificationApiCall = async (notification: ISMSNotification) => {
+        let res = await publishSmsNotifcation(notification);
         setIsLoading(false);
     }
 

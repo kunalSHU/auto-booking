@@ -28,7 +28,7 @@ ${BUSINESS_NAME}
 `
     },
     technicianEmail: {
-        subject: (serviceDate, timeWindow) =>`New Job Assigned – ${serviceDate} - ${timeWindow}`,
+        subject: (serviceDate, timeWindow) => `New Job Assigned – ${serviceDate} - ${timeWindow}`,
         body: (serviceDate, timeWindow) => `Hi {{TechnicianName}},
 You’ve been assigned a new mobile service job.
 Job Info
