@@ -1,7 +1,8 @@
 import axios from "axios";
-import { IEmailNotification } from "../pages/bookingappointment/bookingConfirmed";
+import { IEmailNotification, ISMSNotification } from "../pages/bookingappointment/bookingConfirmed";
 
 const publishEmailNotifcationUrl = "/api/pubsub/email-notification";
+const publishSmsNotificationUrl = "/api/pubsub/sms-notification";
 
 export const callNodeHelloWorld = async () => {
     try {
@@ -16,8 +17,17 @@ export const callNodeHelloWorld = async () => {
 
 export const publishEmailNotifcation = async (data: IEmailNotification) => {
     try {
-        console.log("This is the data in publishEmailNotifcation method: ", data)
+        console.log("This is the data in publishEmailNotification method: ", data)
         return await axios.post(publishEmailNotifcationUrl, data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const publishSmsNotifcation = async (data: ISMSNotification) => {
+    try {
+        console.log("This is the data in publishSmsNotification method: ", data)
+        return await axios.post(publishSmsNotificationUrl, data)
     } catch (error) {
         console.log(error)
     }

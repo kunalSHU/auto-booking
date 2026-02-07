@@ -1,11 +1,14 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses'); // ES Modules import
+const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
 const path = require('path');
-const { emailTemplate, EmailTemplates } = require('../emailTemplates/emails');
+const { emailTemplate, EmailTemplates } = require('../notificationTemplates/emails');
+const { smsTemplate, SmsTemplates } = require('../notificationTemplates/sms');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const pubSubClient = new PubSub();
-const subscriptionName = 'email-notification-dev-sub';
+const emailSubscriptionName = 'email-notification-dev-sub';
+const smsSubscriptionName = 'sms-notification-dev-sub';
 
 // Verify credentials are loaded
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -20,13 +23,15 @@ const config = {
     }
 }; // type is SESClientConfig
 const client = new SESClient(config);
+const snsClient = new SNSClient(config);
 
 const listenForMessages = () => {
     // References an existing subscription
-    const subscription = pubSubClient.subscription(subscriptionName);
+    const emailSubscription = pubSubClient.subscription(emailSubscriptionName);
+    const smsSubscription = pubSubClient.subscription(smsSubscriptionName);
 
     // Create an event handler to handle messages
-    const messageHandler = async (message) => {
+    const emailMessageHandler = async (message) => {
         console.log(`[Email Worker] Received message ${message.id}:`);
 
         try {
@@ -47,21 +52,98 @@ const listenForMessages = () => {
             }
 
         } catch (e) {
-            console.error('\tFailed to parse message data:', e.message);
+            console.error('\tFailed to parse email message data:', e.message);
         }
 
         // "Ack" (acknowledge) the message so it is removed from the queue
         message.ack();
     };
 
-    subscription.on('message', messageHandler);
+    const smsMessageHandler = async (message) => {
+        console.log(`[SMS Worker] Received message ${message.id}`);
 
-    console.log(`[Email Worker] Listening for messages on ${subscriptionName}...`);
+        try {
+            const dataString = message.data.toString();
+            const payload = JSON.parse(dataString);
+            console.log(`\tProcessing sms for: ${payload.toNumber}`);
 
-    subscription.on('error', (error) => {
+            try {
+                const response = await sendSmsLogic(payload);
+                console.log(`\tSMS sent successfully to ${payload.toNumber}! Message ID:`, response.MessageId);
+            } catch (smsError) {
+                console.error("\tError sending SMS:", smsError.message);
+            }
+
+        } catch (e) {
+            console.error('\tFailed to parse sms message data:', e.message);
+        }
+
+        // SMS sending logic will go here
+        message.ack();
+    };
+
+    emailSubscription.on('message', emailMessageHandler);
+    smsSubscription.on('message', smsMessageHandler);
+
+    console.log(`[Worker] Listening for messages on ${emailSubscriptionName} and ${smsSubscriptionName}...`);
+
+    emailSubscription.on('error', (error) => {
         console.error(`[Email Worker] Error: ${error}`);
     });
+
+    smsSubscription.on('error', (error) => {
+        console.error(`[SMS Worker] Error: ${error}`);
+    });
 };
+
+// Helper to replace placeholders
+const replacePlaceholders = (text, data) => {
+    if (!text) return "";
+    let result = text;
+    if (data.customerName) result = result.replace(/{{CustomerName}}/g, data.customerName);
+    // Add other replacements as you add them to the frontend payload
+    // if (data.serviceName) result = result.replace(/{{ServiceName}}/g, data.serviceName);
+    return result;
+};
+
+const sendSmsLogic = async (payload) => {
+
+    console.log("Here is the payload: ", payload)
+    if (payload.templateType === SmsTemplates.adminSms) {
+        payload.message = smsTemplate.adminSms.body(payload.customerName, payload.date, payload.time);
+    } else if (payload.templateType === SmsTemplates.customerConfirmationSms) {
+        payload.message = smsTemplate.customerConfirmationSms.body(payload.date, payload.time);
+    }
+
+    // Perform placeholder replacement on the generated message body
+    payload.message = replacePlaceholders(payload.message, payload);
+
+    const input = {
+        Message: payload.message,
+        PhoneNumber: payload.toNumber,
+        MessageAttributes: {
+            // SenderID is often blocked or overwritten in the US/Canada without registration.
+            // Commenting it out for testing ensures better delivery rates in Sandbox.
+            // 'AWS.SNS.SMS.SenderID': {
+            //     DataType: 'String',
+            //     StringValue: 'ApexAutoHub' // Max 11 characters, alphanumeric, no spaces
+            // },
+            'AWS.SNS.SMS.SMSType': {
+                DataType: 'String',
+                StringValue: 'Transactional' // 'Transactional' for critical alerts, 'Promotional' for marketing
+            }
+        }
+    };
+
+    try {
+        const command = new PublishCommand(input);
+        const response = await snsClient.send(command);
+        return response;
+    } catch (error) {
+        console.error("[SMS Worker] SNS Error:", error);
+        throw error;
+    }
+}
 
 const sendEmailLogic = async (payload) => {
 

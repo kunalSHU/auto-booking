@@ -4,7 +4,8 @@ const { PubSub } = require('@google-cloud/pubsub');
 
 // Initialize PubSub client
 const pubSubClient = new PubSub();
-const topicName = 'email-notification-dev';
+const emailTopicName = 'email-notification-dev';
+const smsTopicName = 'sms-notification-dev';
 
 // Define your static list of internal emails here
 // In a real production app, you might load this from process.env.ADMIN_EMAILS
@@ -14,15 +15,30 @@ router.post('/email-notification', async (req, res) => {
     console.log('in email notifcation endpoint')
     console.log(req.body)
 
+    // Securely add the CC list here on the server side
+    const notificationPayload = {
+        ...req.body,
+        ccEmail: INTERNAL_CC_LIST
+    };
+    const dataBuffer = Buffer.from(JSON.stringify(notificationPayload));
+    publishToTopic(emailTopicName, dataBuffer, res);
+})
+
+router.post('/sms-notification', async (req, res) => {
+    console.log('in sms notifcation endpoint')
+    console.log(req.body)
+
+    // Send message to pub sub topic here
+    const notificationPayload = {
+        ...req.body
+    };
+    const dataBuffer = Buffer.from(JSON.stringify(notificationPayload));
+    publishToTopic(smsTopicName, dataBuffer, res);
+})
+
+const publishToTopic = async (topicName, dataBuffer, res) => {
     // Send message to pub sub topic here
     try {
-        // Securely add the CC list here on the server side
-        const notificationPayload = {
-            ...req.body,
-            ccEmail: INTERNAL_CC_LIST
-        };
-        const dataBuffer = Buffer.from(JSON.stringify(notificationPayload));
-
         // Would need to publish 3 messages (customer, technician and booking email)
         // notification payload would need to change so we set the msg to the proper email template based on the msg key
         // only metadata information is recieved from the api call
@@ -33,6 +49,6 @@ router.post('/email-notification', async (req, res) => {
         console.error(`Error publishing to Pub/Sub: ${error.message}`);
         res.status(500).json({ success: false, error: 'Failed to publish message' });
     }
-})
+}
 
 module.exports = router;

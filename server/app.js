@@ -8,7 +8,7 @@ const bookingsRoutes = require('./routes/bookingsRoutes');
 const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const pubsubRoutes = require('./routes/pubsubRoutes');
-const listenForMessages = require('./subscribers/emailSubscriber');
+const listenForMessages = require('./subscribers/notificationSubscriber');
 
 const errorHandler = require('./middleware/errorHandler');
 
