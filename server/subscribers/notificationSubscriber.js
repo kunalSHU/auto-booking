@@ -96,38 +96,32 @@ const listenForMessages = () => {
     });
 };
 
-// Helper to replace placeholders
-const replacePlaceholders = (text, data) => {
-    if (!text) return "";
-    let result = text;
-    if (data.customerName) result = result.replace(/{{CustomerName}}/g, data.customerName);
-    // Add other replacements as you add them to the frontend payload
-    // if (data.serviceName) result = result.replace(/{{ServiceName}}/g, data.serviceName);
-    return result;
-};
-
 const sendSmsLogic = async (payload) => {
 
     console.log("Here is the payload: ", payload)
-    if (payload.templateType === SmsTemplates.adminSms) {
-        payload.message = smsTemplate.adminSms.body(payload.customerName, payload.date, payload.time);
-    } else if (payload.templateType === SmsTemplates.customerConfirmationSms) {
+    if (payload.templateType === SmsTemplates.customerConfirmationSms) {
         payload.message = smsTemplate.customerConfirmationSms.body(payload.date, payload.time);
     }
 
     // Perform placeholder replacement on the generated message body
-    payload.message = replacePlaceholders(payload.message, payload);
+    // payload.message = replacePlaceholders(payload.message, payload);
+
+    // Format phone number to E.164 (AWS SNS requirement)
+    let phoneNumber = payload.toNumber;
+    const numericPhone = phoneNumber.replace(/\D/g, '');
+
+    if (numericPhone.length === 10) {
+        phoneNumber = `+1${numericPhone}`;
+    } else if (numericPhone.length === 11 && numericPhone.startsWith('1')) {
+        phoneNumber = `+${numericPhone}`;
+    } else if (!phoneNumber.startsWith('+')) {
+        phoneNumber = `+${numericPhone}`;
+    }
 
     const input = {
         Message: payload.message,
-        PhoneNumber: payload.toNumber,
+        PhoneNumber: phoneNumber,
         MessageAttributes: {
-            // SenderID is often blocked or overwritten in the US/Canada without registration.
-            // Commenting it out for testing ensures better delivery rates in Sandbox.
-            // 'AWS.SNS.SMS.SenderID': {
-            //     DataType: 'String',
-            //     StringValue: 'ApexAutoHub' // Max 11 characters, alphanumeric, no spaces
-            // },
             'AWS.SNS.SMS.SMSType': {
                 DataType: 'String',
                 StringValue: 'Transactional' // 'Transactional' for critical alerts, 'Promotional' for marketing
@@ -153,8 +147,9 @@ const sendEmailLogic = async (payload) => {
         console.log("admin email")
         payload.subject = emailTemplate.adminEmail.subject;
         payload.message = emailTemplate.adminEmail.body(payload.date, payload.time);
+        payload.toEmail = "janarthkulenthiranrealtor@gmail.com";
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
-         console.log("technician email")
+        console.log("technician email")
         payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
         payload.message = emailTemplate.technicianEmail.body(payload.date, payload.time);
         payload.toEmail = "autotechnicianx@gmail.com";

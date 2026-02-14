@@ -15,7 +15,7 @@ Manage: {{ShortLink}}
     },
     adminSms: {
         body: (customerName, serviceDate, timeWindow) => `New booking 📥
-{{CustomerName}} | ${serviceDate} ${timeWindow}
+${customerName} | ${serviceDate} ${timeWindow}
 {{VehicleMake}} {{VehicleModel}}
 `
     }
