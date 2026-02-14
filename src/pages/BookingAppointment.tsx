@@ -11,8 +11,9 @@ import XIcon from '@mui/icons-material/X';
 import ReviewBooking from './bookingappointment/reviewBooking';
 import BookingConfirmed from './bookingappointment/bookingConfirmed';
 import Union from '../Assets/Union.svg';
+import UserAddress from './bookingappointment/userAddress';
 
-const steps = [1, 2, 3, 4, 5];
+const steps = [1, 2, 3, 4, 5, 6];
 
 const CustomStepIcon = (props: StepIconProps) => {
     const { active, completed, icon } = props;
@@ -92,10 +93,11 @@ const BookingAppointment: React.FC = () => {
                     </Box>
 
                     {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
-                    {activeStep === 1 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                    {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
-                    {activeStep === 3 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
-                    {activeStep === 4 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName}/>}            
+                    {activeStep === 1 && <UserAddress handleBack={handleBack} handleNext={handleNext} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')}/>}
+                    {activeStep === 2 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
+                    {activeStep === 3 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
+                    {activeStep === 4 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
+                    {activeStep === 5 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} email={userInformation.email} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName}/>}            
                     </Card>
                 <Box sx={{ mt: 5, textAlign: 'center' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>

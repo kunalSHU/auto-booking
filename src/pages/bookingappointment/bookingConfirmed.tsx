@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, Typography, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { publishEmailNotifcation, publishSmsNotifcation } from '../../apiServer/api';
 
@@ -43,8 +43,12 @@ export interface IEmailNotification {
 const BookingConfirmed: React.FC<IProps> = (props) => {
 
     const [isLoading, setIsLoading] = useState(true);
+    const notificationSent = useRef(false);
 
     useEffect(()=> {
+        if (notificationSent.current) return;
+        notificationSent.current = true;
+
         console.log("Booking confirmed use effect")
         prepareEmailNotification();
         prepareSmsNotifcation();
@@ -98,7 +102,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
 
         console.log("SMS Notification Payload ready for Pub/Sub");
         smsNotificationApiCall(customerConfirmationSms);
-        smsNotificationApiCall(adminNotification);
+        // smsNotificationApiCall(adminNotification);
         
     }
 
