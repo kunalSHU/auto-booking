@@ -18,10 +18,18 @@ interface IProps {
   handleBack: () => void;
   handleNext: () => void;
   selectedDate: string | undefined;
+  userInformation: {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    additionalNotes: string;
+  }
+  setUserInformation: (values: any) => void;
 }
 
 const UserAddress: React.FC<IProps> = (props) => {
-  const [address, setAddress] = useState('Car Drop-Off (AutoHub Shop - 123 Road Dr.)');
+  const [address, setAddress] = useState('');
   const [label, setLabel] = useState('Home');
 
   return (
@@ -58,6 +66,7 @@ const UserAddress: React.FC<IProps> = (props) => {
             multiline
             rows={4}
             value={address}
+            placeholder='Please enter home address'
             onChange={(e) => setAddress(e.target.value)}
             variant="outlined"
             sx={{
@@ -108,7 +117,7 @@ const UserAddress: React.FC<IProps> = (props) => {
           <Button 
             variant="contained" 
             fullWidth 
-            onClick={props.handleNext}
+            onClick={() => {props.setUserInformation({...props.userInformation, address}); props.handleNext();}}
             sx={{ 
               py: 1.5, 
               borderRadius: 2, 

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Stack } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import React, { useState } from 'react';
 import AppointmentSummary from './appointmentSummary';
@@ -75,10 +75,42 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props: ITimeSelectionProps
                             {renderTimeButtons(afternoonLst)}
                         </Box>
                     </Box>
-                    <Button onClick={backToCalendar} variant="outlined" sx={{ color: 'black', borderColor: 'black', textTransform: 'none' }}>Back</Button>
-                    <Button disabled={props.selectedTime ? false : true} onClick={nextToYourInformation} variant="contained" sx={{ bgcolor: '#bef264', ml: 2, color: 'black', textTransform: 'none', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' } }}>
-                        Next
-                    </Button>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        <Button 
+                            variant="outlined" 
+                            fullWidth 
+                            onClick={backToCalendar}
+                            sx={{ 
+                                py: 1.5, 
+                                borderRadius: 2, 
+                                color: 'black', 
+                                borderColor: '#ccc',
+                                textTransform: 'none',
+                                fontSize: '1rem'
+                            }}
+                        >
+                            Back
+                        </Button>
+                        <Button 
+                            disabled={props.selectedTime ? false : true} 
+                            onClick={nextToYourInformation} 
+                            variant="contained" 
+                            fullWidth
+                            sx={{ 
+                                py: 1.5, 
+                                borderRadius: 2, 
+                                backgroundColor: '#ccff90', 
+                                color: 'black', 
+                                boxShadow: 'none', 
+                                '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' }, 
+                                textTransform: 'none', 
+                                fontSize: '1rem', 
+                                fontWeight: 600
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </Stack>
                 </CardContent>
             </Card>
             <AppointmentSummary selectedDate={props.selectedDate} selectedTime={props.selectedTime} />
