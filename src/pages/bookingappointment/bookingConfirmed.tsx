@@ -11,6 +11,7 @@ interface IProps {
     phoneNumber: string;
     customerName: string;
     address: string;
+    notes: string;
     resetStepper: () => void;
 }
 
@@ -45,6 +46,7 @@ export interface IEmailNotification {
     date: string;
     time: string;
     serviceAddress?: string | null | { string: string };
+    notes?: string | null | { string: string };
     vehicleYear?: string | null | { string: string };
     vehicleMake?: string | null | { string: string };
     vehicleModel?: string | null | { string: string };
@@ -81,6 +83,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             date: props.selectedDate || '',
             time: props.selectedTime || '',
             serviceAddress: props.address ? { string: props.address } : null,
+            notes: props.notes ? { string: props.notes } : null,
             vehicleYear: null,
             vehicleMake: null,
             vehicleModel: null,
@@ -96,6 +99,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             date: props.selectedDate || '',
             time: props.selectedTime || '',
             serviceAddress: props.address ? { string: props.address } : null,
+            notes: props.notes ? { string: props.notes } : null,
             vehicleYear: null,
             vehicleMake: null,
             vehicleModel: null,
@@ -111,6 +115,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             date: props.selectedDate || '',
             time: props.selectedTime || '',
             serviceAddress: props.address ? { string: props.address } : null,
+            notes: props.notes ? { string: props.notes } : null,
             vehicleYear: null,
             vehicleMake: null,
             vehicleModel: null,

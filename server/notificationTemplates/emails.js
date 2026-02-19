@@ -29,7 +29,7 @@ ${BUSINESS_NAME}
     },
     technicianEmail: {
         subject: (serviceDate, timeWindow) => `New Job Assigned – ${serviceDate} - ${timeWindow}`,
-        body: (customerName, customerPhone, serviceDate, timeWindow, serviceAddress) => `Hi {{TechnicianName}},
+        body: (customerName, customerPhone, serviceDate, timeWindow, serviceAddress, notes) => `Hi {{TechnicianName}},
 You’ve been assigned a new mobile service job.
 Job Info
 • Customer: ${customerName}
@@ -38,7 +38,7 @@ Job Info
 • Service: {{ServiceName}}
 • Date & Time:  ${serviceDate} at ${timeWindow}
 • Address: ${serviceAddress}
-Notes: {{JobNotes}}
+Notes: ${notes}
 Please confirm availability or flag issues ASAP.
 Thanks,
 ${BUSINESS_NAME}`

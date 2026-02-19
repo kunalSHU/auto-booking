@@ -144,6 +144,7 @@ const sendEmailLogic = async (payload) => {
     console.log("Here is the payload: ", payload)
     // Get the details based on the template type in the payload
     const address = payload.serviceAddress ? payload.serviceAddress.string : '';
+    const notes = payload.notes ? payload.notes.string : '';
 
     if (payload.templateType === EmailTemplates.adminEmail) {
         console.log("admin email")
@@ -153,7 +154,7 @@ const sendEmailLogic = async (payload) => {
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
         console.log("technician email")
         payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
-        payload.message = emailTemplate.technicianEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.date, payload.time, address);
+        payload.message = emailTemplate.technicianEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.date, payload.time, address, notes);
         payload.pii.toEmail = "autotechnicianx@gmail.com";
     } else if (payload.templateType === EmailTemplates.customerEmail) {
         console.log("booking email")
