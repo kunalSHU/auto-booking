@@ -10,6 +10,7 @@ interface IProps {
     activeStep: number;
     phoneNumber: string;
     customerName: string;
+    address: string;
     resetStepper: () => void;
 }
 
@@ -32,12 +33,22 @@ export interface ISMSNotification {
     customerName?: string;
 }
 
-export interface IEmailNotification {
+export interface IPii {
     toEmail: string;
-    ccEmail?: string[];
-    date: string | undefined;
-    time: string | null;
+    customerPhone: string;
+    customerName: string;
+}
+
+export interface IEmailNotification {
+    pii: IPii;
     templateType: string;
+    date: string;
+    time: string;
+    serviceAddress?: string | null | { string: string };
+    vehicleYear?: string | null | { string: string };
+    vehicleMake?: string | null | { string: string };
+    vehicleModel?: string | null | { string: string };
+    estimatedPrice?: string | null | { string: string };
 }
 
 const BookingConfirmed: React.FC<IProps> = (props) => {
@@ -50,6 +61,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
         notificationSent.current = true;
 
         console.log("Booking confirmed use effect")
+        console.log(props.address)
         prepareEmailNotification();
         prepareSmsNotifcation();
     
@@ -60,22 +72,49 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
     const prepareEmailNotification = () => {
         // Construct the payload matching your Avro schema
         const customerNotification: IEmailNotification = {
-            toEmail: props.email,
-            date: props.selectedDate,
-            time: props.selectedTime,
-            templateType: EmailTemplates.customerEmail
+            pii: {
+                toEmail: props.email,
+                customerPhone: props.phoneNumber,
+                customerName: props.customerName
+            },
+            templateType: EmailTemplates.customerEmail,
+            date: props.selectedDate || '',
+            time: props.selectedTime || '',
+            serviceAddress: props.address ? { string: props.address } : null,
+            vehicleYear: null,
+            vehicleMake: null,
+            vehicleModel: null,
+            estimatedPrice: null
         };
         const technicianNotification: IEmailNotification = {
-            toEmail: props.email,
-            date: props.selectedDate,
-            time: props.selectedTime,
-            templateType: EmailTemplates.technicianEmail
+            pii: {
+                toEmail: props.email,
+                customerPhone: props.phoneNumber,
+                customerName: props.customerName
+            },
+            templateType: EmailTemplates.technicianEmail,
+            date: props.selectedDate || '',
+            time: props.selectedTime || '',
+            serviceAddress: props.address ? { string: props.address } : null,
+            vehicleYear: null,
+            vehicleMake: null,
+            vehicleModel: null,
+            estimatedPrice: null
         };
         const adminNotification: IEmailNotification = {
-            toEmail: props.email,
-            date: props.selectedDate,
-            time: props.selectedTime,
-            templateType: EmailTemplates.adminEmail
+            pii: {
+                toEmail: props.email,
+                customerPhone: props.phoneNumber,
+                customerName: props.customerName
+            },
+            templateType: EmailTemplates.adminEmail,
+            date: props.selectedDate || '',
+            time: props.selectedTime || '',
+            serviceAddress: props.address ? { string: props.address } : null,
+            vehicleYear: null,
+            vehicleMake: null,
+            vehicleModel: null,
+            estimatedPrice: null
         };
         console.log("Email Notification Payload ready for Pub/Sub:", customerNotification);
         emailNotificationApiCall(customerNotification);
@@ -145,7 +184,23 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                         <Typography sx={{ mt: 4, textAlign: 'center' }}>
                             A confirmation email has been sent to {props.email}
                         </Typography>
-                        <Button variant="contained" onClick={bookingConfirmedClick} sx={{ bgcolor: '#bef264', mt: 2, color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' }, textTransform: 'none' }}>
+                        <Button 
+                            variant="contained" 
+                            fullWidth
+                            onClick={bookingConfirmedClick} 
+                            sx={{ 
+                                py: 1.5, 
+                                borderRadius: 2, 
+                                backgroundColor: '#ccff90', 
+                                color: 'black', 
+                                boxShadow: 'none', 
+                                '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' }, 
+                                textTransform: 'none', 
+                                fontSize: '1rem', 
+                                fontWeight: 600,
+                                mt: 2 
+                            }}
+                        >
                             Book another appointment
                         </Button>
                     </>

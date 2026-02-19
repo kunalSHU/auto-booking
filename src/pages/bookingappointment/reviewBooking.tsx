@@ -1,6 +1,6 @@
 import React from 'react'
 import AppointmentSummary from './appointmentSummary';
-import { Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Typography, Stack } from '@mui/material';
 import UserInformationSummary from './userInformationSummary';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
@@ -13,6 +13,7 @@ interface IProps {
         email: string;
         phoneNumber: string;
         additionalNotes: string;
+        address: string;
     }
     nextToBookingConfirmed: () => void;
 }
@@ -30,11 +31,43 @@ const ReviewBooking: React.FC<IProps> = (props) => {
                 <Divider sx={{ mt: 3, mb: 2 }} />
                 <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Please review your appointment details above. Once confirmed, we'll send a confirmation email to {props.userInformation.email}.</Typography>
             </CardContent>
-            <Box sx={{ pl: 3, pb: 3 }}>
-                <Button onClick={props.onBack} variant="outlined" sx={{ color: 'black', borderColor: 'black',textTransform: 'none' }}>Back</Button>
-                <Button disabled={props.selectedTime ? false : true} onClick={props.nextToBookingConfirmed} variant="contained" sx={{ bgcolor: '#bef264', textTransform: 'none', ml: 2, color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' } }}>
-                    Confirm Booking
-                </Button>
+            <Box sx={{ px: 3, pb: 3 }}>
+                <Stack spacing={2}>
+                    <Button 
+                        onClick={props.onBack} 
+                        variant="outlined" 
+                        fullWidth
+                        sx={{ 
+                            py: 1.5, 
+                            borderRadius: 2, 
+                            color: 'black', 
+                            borderColor: '#ccc',
+                            textTransform: 'none',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        Back
+                    </Button>
+                    <Button 
+                        disabled={props.selectedTime ? false : true} 
+                        onClick={props.nextToBookingConfirmed} 
+                        variant="contained" 
+                        fullWidth
+                        sx={{ 
+                            py: 1.5, 
+                            borderRadius: 2, 
+                            backgroundColor: '#ccff90', 
+                            color: 'black', 
+                            boxShadow: 'none', 
+                            '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' }, 
+                            textTransform: 'none', 
+                            fontSize: '1rem', 
+                            fontWeight: 600
+                        }}
+                    >
+                        Confirm Booking
+                    </Button>
+                </Stack>
             </Box>
         </Card>
     )

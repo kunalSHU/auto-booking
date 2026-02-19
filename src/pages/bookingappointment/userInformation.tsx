@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Card, CardContent, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, TextField, Typography, Stack } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import AppointmentSummary from './appointmentSummary';
 import { Field, Form, Formik } from 'formik';
@@ -32,7 +32,7 @@ const UserInformation: React.FC<IProps> = (props) => {
                     }}
                     onSubmit={(values, formikHelpers) => {
                         console.log(values);
-                        props.setUserInformation(values)
+                        props.setUserInformation({...props.userInformation, ...values})
                         props.nextToReviewBooking();
                         // formikHelpers.resetForm();
                     }}
@@ -107,11 +107,43 @@ const UserInformation: React.FC<IProps> = (props) => {
                                     />
                                 </Box>
                             </CardContent>
-                            <Box sx={{ pl: 3, pb: 3 }}>
-                                <Button variant="outlined" sx={{ color: 'black', borderColor: 'black', textTransform: 'none' }} onClick={props.onBack}>Back</Button>
-                                <Button disabled={!isValid} type="submit" /*onClick={props.nextToReviewBooking} */variant="contained" sx={{ bgcolor: '#bef264', ml: 2, textTransform: 'none', color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#a3e635' } }}>
-                                    Review Booking
-                                </Button>
+                            <Box sx={{ px: 3, pb: 3 }}>
+                                <Stack spacing={2}>
+                                    <Button 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        onClick={props.onBack}
+                                        sx={{ 
+                                            py: 1.5, 
+                                            borderRadius: 2, 
+                                            color: 'black', 
+                                            borderColor: '#ccc',
+                                            textTransform: 'none',
+                                            fontSize: '1rem'
+                                        }}
+                                    >
+                                        Back
+                                    </Button>
+                                    <Button 
+                                        disabled={!isValid} 
+                                        type="submit" 
+                                        fullWidth
+                                        variant="contained" 
+                                        sx={{ 
+                                            py: 1.5, 
+                                            borderRadius: 2, 
+                                            backgroundColor: '#ccff90', 
+                                            color: 'black', 
+                                            boxShadow: 'none', 
+                                            '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' }, 
+                                            textTransform: 'none', 
+                                            fontSize: '1rem', 
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Review Booking
+                                    </Button>
+                                </Stack>
                             </Box>
                         </Form>
                     )}
