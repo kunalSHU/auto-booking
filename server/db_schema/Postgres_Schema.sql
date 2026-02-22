@@ -8,7 +8,7 @@ CREATE TYPE service_difficulty_enum AS ENUM ('easy', 'medium', 'hard');
 
 -- Create Tables
 CREATE TABLE "Users" (
-  "user_id" int PRIMARY KEY,
+  "user_id" SERIAL PRIMARY KEY,
   "name" varchar,
   "email" varchar,
   "phone" varchar,
@@ -17,12 +17,13 @@ CREATE TABLE "Users" (
 );
 
 CREATE TABLE "Vehicles" (
-  "vehicle_id" int PRIMARY KEY,
+  "vehicle_id" SERIAL PRIMARY KEY,
   "user_id" int,
   "vin_number" varchar,
   "make" varchar,
   "model" varchar,
   "year" int,
+  "trim" varchar,
   "created_at" timestamp
 );
 
@@ -39,7 +40,7 @@ CREATE TABLE "Services" (
 );
 
 CREATE TABLE "DetailingOptions" (
-  "detailing_id" int PRIMARY KEY,
+  "detailing_id" SERIAL PRIMARY KEY,
   "name" varchar,
   "description" text,
   "type" detailing_type_enum,
@@ -47,8 +48,18 @@ CREATE TABLE "DetailingOptions" (
   "created_at" timestamp
 );
 
+CREATE TABLE "ServiceEstimates" (
+  "estimate_id" SERIAL PRIMARY KEY,
+  "service_id" varchar(30),
+  "vehicle_id" int,
+  "price_min" decimal,
+  "price_max" decimal,
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE "Bookings" (
-  "booking_id" int PRIMARY KEY,
+  "booking_id" SERIAL PRIMARY KEY,
   "user_id" int,
   "vehicle_id" int,
   "service_id" int,
@@ -65,7 +76,7 @@ CREATE TABLE "Bookings" (
 );
 
 CREATE TABLE "Payments" (
-  "payment_id" int PRIMARY KEY,
+  "payment_id" SERIAL PRIMARY KEY,
   "booking_id" int,
   "amount" decimal,
   "payment_method" payment_method_enum,
@@ -81,6 +92,9 @@ ALTER TABLE "Bookings" ADD FOREIGN KEY ("vehicle_id") REFERENCES "Vehicles" ("ve
 ALTER TABLE "Bookings" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
 ALTER TABLE "Bookings" ADD FOREIGN KEY ("detailing_id") REFERENCES "DetailingOptions" ("detailing_id");
 ALTER TABLE "Payments" ADD FOREIGN KEY ("booking_id") REFERENCES "Bookings" ("booking_id");
+ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
+ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("vehicle_id") REFERENCES "Vehicles" ("vehicle_id");
 
 -- Indexes
 CREATE INDEX idx_services_category ON "Services" ("category");
+CREATE INDEX idx_service_estimates_lookup ON "ServiceEstimates" ("service_id", "vehicle_id");

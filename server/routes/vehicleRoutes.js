@@ -141,7 +141,7 @@ router.put('/:id', async (req, res, next) => {
 /* POST /api/vehicle - Save vehicle information */
 router.post("/", async (req, res, next) => {
   try {
-    let { vin, make, model, trim, year } = req.body;
+    const { vin, make, model, trim, year } = req.body;
 
     console.log(req.body);
 
@@ -151,7 +151,7 @@ router.post("/", async (req, res, next) => {
     }
 
     // If VIN provided, decode it to get vehicle details
-    let vehicleDetails = { make, model, year };
+    let vehicleDetails = { make, model, year, trim };
     if (vin) {
       try {
         const vinResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
@@ -161,23 +161,18 @@ router.post("/", async (req, res, next) => {
 
 
         if (vinData && vinData.Results && vinData.Results.length > 0) {
-
-          make = vinData.Results[0].Make || make;
-          model = vinData.Results[0].Model || model;
-          year = vinData.Results[0].ModelYear || year;
-          // trim = vinData.Results[0].Trim || trim;
-
           console.log(make);
           console.log(model);
           console.log(year);
           // console.log(trim);
-          // vehicleDetails = {
-          //   vin: vin,
-          //   make: vinData.Results[0].Make || make,
-          //   model: vinData.Results[0].Model || model,
-          //   year: vinData.Results[0].ModelYear || year,
-          //   ...vinData.Results[0]
-          // };
+          vehicleDetails = {
+            vin: vin,
+            make: vinData.Results[0].Make || make,
+            model: vinData.Results[0].Model || model,
+            year: vinData.Results[0].ModelYear || year,
+            trim: vinData.Results[0].Trim || trim,
+            // ...vinData.Results[0]
+          };
         }
       } catch (vinErr) {
         console.warn('Failed to decode VIN from NHTSA API:', vinErr.message);
@@ -186,7 +181,7 @@ router.post("/", async (req, res, next) => {
 
 
     // Construct the car image URL with proper encoding for special characters and spaces
-    const imageUrl = `https://cdn.imagin.studio/getImage?customer=pandahub-ca&make=${encodeURIComponent(make)}&modelFamily=${encodeURIComponent(model)}&modelYear=${year}&trim=${encodeURIComponent(trim)}&angle=28&zoomLevel=30&width=500&countryCode=us&paintdescription=white`;
+    const imageUrl = `https://cdn.imagin.studio/getImage?customer=pandahub-ca&make=${encodeURIComponent(vehicleDetails.make)}&modelFamily=${encodeURIComponent(vehicleDetails.model)}&modelYear=${vehicleDetails.year}&trim=${encodeURIComponent(vehicleDetails.trim)}&angle=28&zoomLevel=30&width=500&countryCode=us&paintdescription=white`;
 
     // Fetch the actual image and convert to base64
     let imageBase64 = null;
