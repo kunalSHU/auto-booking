@@ -1,131 +1,133 @@
 import React, { useState } from 'react';
-import { Box, Card, Typography, Stepper, Step, StepLabel, StepIconProps, LinearProgress } from '@mui/material';
-import BookingSidebar from './bookingappointment/BookingSidebar';
+import { 
+  Box, Typography, Stepper, Step, StepLabel, IconButton, Container, Stack, Paper 
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Calendar from './bookingappointment/calendar';
-import TimeSelection from './bookingappointment/timeSelection';
+import AppHeader from '../Components/AppHeader';
 import { Dayjs } from 'dayjs';
-import UserInformation from './bookingappointment/userInformation';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import XIcon from '@mui/icons-material/X';
+import UserAddress from './bookingappointment/userAddress';
+import TimeSelection from './bookingappointment/timeSelection';
 import ReviewBooking from './bookingappointment/reviewBooking';
 import BookingConfirmed from './bookingappointment/bookingConfirmed';
-import Union from '../Assets/Union.svg';
-import UserAddress from './bookingappointment/userAddress';
+import UserInformation from './bookingappointment/userInformation';
+import AppFooter from '../Components/AppFooter';
 
-const steps = [1, 2, 3, 4, 5, 6];
-
-const CustomStepIcon = (props: StepIconProps) => {
-    const { active, completed, icon } = props;
-    return (
-        <Box
-            sx={{
-                width: 30,
-                height: 30,
-                borderRadius: '50%',
-                bgcolor: active || completed ? 'lightgreen' : '#e0e0e0',
-                color: '#000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-            }}
-        >
-            {icon}
-        </Box>
-    );
-};
+const steps = ['DATE', 'LOCATION', 'TIME', 'DETAILS', 'REVIEW', 'DONE'];
 
 const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [userInformation, setUserInformation] = useState({
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-        additionalNotes: '',
-        address: ''
+        fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: ''
     });
 
-    const handleNext = () => {
-
-        // Need to send notification if active step equals 4
-
-        setActiveStep((prevActiveStep: any) => {
-            let currentStep = prevActiveStep + 1;
-            console.log("this is the activeStep " + activeStep)
-            return currentStep;
-        });
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
+    const handleNext = () => setActiveStep((prev) => prev + 1);
+    const handleBack = () => setActiveStep((prev) => prev - 1);
     const resetStepper = () => {
         setActiveStep(0);
-        setUserInformation({
-            fullName: '',
-            email: '',
-            phoneNumber: '',
-            additionalNotes: '',
-            address: ''
-        })
         setSelectedDate(null);
         setSelectedTime(null);
-    }
+    };
 
-    // xs = mobile screens
-    // sm = larger screens
     return (
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, minHeight: '100vh' }}>
-            <BookingSidebar />
-            <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 5 }, display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
-                <Card sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <img src={Union} alt="APEX logo" className="h-8 w-8" />
-                        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#394508' }}>APEX Auto Hub</Typography>
+        <>
+            <AppHeader selectedService="Oil Change for your 2022 Dodge Durango Sport" />
+            <Box sx={{ 
+                bgcolor: '#fcfdfc', 
+                minHeight: '100vh', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'flex-start',
+                pt: { xs: 2, md: 8 }, 
+                pb: 4, 
+                px: { xs: 0, sm: 2 } 
+            }}>
+                <Paper 
+                    elevation={0} 
+                    sx={{ 
+                        width: '100%', 
+                        maxWidth: '850px', 
+                        borderRadius: { xs: 0, sm: '24px' }, 
+                        border: '1px solid #f0f0f0',
+                        boxShadow: '0px 10px 40px rgba(0,0,0,0.03)',
+                        overflow: 'hidden',
+                        bgcolor: '#fbfbfb'
+                    }}
+                >
+                    {/* Header Section */}
+                    <Box sx={{ borderBottom: '1px solid #f5f5f5', py: 3, px: { xs: 2, md: 5 } }}>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box>
+                                <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', fontFamily: 'serif' }}>
+                                    Step {activeStep + 1} of 6 — {activeStep === 0 ? 'Select a Date' : steps[activeStep]}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#888' }}>
+                                    Choose an available date to get started
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ bgcolor: '#f5f5f5', borderRadius: 2, '&:hover': { bgcolor: '#efefef' } }}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </Stack>
                     </Box>
-                    <Typography variant="subtitle1" sx={{ mb: 3, color: 'text.secondary' }}>Book your maintanence appointment</Typography>
 
-                    <Box sx={{ mb: 5 }}>
-                        <Stepper activeStep={activeStep} alternativeLabel connector={null}>
-                            {steps.map((label) => (
+                    {/* Content Section */}
+                    <Box sx={{ p: { xs: 2, md: 6 } }}>
+                        <Stepper activeStep={activeStep} alternativeLabel connector={null} sx={{ mb: 6 }}>
+                            {steps.map((label, index) => (
                                 <Step key={label}>
-                                    <StepLabel StepIconComponent={CustomStepIcon} />
+                                    <StepLabel
+                                        StepIconComponent={() => (
+                                            <Box sx={{
+                                                width: 40, height: 40, borderRadius: '50%',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                border: '2px solid',
+                                                borderColor: index <= activeStep ? '#4a7c2c' : '#e0e0e0',
+                                                bgcolor: index === activeStep ? '#4a7c2c' : 'white',
+                                                color: index === activeStep ? 'white' : index < activeStep ? '#4a7c2c' : '#bdbdbd',
+                                                fontWeight: 800,
+                                                position: 'relative',
+                                                zIndex: 1
+                                            }}>
+                                                {index + 1}
+                                                {/* Manual Connector Line */}
+                                                {index < steps.length - 1 && (
+                                                    <Box sx={{ 
+                                                        position: 'absolute', left: '100%', top: '50%', 
+                                                        width: { xs: '30px', sm: '60px', md: '80px' }, 
+                                                        height: '1px', bgcolor: '#e0e0e0', zIndex: -1 
+                                                    }} />
+                                                )}
+                                            </Box>
+                                        )}
+                                    >
+                                        <Typography sx={{ 
+                                            fontSize: '0.7rem', fontWeight: 800, 
+                                            color: index <= activeStep ? '#4a7c2c' : '#bdbdbd', mt: 1 
+                                        }}>
+                                            {label}
+                                        </Typography>
+                                    </StepLabel>
                                 </Step>
                             ))}
                         </Stepper>
-                        <LinearProgress variant="determinate" value={activeStep < 4 ? (activeStep / steps.length) * 100 : 100} sx={{ mt: 1, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: 'lightgreen' } }} />
-                    </Box>
 
-                    {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
-                    {activeStep === 1 && <UserAddress handleBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} handleNext={handleNext} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')}/>}
-                    {activeStep === 2 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                    {activeStep === 3 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
-                    {activeStep === 4 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
-                    {activeStep === 5 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName}/>}            
-                    </Card>
-                <Box sx={{ mt: 5, textAlign: 'center' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
-                        <img src={Union} alt="APEX logo" className="h-6 w-6" />
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>APEX Auto Hub</Typography>
+                        <Box sx={{ mt: 2 }}>
+                            {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
+                            {activeStep === 1 && <UserAddress handleBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} handleNext={handleNext} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')}/>}
+                            {activeStep === 2 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
+                            {activeStep === 3 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}   
+                            {activeStep === 4 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}        
+                            {activeStep === 5 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName}/>}  
+                        </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 1 }}>
-                        <Typography variant="body2">Feature</Typography>
-                        <Typography variant="body2">Learn more</Typography>
-                        <Typography variant="body2">Support</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 1 }}>
-                        <InstagramIcon />
-                        <LinkedInIcon />
-                        <XIcon />
-                    </Box>
-                </Box>
+                </Paper>
             </Box>
-        </Box>
-    )
-}
+            <AppFooter/>
+        </>
+    );
+};
 
 export default BookingAppointment;
