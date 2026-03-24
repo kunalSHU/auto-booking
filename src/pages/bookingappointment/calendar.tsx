@@ -76,43 +76,60 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                         }}
                         sx={{
                             width: '100%',
-                            height: 'auto',
-                            // 2. This creates the "Big Square Green Icon" selection
+                            // 1. Selection Block Styling
                             '& .MuiPickersDay-root': {
-                                width: '50px',
-                                height: '50px',
+                                width: { xs: '42px', sm: '50px' },
+                                height: { xs: '42px', sm: '50px' },
                                 fontSize: '1rem',
                                 fontWeight: 600,
-                                borderRadius: '12px', // The rounded square look
+                                borderRadius: '12px', // The square shape
                                 margin: '2px',
+                                color: '#1a1a1a', // Default text color
+                                transition: 'all 0.2s ease',
+
+                                // Fix: Ensure text is visible when selected
                                 '&.Mui-selected': {
-                                    bgcolor: '#426b29 !important', // Deep green from design
-                                    color: 'white',
-                                    '&:hover': { bgcolor: '#355621 !important' }
+                                    bgcolor: '#426b29 !important',
+                                    color: '#ffffff !important', // Forces text to white
+                                    '&:hover': { bgcolor: '#355621 !important' },
+                                    // This removes the "Today" circle/border when the date is also selected
+                                    border: 'none !important',
                                 },
+
+                                // 2. Today's Date Styling (when NOT selected)
                                 '&.MuiPickersDay-today': {
-                                    borderColor: 'transparent', // Remove the circle around today
+                                    borderColor: 'transparent',
                                     color: '#426b29',
-                                    '&::after': { // Add the small green dot below today
+                                    fontWeight: 800,
+                                    position: 'relative',
+                                    // The small dot under the number
+                                    '&::after': {
                                         content: '""',
                                         position: 'absolute',
                                         bottom: '6px',
                                         width: '4px',
                                         height: '4px',
                                         borderRadius: '50%',
-                                        bgcolor: '#426b29'
+                                        bgcolor: 'currentColor'
                                     }
+                                },
+
+                                // Fix: Remove the blue focus ring that MUI adds
+                                '&:focus': {
+                                    bgcolor: 'transparent',
+                                    '&.Mui-selected': { bgcolor: '#426b29 !important' }
                                 }
                             },
-                            // 3. Style the Day labels (SUN, MON, etc.)
+
+                            // 3. Header and Weekday cleanup
                             '& .MuiDayCalendar-weekDayLabel': {
                                 fontWeight: 800,
                                 color: '#999',
                                 fontSize: '0.75rem',
-                                width: '50px'
+                                width: { xs: '42px', sm: '50px' },
                             },
-                            // Hide the default MUI header since we made a custom one above
-                            '& .MuiPickersCalendarHeader-root': { display: 'none' }
+                            '& .MuiPickersCalendarHeader-root': { display: 'none' },
+
                         }}
                     />
                 </LocalizationProvider>
