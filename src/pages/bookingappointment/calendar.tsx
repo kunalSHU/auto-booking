@@ -7,6 +7,7 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Dayjs } from 'dayjs';
+import DateInformation from './dateInformation';
 
 interface CalendarProps {
     onNext: () => void;
@@ -15,6 +16,9 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
+
+    const [isDateSelected, setIsDateSelected] = React.useState(false);
+
     return (
         <Box>
             <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
@@ -49,7 +53,10 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                     <DateCalendar
                         disablePast
                         value={value}
-                        onChange={(newValue) => setValue(newValue)}
+                        onChange={(newValue) => {
+                            setValue(newValue)
+                            setIsDateSelected(true);
+                        }}
                         // 1. This centers the Month/Year and customizes the arrows
                         slots={{
                             calendarHeader: (props) => (
@@ -133,6 +140,8 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                         }}
                     />
                 </LocalizationProvider>
+
+                {isDateSelected && <DateInformation selectedDate={value}/>}
             </Box>
 
             <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5' }}>
