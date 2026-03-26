@@ -34,7 +34,7 @@ interface IProps {
 
 const UserAddress: React.FC<IProps> = (props) => {
   const [addressType, setAddressType] = useState('Home');
-  const [fullAddress, setFullAddress] = useState(props.userInformation.address || '');
+  const [fullAddress, setFullAddress] = useState('');
   const [fullAddressDisabled, setFullAddressDisabled] = useState(false);
 
   const radioButtonClicked = (value: string) => {
@@ -175,7 +175,7 @@ const UserAddress: React.FC<IProps> = (props) => {
             fullWidth 
             disabled={(addressType !== 'Other' && fullAddress.trim() === '')}
             onClick={() => {
-              const finalAddr = addressType === 'Other' ? "Drop-off: 123 Road Dr." : fullAddress;
+              const finalAddr = addressType === 'Other' ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : fullAddress;
               props.setUserInformation({ ...props.userInformation, address: finalAddr }); 
               props.handleNext();
             }}
