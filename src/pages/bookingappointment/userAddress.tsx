@@ -41,7 +41,7 @@ const UserAddress: React.FC<IProps> = (props) => {
     setAddressType(value);
     if (value === 'Other') {
       setFullAddressDisabled(true);
-      setFullAddress(''); // Clear address if dropping off
+      setFullAddress('');
     } else {
       setFullAddressDisabled(false);
     }
@@ -50,10 +50,10 @@ const UserAddress: React.FC<IProps> = (props) => {
   return (
     <Box sx={{ 
       /* Ensures the Paper container stays the same size regardless of content */
-      minHeight: '650px', 
+      minHeight: '540px', 
       display: 'flex', 
       flexDirection: 'column',
-      width: '100%' 
+      position: 'relative' // Needed for absolute banner positioning
     }}>
       
       {/* 1. Header Section */}
@@ -123,8 +123,8 @@ const UserAddress: React.FC<IProps> = (props) => {
       <TextField
         fullWidth
         disabled={fullAddressDisabled}
-        placeholder={fullAddressDisabled ? "Address not required for drop-off" : "Enter your street address..."}
-        value={fullAddress}
+        placeholder={fullAddressDisabled ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : "Enter your street address..."}
+        value={!fullAddress && addressType === 'Other'? 'Car Drop-Off - AutoHub Shop, 123 Road Dr.' : fullAddress}
         onChange={(e) => setFullAddress(e.target.value)}
         InputProps={{
           startAdornment: (
@@ -144,24 +144,22 @@ const UserAddress: React.FC<IProps> = (props) => {
         }}
       />
 
-      {/* FIXED: Space Reservation Container */}
-      <Box sx={{ 
-        mt: 1, 
-        width: '100%',
-        /* visibility: hidden keeps the space reserved so the box doesn't resize */
-        visibility: addressType === 'Other' ? 'visible' : 'hidden',
-        minHeight: '100px' // Adjust to match the banner's approximate height
-      }}>
-         <DropOffInformationBanner />
+      {/* BANNER FIX: By using absolute positioning, the banner sits ON TOP 
+          of the space instead of pushing the box bigger. */}
+      <Box sx={{ height: '80px', position: 'relative', mt: 1 }}>
+        {addressType === 'Other' && (
+          <Box sx={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            zIndex: 2,
+            animation: 'fadeIn 0.2s ease-in' 
+          }}>
+            <DropOffInformationBanner />
+          </Box>
+        )}
       </Box>
-
-      {/* STEP 2: The Flexible Spacer 
-          This Box expands to fill the 650px height. 
-          When the banner appears, this box shrinks to accommodate it.
-      */}
-      {/* <Box sx={{ flexGrow: 1, display: 'flex' }}> */}
-        
-      {/* </Box> */}
 
       {/* 5. Footer Buttons */}
       <Box sx={{ mt: 'auto', pt: 4, borderTop: '1px solid #f5f5f5' }}>

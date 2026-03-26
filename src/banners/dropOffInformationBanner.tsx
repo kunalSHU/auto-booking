@@ -6,7 +6,7 @@ const DropOffInformationBanner: React.FC = () => {
   return (
     <Box
       sx={{
-        p: 2,
+        p: 1.5,
         borderRadius: '12px',
         bgcolor: '#e9f3e7', 
         border: '1px solid #53dd5e',
@@ -16,19 +16,10 @@ const DropOffInformationBanner: React.FC = () => {
         boxSizing: 'border-box'
       }}
     >
-      <Stack direction="row" spacing={1.5}>
-        <Box>
-          <Typography
-            sx={{
-              color: '#666',
-              fontSize: '0.85rem',
-              fontWeight: 500,
-              lineHeight: 1.5,
-            }}
-          >
-            ℹ️ By selecting this option you confirm you'll drop off your vehicle at our shop. Our team will contact you with drop-off instructions.
-          </Typography>
-        </Box>
+      <Stack direction="row" spacing={1}>
+        <Typography sx={{ color: '#444', fontSize: '0.8rem', lineHeight: 1.4 }}>
+          ℹ️ By selecting this option you confirm you'll drop off your vehicle at our shop.
+        </Typography>
       </Stack>
     </Box>
   );

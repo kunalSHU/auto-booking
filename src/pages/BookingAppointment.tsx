@@ -21,7 +21,7 @@ const BookingAppointment: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [userInformation, setUserInformation] = useState({
-        fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: ''
+        fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: '', location: ''
     });
 
     const handleNext = () => setActiveStep((prev) => prev + 1);
