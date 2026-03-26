@@ -3,16 +3,19 @@ import {
   Box,
   Typography,
   TextField,
-  Radio,
+  Button,
+  Stack,
+  InputAdornment,
   RadioGroup,
   FormControlLabel,
-  FormControl,
-  FormLabel,
-  Button,
-  Paper,
-  Stack,
+  Radio,
 } from '@mui/material';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import MapIcon from '@mui/icons-material/Map';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+import ServiceLocationIcon from '../../icons/ServiceLocationIcon';
 
 interface IProps {
   handleBack: () => void;
@@ -29,112 +32,181 @@ interface IProps {
 }
 
 const UserAddress: React.FC<IProps> = (props) => {
-  const [address, setAddress] = useState('');
-  const [label, setLabel] = useState('Home');
+  const [addressType, setAddressType] = useState('Home');
+  const [fullAddress, setFullAddress] = useState(props.userInformation.address || '');
 
   return (
-    <Paper 
-      elevation={2} 
-      sx={{ 
-        p: 4, 
-        maxWidth: 500, 
-        mx: 'auto', 
-        borderRadius: 3,
-        fontFamily: 'Roboto, sans-serif' 
-      }}
-    >
-      {/* Header Section */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-        <LocationOnOutlinedIcon sx={{ mr: 1, fontSize: 28 }} />
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Enter Address
-        </Typography>
-      </Box>
-      
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {props.selectedDate}
-      </Typography>
-
-      <Stack spacing={3}>
-        {/* Full Address Textarea */}
+    <Box>
+      {/* 1. Header Section */}
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
+          <ServiceLocationIcon/>
         <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>
-            Full Address *
+          <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', fontFamily: 'serif' }}>
+            Where should we come to? 
           </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            value={address}
-            placeholder='Please enter home address'
-            onChange={(e) => setAddress(e.target.value)}
-            variant="outlined"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#fff',
-              }
-            }}
+          <Typography variant="body2" sx={{ color: '#888' }}>
+            Choose your service location
+          </Typography>
+        </Box>
+      </Stack>
+
+      {/* 3. Radio Options Section */}
+      <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 2, display: 'block', letterSpacing: '1px' }}>
+        ADDRESS TYPE
+      </Typography>
+      
+      <RadioGroup
+        value={addressType}
+        onChange={(e) => setAddressType(e.target.value)}
+        sx={{ mb: 4 }}
+      >
+        <Stack spacing={1.5}>
+          <RadioGroup
+  value={addressType}
+  onChange={(e) => setAddressType(e.target.value)}
+  sx={{ mb: 4 }}
+>
+  <Stack spacing={1.5}>
+    {[
+      { 
+        id: 'Home', 
+        title: 'MY HOME', 
+        sub: 'We come to your home address',
+        icon: <HomeOutlinedIcon sx={{ fontSize: '1.1rem', color: '#4a7c2c' }} />
+      },
+      { 
+        id: 'Work', 
+        title: 'ANOTHER LOCATION', 
+        sub: 'Office, parking lot, or any other address',
+        icon: <LocationOnIcon sx={{ fontSize: '1.1rem', color: '#d32f2f' }} /> // Red Pin
+      },
+      { 
+        id: 'Other', 
+        title: 'DROP OFF AT AUTOVIVO SHOP', 
+        sub: '123 Road Dr. - bring your vehicle to us',
+        icon: <BuildOutlinedIcon sx={{ fontSize: '1rem', color: '#757575' }} /> // Grey Wrench
+      },
+    ].map((item) => {
+      const isSelected = addressType === item.id;
+      return (
+        <Box 
+          key={item.id}
+          onClick={() => setAddressType(item.id)}
+          sx={{ 
+            display: 'flex',
+            alignItems: 'center',
+            px: 2.5,
+            py: 2, 
+            cursor: 'pointer',
+            borderRadius: '12px',
+            border: '1px solid',
+            transition: '0.2s ease',
+            borderColor: isSelected ? '#4a7c2c' : '#eeeeee',
+            bgcolor: isSelected ? '#f1f8e9' : 'transparent',
+            '&:hover': {
+              borderColor: '#4a7c2c',
+              bgcolor: isSelected ? '#f1f8e9' : '#fafafa',
+            }
+          }}
+        >
+          <FormControlLabel 
+            value={item.id} 
+            sx={{ width: '100%', m: 0, alignItems: 'center' }}
+            control={
+              <Radio 
+                sx={{ 
+                  color: '#e0e0e0', 
+                  mr: 1,
+                  '&.Mui-checked': { color: '#4a7c2c' } 
+                }} 
+              />
+            } 
+            label={
+              <Box>
+                <Typography sx={{ 
+                  fontWeight: 900, 
+                  color: isSelected ? '#1b5e20' : '#1a1a1a',
+                  fontSize: '0.85rem',
+                  lineHeight: 1.1,
+                  letterSpacing: '1px' // Matches the "Editorial" tracking
+                }}>
+                  {item.icon} {item.title}
+                </Typography>
+                <Typography sx={{ 
+                  fontWeight: 500, 
+                  color: isSelected ? '#4a7c2c' : '#888',
+                  fontSize: '0.75rem',
+                  mt: 0.4
+                }}>
+                  {item.sub}
+                </Typography>
+              </Box>
+            } 
           />
         </Box>
+      );
+    })}
+  </Stack>
+</RadioGroup>
+        </Stack>
+      </RadioGroup>
 
-        {/* Address Label Radio Group */}
-        <FormControl>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>
-            Address Label *
-          </Typography>
-          <RadioGroup
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-          >
-            <FormControlLabel value="Home" control={<Radio />} label="Home" />
-            <FormControlLabel value="Other" control={<Radio />} label="Other" />
-            <FormControlLabel 
-              value="Car Drop-Off" 
-              control={<Radio />} 
-              label="Car Drop-Off (AutoHub Shop - 123 Road Dr.)" 
-            />
-          </RadioGroup>
-        </FormControl>
+      {/* 4. Full Address Input */}
+      <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
+        FULL ADDRESS
+      </Typography>
+      <TextField
+        fullWidth
+        placeholder="Enter your street address..."
+        value={fullAddress}
+        onChange={(e) => setFullAddress(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <LocationOnIcon sx={{ color: '#4a7c2c' }} />
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          mb: 4,
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            bgcolor: '#fafafa',
+            '& fieldset': { borderColor: '#eee' },
+            '&:hover fieldset': { borderColor: '#4a7c2c' },
+            '&.Mui-focused fieldset': { borderColor: '#4a7c2c' },
+          }
+        }}
+      />
 
-        {/* Navigation Buttons */}
-        <Stack spacing={2} sx={{ mt: 2 }}>
+      {/* 5. Footer Buttons */}
+      <Box sx={{ mt: 2, pt: 4, borderTop: '1px solid #f5f5f5' }}>
+        <Stack direction="row" spacing={2}>
           <Button 
-            variant="outlined" 
             fullWidth 
             onClick={props.handleBack}
-            sx={{ 
-              py: 1.5, 
-              borderRadius: 2, 
-              color: 'black', 
-              borderColor: '#ccc',
-              textTransform: 'none',
-              fontSize: '1rem'
-            }}
+            sx={{ py: 2, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
           >
-            Back
+            BACK
           </Button>
           <Button 
-            variant="contained" 
             fullWidth 
-            onClick={() => {props.setUserInformation({...props.userInformation, address}); props.handleNext();}}
+            disabled={!fullAddress}
+            onClick={() => {
+              props.setUserInformation({ ...props.userInformation, address: `${addressType}: ${fullAddress}` }); 
+              props.handleNext();
+            }}
+            variant="contained" 
             sx={{ 
-              py: 1.5, 
-              borderRadius: 2, 
-              backgroundColor: '#ccff90', // The lime green from your screenshot
-              color: 'black',
-              boxShadow: 'none',
-              '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' },
-              textTransform: 'none',
-              fontSize: '1rem',
-              fontWeight: 600
+                py: 2, borderRadius: '12px', bgcolor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none',
+                fontWeight: 800, '&:hover': { bgcolor: '#aed581' }
             }}
           >
-            Next
+            CONTINUE →
           </Button>
         </Stack>
-      </Stack>
-    </Paper>
+      </Box>
+    </Box>
   );
 };
 
