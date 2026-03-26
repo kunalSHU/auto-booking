@@ -16,6 +16,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import ServiceLocationIcon from '../../icons/ServiceLocationIcon';
+import DropOffInformationBanner from '../../banners/dropOffInformationBanner';
 
 interface IProps {
   handleBack: () => void;
@@ -34,18 +35,36 @@ interface IProps {
 const UserAddress: React.FC<IProps> = (props) => {
   const [addressType, setAddressType] = useState('Home');
   const [fullAddress, setFullAddress] = useState(props.userInformation.address || '');
+  const [fullAddressDisabled, setFullAddressDisabled] = useState(false);
+
+  const radioButtonClicked = (value: string) => {
+    setAddressType(value);
+    if (value === 'Other') {
+      setFullAddressDisabled(true);
+      setFullAddress(''); // Clear address if dropping off
+    } else {
+      setFullAddressDisabled(false);
+    }
+  };
 
   return (
-    <Box>
+    <Box sx={{ 
+      /* Ensures the Paper container stays the same size regardless of content */
+      minHeight: '650px', 
+      display: 'flex', 
+      flexDirection: 'column',
+      width: '100%' 
+    }}>
+      
       {/* 1. Header Section */}
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
-          <ServiceLocationIcon/>
+        <ServiceLocationIcon size={64} />
         <Box>
           <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', fontFamily: 'serif' }}>
-            Where should we come to? 
+            Service Location
           </Typography>
           <Typography variant="body2" sx={{ color: '#888' }}>
-            Choose your service location
+            Where should we perform the service?
           </Typography>
         </Box>
       </Stack>
@@ -55,99 +74,45 @@ const UserAddress: React.FC<IProps> = (props) => {
         ADDRESS TYPE
       </Typography>
       
-      <RadioGroup
-        value={addressType}
-        onChange={(e) => setAddressType(e.target.value)}
-        sx={{ mb: 4 }}
-      >
+      <RadioGroup value={addressType} onChange={(e) => radioButtonClicked(e.target.value)} sx={{ mb: 4 }}>
         <Stack spacing={1.5}>
-          <RadioGroup
-  value={addressType}
-  onChange={(e) => setAddressType(e.target.value)}
-  sx={{ mb: 4 }}
->
-  <Stack spacing={1.5}>
-    {[
-      { 
-        id: 'Home', 
-        title: 'MY HOME', 
-        sub: 'We come to your home address',
-        icon: <HomeOutlinedIcon sx={{ fontSize: '1.1rem', color: '#4a7c2c' }} />
-      },
-      { 
-        id: 'Work', 
-        title: 'ANOTHER LOCATION', 
-        sub: 'Office, parking lot, or any other address',
-        icon: <LocationOnIcon sx={{ fontSize: '1.1rem', color: '#d32f2f' }} /> // Red Pin
-      },
-      { 
-        id: 'Other', 
-        title: 'DROP OFF AT AUTOVIVO SHOP', 
-        sub: '123 Road Dr. - bring your vehicle to us',
-        icon: <BuildOutlinedIcon sx={{ fontSize: '1rem', color: '#757575' }} /> // Grey Wrench
-      },
-    ].map((item) => {
-      const isSelected = addressType === item.id;
-      return (
-        <Box 
-          key={item.id}
-          onClick={() => setAddressType(item.id)}
-          sx={{ 
-            display: 'flex',
-            alignItems: 'center',
-            px: 2.5,
-            py: 2, 
-            cursor: 'pointer',
-            borderRadius: '12px',
-            border: '1px solid',
-            transition: '0.2s ease',
-            borderColor: isSelected ? '#4a7c2c' : '#eeeeee',
-            bgcolor: isSelected ? '#f1f8e9' : 'transparent',
-            '&:hover': {
-              borderColor: '#4a7c2c',
-              bgcolor: isSelected ? '#f1f8e9' : '#fafafa',
-            }
-          }}
-        >
-          <FormControlLabel 
-            value={item.id} 
-            sx={{ width: '100%', m: 0, alignItems: 'center' }}
-            control={
-              <Radio 
+          {[
+            { id: 'Home', title: 'MY HOME', sub: 'We come to your home address', icon: <HomeOutlinedIcon sx={{ fontSize: '1.1rem', color: '#4a7c2c' }} /> },
+            { id: 'Work', title: 'ANOTHER LOCATION', sub: 'Office, parking lot, or any other address', icon: <LocationOnIcon sx={{ fontSize: '1.1rem', color: '#d32f2f' }} /> },
+            { id: 'Other', title: 'DROP OFF AT AUTOVIVO SHOP', sub: '123 Road Dr. - bring your vehicle to us', icon: <BuildOutlinedIcon sx={{ fontSize: '1rem', color: '#757575' }} /> },
+          ].map((item) => {
+            const isSelected = addressType === item.id;
+            return (
+              <Box 
+                key={item.id}
+                onClick={() => radioButtonClicked(item.id)}
                 sx={{ 
-                  color: '#e0e0e0', 
-                  mr: 1,
-                  '&.Mui-checked': { color: '#4a7c2c' } 
-                }} 
-              />
-            } 
-            label={
-              <Box>
-                <Typography sx={{ 
-                  fontWeight: 900, 
-                  color: isSelected ? '#1b5e20' : '#1a1a1a',
-                  fontSize: '0.85rem',
-                  lineHeight: 1.1,
-                  letterSpacing: '1px' // Matches the "Editorial" tracking
-                }}>
-                  {item.icon} {item.title}
-                </Typography>
-                <Typography sx={{ 
-                  fontWeight: 500, 
-                  color: isSelected ? '#4a7c2c' : '#888',
-                  fontSize: '0.75rem',
-                  mt: 0.4
-                }}>
-                  {item.sub}
-                </Typography>
+                  display: 'flex', alignItems: 'center', px: 2.5, py: 2, cursor: 'pointer', borderRadius: '12px',
+                  border: '1px solid', borderColor: isSelected ? '#4a7c2c' : '#eeeeee',
+                  bgcolor: isSelected ? '#f1f8e9' : 'transparent', transition: '0.2s ease',
+                }}
+              >
+                <FormControlLabel 
+                  value={item.id} 
+                  sx={{ width: '100%', m: 0, alignItems: 'center' }}
+                  control={<Radio sx={{ color: '#e0e0e0', mr: 1, '&.Mui-checked': { color: '#4a7c2c' } }} />} 
+                  label={
+                    <Box>
+                      <Stack direction="row" alignItems="center" spacing={0.8}>
+                        {item.icon}
+                        <Typography sx={{ fontWeight: 900, color: isSelected ? '#1b5e20' : '#1a1a1a', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                          {item.title}
+                        </Typography>
+                      </Stack>
+                      <Typography sx={{ fontWeight: 500, color: isSelected ? '#4a7c2c' : '#888', fontSize: '0.75rem', mt: 0.5, ml: 3 }}>
+                        {item.sub}
+                      </Typography>
+                    </Box>
+                  } 
+                />
               </Box>
-            } 
-          />
-        </Box>
-      );
-    })}
-  </Stack>
-</RadioGroup>
+            );
+          })}
         </Stack>
       </RadioGroup>
 
@@ -157,7 +122,8 @@ const UserAddress: React.FC<IProps> = (props) => {
       </Typography>
       <TextField
         fullWidth
-        placeholder="Enter your street address..."
+        disabled={fullAddressDisabled}
+        placeholder={fullAddressDisabled ? "Address not required for drop-off" : "Enter your street address..."}
         value={fullAddress}
         onChange={(e) => setFullAddress(e.target.value)}
         InputProps={{
@@ -168,10 +134,9 @@ const UserAddress: React.FC<IProps> = (props) => {
           ),
         }}
         sx={{
-          mb: 4,
+          mb: 2,
           '& .MuiOutlinedInput-root': {
-            borderRadius: '12px',
-            bgcolor: '#fafafa',
+            borderRadius: '12px', bgcolor: '#fafafa',
             '& fieldset': { borderColor: '#eee' },
             '&:hover fieldset': { borderColor: '#4a7c2c' },
             '&.Mui-focused fieldset': { borderColor: '#4a7c2c' },
@@ -179,8 +144,27 @@ const UserAddress: React.FC<IProps> = (props) => {
         }}
       />
 
+      {/* FIXED: Space Reservation Container */}
+      <Box sx={{ 
+        mt: 1, 
+        width: '100%',
+        /* visibility: hidden keeps the space reserved so the box doesn't resize */
+        visibility: addressType === 'Other' ? 'visible' : 'hidden',
+        minHeight: '100px' // Adjust to match the banner's approximate height
+      }}>
+         <DropOffInformationBanner />
+      </Box>
+
+      {/* STEP 2: The Flexible Spacer 
+          This Box expands to fill the 650px height. 
+          When the banner appears, this box shrinks to accommodate it.
+      */}
+      {/* <Box sx={{ flexGrow: 1, display: 'flex' }}> */}
+        
+      {/* </Box> */}
+
       {/* 5. Footer Buttons */}
-      <Box sx={{ mt: 2, pt: 4, borderTop: '1px solid #f5f5f5' }}>
+      <Box sx={{ mt: 'auto', pt: 4, borderTop: '1px solid #f5f5f5' }}>
         <Stack direction="row" spacing={2}>
           <Button 
             fullWidth 
@@ -191,9 +175,10 @@ const UserAddress: React.FC<IProps> = (props) => {
           </Button>
           <Button 
             fullWidth 
-            disabled={!fullAddress}
+            disabled={(addressType !== 'Other' && fullAddress.trim() === '')}
             onClick={() => {
-              props.setUserInformation({ ...props.userInformation, address: `${addressType}: ${fullAddress}` }); 
+              const finalAddr = addressType === 'Other' ? "Drop-off: 123 Road Dr." : fullAddress;
+              props.setUserInformation({ ...props.userInformation, address: finalAddr }); 
               props.handleNext();
             }}
             variant="contained" 
