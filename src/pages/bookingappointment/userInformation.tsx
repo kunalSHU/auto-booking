@@ -1,9 +1,9 @@
-import React from 'react'
-import { Box, Button, Card, CardContent, TextField, Typography, Stack } from '@mui/material';
+import React from 'react';
+import { Box, Button, TextField, Typography, Stack, InputAdornment } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import AppointmentSummary from './appointmentSummary';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Field, Form, Formik } from 'formik';
-import { object, string } from 'yup';
+import * as Yup from 'yup';
 
 interface IProps {
     selectedDate: string | undefined;
@@ -19,139 +19,178 @@ interface IProps {
     setUserInformation: (values: any) => void;
 }
 
+const validationSchema = Yup.object({
+    fullName: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+    phoneNumber: Yup.string().required('Required'),
+});
+
 const UserInformation: React.FC<IProps> = (props) => {
     return (
-        <>
-            <Card sx={{ width: '100%', boxShadow: 3 }}>
-                <Formik
-                    initialValues={{
-                        fullName: props.userInformation.fullName,
-                        email: props.userInformation.email,
-                        phoneNumber: props.userInformation.phoneNumber,
-                        additionalNotes: props.userInformation.additionalNotes,
-                    }}
-                    onSubmit={(values, formikHelpers) => {
-                        console.log(values);
-                        props.setUserInformation({...props.userInformation, ...values})
-                        props.nextToReviewBooking();
-                        // formikHelpers.resetForm();
-                    }}
-                    validationSchema={
-                        object({
-                            fullName: string().required("Please enter your full name"),
-                            phoneNumber: string().required("Please enter your phone number"),
-                            email: string().required("Please enter your email").email("Invalid email")
-                        })
-                    }
-                >
-                    {({ values, handleChange, handleBlur, errors, isValid, touched, dirty }) => (
-                        <Form>
-                            <CardContent sx={{ p: 3 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                    <PersonIcon sx={{ mr: 1 }} />
-                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Your Information</Typography>
-                                </Box>
-                                <Box sx={{ mb: 2 }}>
-                                    <Typography sx={{ display: 'flex', mb: 1, fontSize: 14 }}>Full Name *</Typography>
+        <Box sx={{ 
+            minHeight: '540px', 
+            display: 'flex', 
+            flexDirection: 'column',
+            width: '100%' 
+        }}>
+            {/* 1. Header Section */}
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
+                <Box sx={{
+                    bgcolor: '#e8f5e9', p: 1.5, borderRadius: '12px',
+                    display: 'flex', border: '1px solid #c8e6c9'
+                }}>
+                    <PersonIcon sx={{ color: '#4a7c2c' }} />
+                </Box>
+                <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', fontFamily: 'serif' }}>
+                        Your Information
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#888' }}>
+                        Tell us who you are.
+                    </Typography>
+                </Box>
+            </Stack>
+
+            {/* 2. Selection Info Pill (Matches Previous Steps) */}
+            <Box sx={{ 
+                mb: 4, p: 2, borderRadius: '12px', bgcolor: '#f5f5f5', 
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between' 
+            }}>
+                <Stack direction="row" spacing={1.5} alignItems="center">
+                    <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, letterSpacing: '0.5px' }}>
+                        APPOINTMENT:
+                    </Typography>
+                    <Typography sx={{ fontWeight: 800, fontSize: '0.85rem' }}>
+                        {props.selectedDate} at {props.selectedTime}
+                    </Typography>
+                </Stack>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, bgcolor: '#e8f5e9', px: 1.2, py: 0.5, borderRadius: '20px' }}>
+                    <CheckCircleIcon sx={{ color: '#4a7c2c', fontSize: '0.9rem' }} />
+                    <Typography sx={{ color: '#2e7d32', fontWeight: 700, fontSize: '0.7rem' }}>Selected</Typography>
+                </Box>
+            </Box>
+
+            {/* 3. Form Section */}
+            <Formik
+                initialValues={{
+                    fullName: props.userInformation.fullName,
+                    email: props.userInformation.email,
+                    phoneNumber: props.userInformation.phoneNumber,
+                    additionalNotes: props.userInformation.additionalNotes,
+                }}
+                validationSchema={validationSchema}
+                onSubmit={(values) => {
+                    props.setUserInformation({ ...props.userInformation, ...values });
+                    props.nextToReviewBooking();
+                }}
+            >
+                {({ errors, touched, isValid }) => (
+                    <Form style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                        <Stack spacing={2.5} sx={{ mb: 4 }}>
+                            {/* Full Name */}
+                            <Box>
+                                <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
+                                    FULL NAME
+                                </Typography>
+                                <Field
+                                    as={TextField}
+                                    name="fullName"
+                                    fullWidth
+                                    placeholder="Enter your name"
+                                    error={touched.fullName && Boolean(errors.fullName)}
+                                    helperText={touched.fullName && errors.fullName}
+                                    sx={textFieldStyle}
+                                />
+                            </Box>
+
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                                {/* Email */}
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
+                                        EMAIL ADDRESS
+                                    </Typography>
                                     <Field
-                                        fullWidth
-                                        size="small"
-                                        name="fullName"
                                         as={TextField}
-                                        value={values.fullName}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.fullName) && Boolean(errors.fullName)}
-                                        helperText={Boolean(touched.fullName) && errors.fullName}
-                                    />
-                                </Box>
-                                <Box sx={{ mb: 2 }}>
-                                    <Typography sx={{ display: 'flex', mb: 1, fontSize: 14 }}>Email Address *</Typography>
-                                    <Field
-                                        fullWidth
-                                        size="small"
                                         name="email"
-                                        as={TextField}
-                                        value={values.email}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.email) && Boolean(errors.email)}
-                                        helperText={Boolean(touched.email) && errors.email}
+                                        fullWidth
+                                        placeholder="email@example.com"
+                                        error={touched.email && Boolean(errors.email)}
+                                        sx={textFieldStyle}
                                     />
                                 </Box>
-                                <Box sx={{ mb: 2 }}>
-                                    <Typography sx={{ display: 'flex', mb: 1, fontSize: 14 }}>Phone Number *</Typography>
+                                {/* Phone Number */}
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
+                                        PHONE NUMBER
+                                    </Typography>
                                     <Field
-                                        fullWidth
-                                        size="small"
                                         as={TextField}
                                         name="phoneNumber"
-                                        value={values.phoneNumber}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.phoneNumber) && Boolean(errors.phoneNumber)}
-                                        helperText={Boolean(touched.phoneNumber) && errors.phoneNumber}
+                                        fullWidth
+                                        placeholder="(555) 000-0000"
+                                        error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                                        sx={textFieldStyle}
                                     />
                                 </Box>
-                                <Box>
-                                    <Typography sx={{ display: 'flex', mb: 1, fontSize: 14 }}>Additional Notes</Typography>
-                                    <Field
-                                        fullWidth
-                                        multiline
-                                        rows={4}
-                                        name="additionalNotes"
-                                        as={TextField}
-                                        value={values.additionalNotes}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                    />
-                                </Box>
-                            </CardContent>
-                            <Box sx={{ px: 3, pb: 3 }}>
-                                <Stack spacing={2}>
-                                    <Button 
-                                        variant="outlined" 
-                                        fullWidth 
-                                        onClick={props.onBack}
-                                        sx={{ 
-                                            py: 1.5, 
-                                            borderRadius: 2, 
-                                            color: 'black', 
-                                            borderColor: '#ccc',
-                                            textTransform: 'none',
-                                            fontSize: '1rem'
-                                        }}
-                                    >
-                                        Back
-                                    </Button>
-                                    <Button 
-                                        disabled={!isValid} 
-                                        type="submit" 
-                                        fullWidth
-                                        variant="contained" 
-                                        sx={{ 
-                                            py: 1.5, 
-                                            borderRadius: 2, 
-                                            backgroundColor: '#ccff90', 
-                                            color: 'black', 
-                                            boxShadow: 'none', 
-                                            '&:hover': { backgroundColor: '#b2ff59', boxShadow: 'none' }, 
-                                            textTransform: 'none', 
-                                            fontSize: '1rem', 
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Review Booking
-                                    </Button>
-                                </Stack>
+                            </Stack>
+
+                            {/* Additional Notes */}
+                            <Box>
+                                <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
+                                    ADDITIONAL NOTES (OPTIONAL)
+                                </Typography>
+                                <Field
+                                    as={TextField}
+                                    name="additionalNotes"
+                                    fullWidth
+                                    multiline
+                                    rows={3}
+                                    placeholder="Any specific instructions for our team?"
+                                    sx={textFieldStyle}
+                                />
                             </Box>
-                        </Form>
-                    )}
-                </Formik>
-            </Card>
-            <AppointmentSummary selectedDate={props.selectedDate} selectedTime={props.selectedTime} />
-        </>
-    )
-}
+                        </Stack>
+
+                        {/* 4. Footer Buttons */}
+                        <Box sx={{ mt: 'auto', pt: 4, borderTop: '1px solid #f5f5f5' }}>
+                            <Stack direction="row" spacing={2}>
+                                <Button 
+                                    fullWidth 
+                                    onClick={props.onBack}
+                                    sx={{ py: 2, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
+                                >
+                                    BACK
+                                </Button>
+                                <Button 
+                                    fullWidth 
+                                    type="submit"
+                                    disabled={!isValid}
+                                    variant="contained" 
+                                    sx={{ 
+                                        py: 2, borderRadius: '12px', bgcolor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none',
+                                        fontWeight: 800, '&:hover': { bgcolor: '#aed581' }
+                                    }}
+                                >
+                                    REVIEW BOOKING →
+                                </Button>
+                            </Stack>
+                        </Box>
+                    </Form>
+                )}
+            </Formik>
+        </Box>
+    );
+};
+
+// Common style for the text fields to keep code clean
+const textFieldStyle = {
+    '& .MuiOutlinedInput-root': {
+        borderRadius: '12px',
+        bgcolor: '#fafafa',
+        '& fieldset': { borderColor: '#eee' },
+        '&:hover fieldset': { borderColor: '#4a7c2c' },
+        '&.Mui-focused fieldset': { borderColor: '#4a7c2c' },
+    }
+};
 
 export default UserInformation;
