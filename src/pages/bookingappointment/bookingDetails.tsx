@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -24,7 +24,7 @@ interface BookingDetailsProps {
 const BookingDetails: React.FC<BookingDetailsProps> = ({
   serviceName = "Oil Change",
   duration = "30 min",
-  location = "Auto Vivo",
+  location = null,
   selectedDate = null,
   selectedTime = null,
   selectedContact = null,
@@ -32,9 +32,13 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
   const summaryItems = [
     { label: 'DATE', value: selectedDate },
     { label: 'TIME', value: selectedTime },
-    { label: 'LOCATION', value: selectedContact ? location : null }, // Example conditional
+    { label: 'LOCATION', value: location }, // Example conditional
     { label: 'CONTACT', value: selectedContact },
   ];
+
+  useEffect(() => {
+    console.log(location)
+  }, [location])
 
   return (
     <Box
