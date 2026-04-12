@@ -1,7 +1,7 @@
 import { Box, Button, Typography, Stack, Divider, CircularProgress } from '@mui/material';
 import React, { useEffect, useState, useRef } from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { publishEmailNotifcation, publishSmsNotifcation } from '../../apiServer/api';
+import { publishEmailNotifcation, publishSmsNotifcation, setAppointmentInRedisCache } from '../../apiServer/api';
 
 interface IProps {
     selectedDate: string | undefined;
@@ -13,6 +13,15 @@ interface IProps {
     address: string;
     notes: string;
     resetStepper: () => void;
+}
+
+export interface IRedisCache {
+    //{"phone": "123-456-7890", "time": "10:30 AM", "status": "pending"}
+    email: string;
+    phone: string;
+    time: string;
+    status: string;
+    date: string;
 }
 
 const EmailTemplates = {
@@ -56,8 +65,8 @@ export interface IEmailNotification {
 const BookingConfirmed: React.FC<IProps> = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const notificationSent = useRef(false);
+    const [bookingExist, setBookingExist] = useState(false)
 
-    // RESTORED: Your original API call methods
     const emailNotificationApiCall = async (notification: IEmailNotification) => {
         await publishEmailNotifcation(notification);
         setIsLoading(false);
@@ -68,7 +77,6 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
         setIsLoading(false);
     }
 
-    // RESTORED: The three-stage email preparation logic
     const prepareEmailNotification = () => {
         const commonPayload = {
             pii: {
@@ -114,14 +122,43 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
         };
         smsNotificationApiCall(customerConfirmationSms);
     }
-
+ 
     useEffect(() => {
         if (notificationSent.current) return;
         notificationSent.current = true;
         
-        prepareEmailNotification();
-        prepareSmsNotifcation();
+        try {
+
+            // Store the user appointment details in the redis cache here
+            // {"phone": "123-456-7890", "time": "10:30 AM", "status": "pending"}
+            prepareRedisCacheData()
+            .then(res => {
+                console.log("This is the response ", res)
+                if (res == "409") {
+                    setBookingExist(true)
+                    setIsLoading(false);
+                    console.log("Apppointment already booked")
+                    return;
+                }
+                setBookingExist(false)
+                prepareEmailNotification();
+                prepareSmsNotifcation();
+            });
+        } catch (err) {
+            console.error("Faile to book appointment: ", err);
+        }
     }, [props.email, props.selectedDate, props.selectedTime]);
+
+    const prepareRedisCacheData = async () => {
+        const appointment: IRedisCache = {
+            email: props.email,
+            phone: props.phoneNumber,
+            date: props.selectedDate || '',
+            time: props.selectedTime || '',
+            status: 'pending'
+        };
+        return await setAppointmentInRedisCache(appointment);   
+    }
 
     if (isLoading) {
         return (
@@ -142,47 +179,57 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             pt: 4
         }}>
             {/* SUCCESS ICON */}
-            <Box sx={{ 
-                bgcolor: '#e8f5e9', p: 3, borderRadius: '50%', mb: 3,
-                display: 'inline-flex', border: '2px solid #c8e6c9'
-            }}>
-                <CheckCircleIcon sx={{ color: '#4a7c2c', fontSize: '3.5rem' }} />
-            </Box>
 
-            <Box sx={{ bgcolor: '#2e7d32', color: '#fff', px: 2, py: 0.5, borderRadius: '20px', mb: 2 }}>
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: '1px' }}>
-                    BOOKING CONFIRMED
-                </Typography>
-            </Box>
-
-            <Typography sx={{ fontWeight: 800, fontSize: '1.75rem', fontFamily: 'serif', mb: 1 }}>
-                You're all set, {props.customerName.split(' ')[0]}!
-            </Typography>
-            
-            <Typography sx={{ color: '#888', mb: 4, maxWidth: '300px', mx: 'auto', fontSize: '0.9rem' }}>
-                Confirmation emails have been sent to <b>{props.email}</b>.
-            </Typography>
-
-            {/* SUMMARY BOX */}
-            <Box sx={{ width: '100%', bgcolor: '#f9f9f9', borderRadius: '16px', p: 3, mb: 4, border: '1px solid #eee' }}>
-                <Stack direction="row" justifyContent="space-around" divider={<Divider orientation="vertical" flexItem />}>
-                    <Box>
-                        <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', display: 'block' }}>DATE</Typography>
-                        <Typography sx={{ fontWeight: 800 }}>{props.selectedDate}</Typography>
+            {!bookingExist ? (
+                <>
+                    <Box sx={{ 
+                        bgcolor: '#e8f5e9', p: 3, borderRadius: '50%', mb: 3,
+                        display: 'inline-flex', border: '2px solid #c8e6c9'
+                    }}>
+                        <CheckCircleIcon sx={{ color: '#4a7c2c', fontSize: '3.5rem' }} />
                     </Box>
-                    <Box>
-                        <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', display: 'block' }}>TIME</Typography>
-                        <Typography sx={{ fontWeight: 800, color: '#4a7c2c' }}>{props.selectedTime}</Typography>
+
+                    <Box sx={{ bgcolor: '#2e7d32', color: '#fff', px: 2, py: 0.5, borderRadius: '20px', mb: 2 }}>
+                        <Typography sx={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: '1px' }}>
+                            BOOKING CONFIRMED
+                        </Typography>
                     </Box>
-                </Stack>
-            </Box>
+
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.75rem', fontFamily: 'serif', mb: 1 }}>
+                        You're all set, {props.customerName.split(' ')[0]}!
+                    </Typography>
+                    
+                    <Typography sx={{ color: '#888', mb: 4, maxWidth: '300px', mx: 'auto', fontSize: '0.9rem' }}>
+                        Confirmation emails have been sent to <b>{props.email}</b>.
+                    </Typography>
+
+                    {/* SUMMARY BOX */}
+                    <Box sx={{ width: '100%', bgcolor: '#f9f9f9', borderRadius: '16px', p: 3, mb: 4, border: '1px solid #eee' }}>
+                        <Stack direction="row" justifyContent="space-around" divider={<Divider orientation="vertical" flexItem />}>
+                            <Box>
+                                <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', display: 'block' }}>DATE</Typography>
+                                <Typography sx={{ fontWeight: 800 }}>{props.selectedDate}</Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', display: 'block' }}>TIME</Typography>
+                                <Typography sx={{ fontWeight: 800, color: '#4a7c2c' }}>{props.selectedTime}</Typography>
+                            </Box>
+                        </Stack>
+                    </Box>
+                </>
+            ) : (
+                <Box sx={{ py: 6 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 800, color: '#d32f2f', mb: 2 }}>Booking Conflict</Typography>
+                    <Typography sx={{ color: '#666' }}>An appointment is already active for <b>{props.email}</b>. Please wait for the current lock to expire or contact support.</Typography>
+                </Box>
+            )}
 
             <Box sx={{ mt: 'auto', width: '100%', pt: 2 }}>
                 <Button 
                     fullWidth 
                     variant="contained" 
                     onClick={props.resetStepper}
-                    sx={{ 
+                    sx={{
                         py: 2, borderRadius: '12px', bgcolor: '#4a7c2c', color: '#fff', 
                         boxShadow: 'none', fontWeight: 800, '&:hover': { bgcolor: '#3d6624' }
                     }}
