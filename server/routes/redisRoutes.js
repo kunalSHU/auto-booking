@@ -20,12 +20,12 @@ router.post('/appointment', async (req, res) => {
     try {
         // Await the result of the get call to check if key exists
         const existingRecord = await client.get(key);
-        
         if (existingRecord) {
             res.status(409).json({ message: "Appointment already exists" });
             return;
         }
 
+        await client.set(key, req.body);
         await client.set(key, JSON.stringify(req.body));
         await client.expireat(key, expiryUnix);
         console.log(`Setting cache data for key ${key}`)
@@ -34,6 +34,7 @@ router.post('/appointment', async (req, res) => {
         console.log("Error storing in cache: ", err)
         res.status(500).json({ error: "Internal server error" });
     }
-})
+    client.close();
+});
 
 module.exports = router;
