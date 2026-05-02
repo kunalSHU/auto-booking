@@ -12,18 +12,19 @@ CREATE TABLE "Users" (
   "email" varchar,
   "phone" varchar,
   "address" text,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Vehicles" (
   "vehicle_id" SERIAL PRIMARY KEY,
   "user_id" int,
   "vin_number" varchar,
-  "make" varchar,
-  "model" varchar,
-  "year" int,
+  "make" varchar NOT NULL,
+  "model" varchar NOT NULL,
+  "year" int NOT NULL,
   "trim" varchar,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_vehicle_model UNIQUE (make, model, year, trim)
 );
 
 CREATE TABLE "Services" (
@@ -32,7 +33,7 @@ CREATE TABLE "Services" (
   "name" varchar,
   "description" text,
   "service_active" boolean DEFAULT true,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "PopupQuestions" (
@@ -58,17 +59,23 @@ CREATE TABLE "DetailingOptions" (
   "description" text,
   "type" detailing_type_enum,
   "price" decimal,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "ServiceEstimates" (
   "estimate_id" SERIAL PRIMARY KEY,
-  "service_id" int,
-  "vehicle_id" int,
+  "service_id" int NOT NULL,
+  "vehicle_id" int NOT NULL,
+  "region" varchar DEFAULT 'Ontario, Canada',
+  "manual_checked" boolean DEFAULT false,
+  "labor_cost" decimal,
+  "parts_cost" decimal,
+  "total_price" decimal,
   "price_min" decimal,
   "price_max" decimal,
   "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
+  "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_service_estimate UNIQUE (vehicle_id, service_id, region)
 );
 
 CREATE TABLE "Bookings" (
@@ -85,7 +92,7 @@ CREATE TABLE "Bookings" (
   "time_slot" time,
   "total_price" decimal,
   "status" booking_status_enum,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Payments" (
@@ -95,7 +102,7 @@ CREATE TABLE "Payments" (
   "payment_method" payment_method_enum,
   "payment_status" payment_status_enum,
   "transaction_id" varchar,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Foreign Key Constraints
@@ -113,5 +120,6 @@ ALTER TABLE "PopupAnswers" ADD FOREIGN KEY ("question_id") REFERENCES "PopupQues
 -- Indexes
 CREATE INDEX idx_services_category ON "Services" ("category");
 CREATE INDEX idx_service_estimates_lookup ON "ServiceEstimates" ("service_id", "vehicle_id");
+CREATE INDEX idx_service_estimates_region ON "ServiceEstimates" ("region");
 CREATE INDEX idx_popup_questions_service ON "PopupQuestions" ("service_id");
 CREATE INDEX idx_popup_answers_question ON "PopupAnswers" ("question_id");
