@@ -12,6 +12,7 @@ export interface CartService {
   title: string;
   price: string;
   desc: string;
+  answers?: { question: string; answer: string }[];
 }
 
 export interface CartItem {

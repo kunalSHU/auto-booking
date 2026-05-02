@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// Assuming Union is an SVG/image file in your assets
-import Union from '../Assets/Union.svg';
-import { useCart, CartItem } from '../context/CartContext';
+import { useCart, CartItem, CartService } from '../context/CartContext';
+import '../styles/ServiceSelectionPage.css';
 
 interface VehicleData {
   vin: string;
@@ -10,370 +9,700 @@ interface VehicleData {
   model: string;
   trim: string;
   year: string;
+  location?: string;
 }
+
+interface Question {
+  text: string;
+  type: 'yesno' | 'select' | 'comment' | 'text';
+  options?: string[];
+}
+
+interface ServiceData {
+  id: number;
+  cat: string;
+  name: string;
+  time: string;
+  desc: string;
+  questions?: Question[];
+  price?: string; // Some might have fixed prices, others "Quote"
+}
+
+const PACKAGES = [
+  { id: 'bronze', tier: 'Bronze', icon: '🥉', priceSmall: '$119.95', priceLarge: '$149.95', services: ['Oil Change', 'Vehicle Health Check'], sub: 'Essential' },
+  { id: 'silver', tier: 'Silver', icon: '⭐', priceSmall: '$159.95', priceLarge: '$189.95', services: ['Oil Change', 'Alignment Inspection', 'Vehicle Health Check'], sub: 'Popular', featured: true },
+  { id: 'gold', tier: 'Gold', icon: '🥇', priceSmall: '$319.95', priceLarge: '$349.95', services: ['Oil Change', 'Alignment Inspection', 'Brake Fluid Flush', 'Cabin Air Filter', 'Vehicle Health Check'], sub: 'Complete' }
+];
+
+const HEALTH_CHECK = ['Inspect & adjust all fluid levels under hood', '4-wheel tire rotation', 'Brake inspection', 'Battery test', 'Steering & suspension inspection', 'Inspect CV axle boot condition', 'Inspect lights, wipers & washers', 'Inspect air & cabin air filter', 'Weatherstrip lubrication', 'Check underbody for damage or leaks'];
+
+const SERVICES: ServiceData[] = [
+  { id: 0, cat: 'Popular', name: 'Oil Change', time: '30 min', desc: 'Drain the old engine oil, replace it with fresh oil, and install a new oil filter to keep the engine properly lubricated and running smoothly.', questions: [{ "text": "Synthetic (recommended) or conventional? Not sure", "type": "yesno" }, { "text": "Is there an oil leak?", "type": "yesno" }] },
+  { id: 1, cat: 'Popular', name: 'Tires (Repair, Replacement & Flat Fix)', time: '30–60 min', desc: 'We safely remove and install your tires at your location, ensuring they are properly mounted and ready for the road.', questions: [{ "text": "What type of tire service do you need?", "type": "select", "options": ["Seasonal swap (winter ↔ summer on rims)", "Tire replacement (new tires)", "Flat tire change (install spare)", "Not sure"] }, { "text": "Do you have the tires ready at the location?", "type": "select", "options": ["Yes", "No"] }, { "text": "Do you have a wheel lock key (if applicable)?", "type": "select", "options": ["Yes", "No", "Not sure"] }] },
+  { id: 2, cat: 'Popular', name: 'Brake Pad Replacement', time: '45–60 min', desc: 'Remove worn brake pads and install new ones to restore safe stopping power and prevent damage to the brake rotors', questions: [{ "text": "Are you replacing front, rear, or both?", "type": "text" }, { "text": "Any squeaking or grinding noises?", "type": "text" }, { "text": "Want the rotors inspected/replaced too?", "type": "text" }] },
+  { id: 3, cat: 'Popular', name: 'Battery Replacement', time: '30–45 min', desc: 'Remove the old battery and install a new one to ensure the vehicle starts reliably and the electrical system functions properly.', questions: [{ "text": "What’s happening with the car?", "type": "select", "options": ["Won’t start", "Slow crank", "Battery light on", "Dead"] }, { "text": "Do you have jumper cables or need a boost?", "type": "yesno" }, { "text": "About how old is your battery? (<2 yrs / 2–4 yrs / 4+ yrs / Not sure)", "type": "text" }] },
+  { id: 4, cat: 'Popular', name: 'Tire Rotation', time: '20–30 min', desc: 'Move tires between the front and rear positions to promote even tire wear and extend the life of the tires.', questions: [{ "text": "Do you have a wheel lock key?", "type": "yesno" }, { "text": "Any vibrations or pulling while driving?", "type": "text" }] },
+  { id: 5, cat: 'Popular', name: 'Engine Air Filter Replacement', time: '15–20 min', desc: 'Install a new engine air filter to ensure the engine receives clean air for efficient combustion.', questions: [{ "text": "Any noticeable loss of power or unusual engine sounds?", "type": "text" }] },
+  { id: 6, cat: 'Popular', name: 'Cabin Air Filter Replacement', time: '15–20 min', desc: 'Replace the cabin air filter to improve the quality of air entering the vehicle’s interior through the ventilation system.', questions: [] },
+  { id: 7, cat: 'Popular', name: 'Spark Plug Replacement', time: '30–45 min', desc: 'Install new spark plugs to improve engine ignition, fuel efficiency, and overall engine performance.', questions: [] },
+  { id: 8, cat: 'Popular', name: 'Coolant Flush', time: '45–60 min', desc: 'Drain old coolant from the cooling system and refill with fresh coolant to help prevent engine overheating and corrosion.', questions: [] },
+  { id: 9, cat: 'Popular', name: 'Transmission Fluid Change', time: '45–60 min', desc: 'Replace old transmission fluid with new fluid to help maintain smooth gear shifting and protect the transmission.', questions: [{ "text": "Are you currently experiencing any transmission issues?", "type": "select", "options": ["No issues", "Vibrating or shaking", "Jerking during acceleration", "Unusual noises", "Other (please describe)"] }, { "text": "How is your vehicle shifting?", "type": "select", "options": ["Shifting normally", "Hard or rough shifting", "Slipping between gears", "Delayed engagement (slow to move after shifting)"] }, { "text": "When was your last transmission service?", "type": "select", "options": ["Within the last 30,000 km", "30,000 – 60,000 km ago", "Over 60,000 km ago", "Not sure"] }] },
+  { id: 10, cat: 'Popular', name: 'Brake Fluid Flush', time: '30–45 min', desc: 'Remove contaminated brake fluid and refill with fresh fluid to maintain proper braking performance and safety.', questions: [{ "text": "Any soft brakes or warning lights?", "type": "yesno" }] },
+  { id: 11, cat: 'Popular', name: 'Serpentine Belt Replacement', time: '30–60 min', desc: 'Install a new serpentine belt to restore proper operation of engine-driven components like the alternator and AC.', questions: [{ "text": "Any squealing noise from the engine?", "type": "yesno" }, { "text": "Has the belt ever been replaced before?", "type": "yesno" }] },
+  { id: 12, cat: 'Popular', name: 'Power Steering Fluid Replacement', time: '15–20 min', desc: 'Check the power steering system and add fluid if necessary to ensure smooth and easy steering.', questions: [{ "text": "Any difficulty turning the wheel?", "type": "yesno" }] },
+  { id: 13, cat: 'Popular', name: 'Light Bulb Replacement', time: '20–30 min', desc: 'Replace faulty or burnt-out headlight or taillight bulbs to restore proper vehicle visibility and road safety.', questions: [{ "text": "Which light?", "type": "select", "options": ["Headlight", "Taillight", "Brake", "Turn signal", "Fog", "Interior"] }, { "text": "Which side?", "type": "select", "options": ["Driver", "Passenger", "Both"] }, { "text": "Bulb type preference?", "type": "select", "options": ["LED", "Halogen", "HID", "Xenon", "Not sure"] }] },
+  { id: 14, cat: 'Popular', name: 'Windshield Wiper Replacement', time: '10–15 min', desc: 'Install new windshield wiper blades to improve visibility during rain, snow, or windshield cleaning.', questions: [{ "text": "Wipers for front, rear, or both?", "type": "text" }, { "text": "Wiper type preference?", "type": "select", "options": ["Standard", "Winter", "Premium"] }] },
+  { id: 15, cat: 'Popular', name: 'Alternator Replacement', time: '60–90 min', desc: 'Remove a faulty alternator and install a new one to restore proper battery charging and electrical system performance.', questions: [{ "text": "Symptoms?", "type": "select", "options": ["Dim lights", "Battery keeps dying", "Car won’t start"] }, { "text": "Check engine light on?", "type": "yesno" }, { "text": "is the battery light on", "type": "yesno" }] },
+  { id: 16, cat: 'Popular', name: 'Check Engine Light Inspection', time: '15–30 min', desc: 'Scan your vehicle’s computer for engine codes, identify potential issues, and reset the check engine light if appropriate.', questions: [{ "text": "Is the car running normally?", "type": "yesno" }, { "text": "Any sounds, smells, or issues when the light is on?", "type": "text" }, { "text": "Additional Comments", "type": "comment" }] },
+  // ... Adding more categories simplified
+  { id: 78, cat: 'Diagnosis & Testing', name: 'Check Engine Light On', time: '30–60 min', desc: 'Perform a diagnostic scan and inspection to identify the cause of the check engine light and recommend next steps.', questions: [{ "text": "Is the light flashing or solid?", "type": "text" }, { "text": "Is the vehicle drivable?", "type": "yesno" }, { "text": "Any loss of power?", "type": "yesno" }, { "text": "Is the car vibrating", "type": "yesno" }, { "text": "Is there any noise", "type": "yesno" }, { "text": "Additional Comments", "type": "comment" }] },
+  { id: 79, cat: 'Diagnosis & Testing', name: 'Car Won’t Start (No Sound or Clicking)', time: '30–60 minutes', desc: 'Diagnose starting system issues including battery, starter, and electrical faults preventing the engine from turning over.', questions: [{ "text": "Does the dashboard/ignition turn on?", "type": "yesno" }, { "text": "Do you hear any clicking or cranking?", "type": "yesno" }, { "text": "Any fluid leaks", "type": "yesno" }, { "text": "Additional Comments", "type": "comment" }] },
+  { id: 94, cat: 'Brakes', name: 'Brake Service - Brake Pads & Rotors Replacement (Combined)', time: '60–120 min', desc: 'Replace both pads and rotors together for complete brake system restoration and optimal performance.', questions: [{ "text": "Which axle?", "type": "select", "options": ["Front", "Rear", "Both"] }, { "text": "Any noise or vibration?", "type": "yesno" }] },
+];
 
 interface ServiceSelectionPageProps {
   onCartClick?: () => void;
 }
 
+const CATEGORIES = ['All', 'Promo', ...Array.from(new Set(SERVICES.map(s => s.cat)))];
+
+const LARGE_MODELS = ['F-150', 'Silverado', 'Sierra', 'Tundra', 'Tacoma', '1500', '2500', '3500', 'Colorado', 'Canyon', 'Ranger', 'Frontier', 'Titan', 'Ridgeline', 'Maverick', 'Gladiator', 'Tahoe', 'Suburban', 'Expedition', 'Yukon', 'Sequoia', 'Armada', 'Wagoneer', '4Runner', 'Highlander', 'Pilot', 'Palisade', 'Telluride', 'Ascent', 'Atlas', 'Traverse', 'Explorer', 'Pathfinder', 'CX-90', 'GLS', 'X7', 'QX80', 'XC90', 'GX', 'LX', 'Durango', 'Grand Cherokee', 'Cybertruck'];
+
 const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { vehicle, imageBase64 } = (location.state as { vehicle: VehicleData; imageBase64: string }) || { vehicle: null, imageBase64: null };
-  const { addToCart, items, removeFromCart, replacePackageForVehicle } = useCart();
+  const { vehicle: navVehicle, imageBase64 } = (location.state as { vehicle: VehicleData; imageBase64: string }) || { vehicle: null, imageBase64: null };
+  const { addToCart, items, removeFromCart, updateCartItem, replacePackageForVehicle } = useCart();
 
-  const [activeCategory, setActiveCategory] = useState('Maintenance');
-  const [activeTab, setActiveTab] = useState('Maintenance');
+  // Load vehicle from session storage if missing (per template logic)
+  const vehicle = useMemo(() => {
+    if (navVehicle) return navVehicle;
+    try {
+      return JSON.parse(sessionStorage.getItem('autovivo_vehicle') || 'null');
+    } catch (e) { return null; }
+  }, [navVehicle]);
+
+  const isLarge = useMemo(() => vehicle && LARGE_MODELS.includes(vehicle.model), [vehicle]);
+
+  // UI State
+  const [activeCat, setActiveCat] = useState('Promo');
   const [searchTerm, setSearchTerm] = useState('');
-  const [estimatingIndex, setEstimatingIndex] = useState<number | null>(null);
-  const [vehicleId, setVehicleId] = useState<number | null>(null);
-  const [estimates, setEstimates] = useState<{ [key: number]: { value: string; source: 'web-search' | 'database' } }>({});
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isFloatingCartDismissed, setIsFloatingCartDismissed] = useState(false);
+  
+  // Modal State
+  const [modalSvc, setModalSvc] = useState<ServiceData | null>(null);
+  const [modalPkg, setModalPkg] = useState<any | null>(null);
+  const [modalAnswers, setModalAnswers] = useState<Record<number, string>>({});
+  const [modalEditMode, setModalEditMode] = useState(false);
+  const [isHcOpen, setIsHcOpen] = useState(false);
 
-  const packages = [
-    { name: 'Bronze', price: '119.95', features: ['Service 1', 'Service 2', 'Service 3'] },
-    { name: 'Silver', price: '159.95', features: ['All the Service Bronze features', 'Service 4', 'Service 5'], popular: true },
-    { name: 'Gold', price: '319.95', features: ['All the Service Silver features', 'Service 6', 'Service 7'] },
-  ];
+  // Estimates state
+  const [estimatingIds, setEstimatingIds] = useState<Set<number>>(new Set());
+  const [estimates, setEstimates] = useState<Record<number, string>>({});
 
-  const servicesData = {
-    Maintenance: {
-      'Maintenance': [
-        { title: 'Oil & Filter Change', price: '49.99', desc: 'Complete oil and filter replacement with synthetic or conventional oil. Includes fluid level checks and disposal of old oil.' },
-        { title: 'Tire Rotation', price: '39.99', desc: 'Professional tire rotation to ensure even wear and extend tire lifespan. Includes balancing and pressure adjustment.' },
-        { title: 'Fluid Top-up', price: '29.99', desc: 'Top up essential fluids including coolant, brake fluid, power steering, and windshield washer fluid.' },
-        { title: 'Battery Check & Service', price: '34.99', desc: 'Battery health diagnostics, terminal cleaning, and charging. Includes inspection for corrosion and secure connections.' },
-        { title: 'Air Filter Replacement', price: '24.99', desc: 'Engine air filter and cabin air filter replacement for improved air flow and cabin quality.' },
-      ],
-      'Inspection/Diagnosis': [
-        { title: 'Computer Diagnostic Scan', price: '79.99', desc: 'Full vehicle diagnostic scan to identify any error codes or performance issues. Includes detailed report.' },
-        { title: 'Brake Inspection', price: '54.99', desc: 'Comprehensive brake system inspection including pads, rotors, calipers, and fluid condition.' },
-        { title: 'Engine Inspection', price: '89.99', desc: 'Complete engine system inspection covering spark plugs, belts, hoses, and fluid levels.' },
-        { title: 'Transmission Check', price: '99.99', desc: 'Transmission fluid analysis and system inspection for smooth shifting and proper operation.' },
-        { title: 'Suspension Inspection', price: '74.99', desc: 'Thorough suspension system check including shocks, struts, springs, and alignment assessment.' },
-      ],
-      'Performance': [
-        { title: 'Engine Performance Tuning', price: '149.99', desc: 'Engine optimization for improved horsepower, torque, and fuel efficiency. Includes ECU tuning.' },
-        { title: 'Suspension Upgrade', price: '299.99', desc: 'Upgrade to performance suspension components for better handling and ride quality.' },
-        { title: 'Brake System Upgrade', price: '249.99', desc: 'Upgrade to high-performance brake pads and rotors for improved stopping power.' },
-        { title: 'Exhaust System Upgrade', price: '399.99', desc: 'Custom performance exhaust system for increased power and improved sound.' },
-        { title: 'Fuel System Cleaning', price: '89.99', desc: 'Professional fuel injector and intake valve cleaning for optimal fuel economy and performance.' },
-      ],
-      'Modification': [
-        { title: 'Custom Wheels Installation', price: '199.99', desc: 'Professional installation of custom wheels including tire mounting and balancing.' },
-        { title: 'Body Kit Installation', price: '449.99', desc: 'Installation of custom body kit including front/rear bumpers, side skirts, and wings.' },
-        { title: 'Window Tint Application', price: '149.99', desc: 'Professional UV-protective window tinting for style and vehicle interior protection.' },
-        { title: 'Custom Paint Service', price: '349.99', desc: 'Professional custom paint job with color matching and protective clear coat.' },
-        { title: 'Interior Customization', price: '299.99', desc: 'Upgrade interior with custom seats, steering wheel, dashboard, and accent lighting.' },
-      ],
-    },
-    Detailing: {
-      'Maintenance': [
-        { title: 'Basic Wash & Dry', price: '29.99', desc: 'Professional hand wash with quality soap and protective drying to prevent water spots.' },
-        { title: 'Undercarriage Wash', price: '39.99', desc: 'Deep clean of undercarriage to remove salt, dirt, and debris from hard-to-reach areas.' },
-        { title: 'Carpet & Mat Cleaning', price: '54.99', desc: 'Professional interior carpet and floor mat cleaning using eco-friendly solutions.' },
-        { title: 'Seat Conditioning', price: '44.99', desc: 'Deep cleaning and conditioning of leather or fabric seats to restore appearance and protection.' },
-      ],
-      'Inspection/Diagnosis': [
-        { title: 'Paint Condition Assessment', price: '49.99', desc: 'Professional paint depth measurement and condition analysis to identify damage or wear.' },
-        { title: 'Interior Inspection', price: '44.99', desc: 'Thorough assessment of interior condition including upholstery, trim, and dashboard.' },
-        { title: 'Protective Coating Inspection', price: '39.99', desc: 'Evaluation of existing sealants and protective coatings to determine reapplication needs.' },
-      ],
-      'Performance': [
-        { title: 'Premium Wax & Polish', price: '89.99', desc: 'Multi-stage polishing with premium carnauba or ceramic wax for exceptional shine and protection.' },
-        { title: 'Clay Bar Treatment', price: '69.99', desc: 'Removes embedded contaminants from paint surface for ultra-smooth finish before waxing.' },
-        { title: 'Headlight Restoration', price: '79.99', desc: 'Professional headlight polishing to remove oxidation and restore clarity and brightness.' },
-      ],
-      'Modification': [
-        { title: 'Custom Vinyl Wrap', price: '299.99', desc: 'Professional application of custom vinyl wrap for unique exterior design and protection.' },
-        { title: 'LED Light Upgrade', price: '149.99', desc: 'Installation of LED lighting upgrades for modern look and improved visibility.' },
-        { title: 'Interior LED Ambient Lighting', price: '199.99', desc: 'Custom LED accent lighting installation throughout interior for personalized ambiance.' },
-      ],
-    },
+  // Get current cart status for each service
+  const currentVehicleKey = vehicle ? (vehicle.vin || `${vehicle.make}-${vehicle.model}-${vehicle.year}`) : '';
+  const vehicleCartItem = items.find(item => {
+    const key = item.vehicle.vin || `${item.vehicle.make}-${item.vehicle.model}-${item.vehicle.year}`;
+    return key === currentVehicleKey;
+  });
+
+  const cartPkgId = vehicleCartItem?.packageName;
+  const cartServices = vehicleCartItem?.services || [];
+
+  const handleOpenSvcModal = (svc: ServiceData, existingAnswers?: { question: string; answer: string }[]) => {
+    setModalSvc(svc);
+    setModalPkg(null);
+    setModalEditMode(!!existingAnswers);
+    
+    const initialAnswers: Record<number, string> = {};
+    if (existingAnswers) {
+      existingAnswers.forEach((a, i) => {
+        initialAnswers[i] = a.answer;
+      });
+    }
+    setModalAnswers(initialAnswers);
+    setIsCartOpen(false);
   };
 
-  const allCategoryServices = servicesData[activeCategory as keyof typeof servicesData] || {};
-  const currentServices = allCategoryServices[activeTab as keyof typeof allCategoryServices] || [];
+  const handleOpenPkgModal = (pkg: any) => {
+    setModalPkg(pkg);
+    setModalSvc(null);
+    setIsHcOpen(false);
+    setIsCartOpen(false);
+  };
 
-  // Get all services from all tabs in the current category for searching
-  const allServicesInCategory = Object.values(allCategoryServices).flat();
+  const handleCloseModal = () => {
+    setModalSvc(null);
+    setModalPkg(null);
+    setModalAnswers({});
+  };
 
-  const filteredServices = (searchTerm ? allServicesInCategory : currentServices).filter(service =>
-    service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    service.desc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleModalAnswerChange = (qi: number, val: string) => {
+    setModalAnswers(prev => ({ ...prev, [qi]: val }));
+  };
 
-  const handleGetEstimate = async (index: number, service: any) => {
+  const isModalReady = useMemo(() => {
+    if (modalPkg) return true;
+    if (!modalSvc) return false;
+    const qs = modalSvc.questions || [];
+    return qs.every((q, qi) => {
+      if (q.type === 'comment') return true;
+      const ans = modalAnswers[qi];
+      return ans && ans.trim() !== '';
+    });
+  }, [modalSvc, modalPkg, modalAnswers]);
+
+  const handleAddToCart = () => {
     if (!vehicle) return;
 
-    setEstimatingIndex(index);
-    try {
-      const response = await fetch('/api/services/estimate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          vehicle: {
-            vin: vehicle.vin,
-            make: vehicle.make,
-            model: vehicle.model,
-            year: vehicle.year,
-            trim: vehicle.trim,
-          },
-          serviceTitle: service.title,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get estimate');
+    if (modalPkg) {
+      const price = isLarge ? modalPkg.priceLarge : modalPkg.priceSmall;
+      const alreadySelected = cartPkgId === modalPkg.tier;
+      
+      if (alreadySelected) {
+        // Remove package
+        const newItem: CartItem = {
+          ...(vehicleCartItem || {
+            id: '',
+            vehicle,
+            imageBase64,
+            packageName: null,
+            services: [],
+            totalPrice: 0
+          }),
+          packageName: null,
+          totalPrice: (vehicleCartItem?.totalPrice || 0) - parseFloat(price.replace('$', ''))
+        };
+        replacePackageForVehicle(vehicle, newItem);
+      } else {
+        // Add package
+        const oldPrice = cartPkgId ? parseFloat(PACKAGES.find(p => p.tier === cartPkgId)?.[isLarge ? 'priceLarge' : 'priceSmall'].replace('$', '') || '0') : 0;
+        const newPkgPrice = parseFloat(price.replace('$', ''));
+        
+        const newItem: CartItem = {
+          ...(vehicleCartItem || {
+            id: '',
+            vehicle,
+            imageBase64,
+            packageName: null,
+            services: [],
+            totalPrice: 0
+          }),
+          packageName: modalPkg.tier,
+          totalPrice: (vehicleCartItem?.totalPrice || 0) - oldPrice + newPkgPrice
+        };
+        replacePackageForVehicle(vehicle, newItem);
       }
+      handleCloseModal();
+    } else if (modalSvc) {
+      const qs = modalSvc.questions || [];
+      const answers = qs.map((q, qi) => ({ question: q.text, answer: modalAnswers[qi] || '' }));
+      
+      const newService: CartService = {
+        title: modalSvc.name,
+        price: modalSvc.price || 'Quote',
+        desc: modalSvc.desc,
+        answers
+      };
 
-      const data = await response.json();
-      setVehicleId(data.vehicleId); // Store the vehicle ID from the response
-      setEstimates(prev => ({
-        ...prev,
-        [index]: {
-          value: data.estimate,
-          source: data.source || 'ai'
+      if (modalEditMode) {
+        // Update existing service
+        const updatedServices = cartServices.map(s => s.title === modalSvc.name ? newService : s);
+        const newItem: CartItem = {
+          ...vehicleCartItem!,
+          services: updatedServices
+        };
+        updateCartItem(vehicleCartItem!.id, newItem);
+      } else {
+        // Add new service
+        const existingServices = cartServices.filter(s => s.title !== modalSvc.name);
+        const newItem: CartItem = {
+          ...(vehicleCartItem || {
+            id: '',
+            vehicle,
+            imageBase64,
+            packageName: null,
+            services: [],
+            totalPrice: 0
+          }),
+          services: [...existingServices, newService]
+        };
+        if (vehicleCartItem) {
+          updateCartItem(vehicleCartItem.id, newItem);
+        } else {
+          addToCart(newItem);
         }
-      }));
-    } catch (error) {
-      console.error('Error getting estimate:', error);
-      setEstimates(prev => ({
-        ...prev,
-        [index]: {
-          value: 'Error loading estimate',
-          source: 'web-search'
-        }
-      }));
-    } finally {
-      setEstimatingIndex(null);
+      }
+      handleCloseModal();
     }
   };
 
-  const handleSelectPackage = (packageName: string, packagePrice: string) => {
+  const handleToggleService = (svc: ServiceData) => {
     if (!vehicle) return;
 
-    // Create new package item
-    const cartItem: CartItem = {
-      id: `${Date.now()}-${Math.random()}`,
-      vehicle: vehicle,
-      imageBase64: imageBase64,
-      packageName: packageName,
-      services: [], // For packages, we don't have specific services
-      totalPrice: parseFloat(packagePrice),
-    };
-
-    // Replace any existing package for this vehicle with the new one
-    replacePackageForVehicle(vehicle, cartItem);
-    setSelectedPackage(packageName);
+    const inCart = cartServices.some(s => s.title === svc.name);
+    if (inCart) {
+      // Remove
+      const updatedServices = cartServices.filter(s => s.title !== svc.name);
+      const newItem: CartItem = {
+        ...vehicleCartItem!,
+        services: updatedServices
+      };
+      updateCartItem(vehicleCartItem!.id, newItem);
+    } else {
+      // Add (check for questions)
+      const qs = (svc.questions || []).filter(q => q.type !== 'comment');
+      if (qs.length > 0) {
+        handleOpenSvcModal(svc);
+      } else {
+        const newItem: CartItem = {
+          ...(vehicleCartItem || {
+            id: '',
+            vehicle,
+            imageBase64,
+            packageName: null,
+            services: [],
+            totalPrice: 0
+          }),
+          services: [...cartServices, { title: svc.name, price: svc.price || 'Quote', desc: svc.desc }]
+        };
+        if (vehicleCartItem) {
+          updateCartItem(vehicleCartItem.id, newItem);
+        } else {
+          addToCart(newItem);
+        }
+      }
+    }
   };
 
-  return (
-    <div className="min-h-screen bg-[#F3F4F6] font-sans">
-      {/* Hero / Header Section */}
-      <div className="bg-[#5C7130] p-4 md:p-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4">
-          {/* Car Card */}
-          <div className="flex-1 bg-white rounded-xl p-4 flex items-center shadow-sm">
-            <div className="w-24 md:w-32 mr-4">
-               <img src={imageBase64 || 'https://placehold.co/200x120?text=Vehicle'} alt={`${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`} className="w-full h-auto" />
-            </div>
-            <div className="flex-1">
-              <h1 className="font-bold text-lg md:text-xl">{vehicle?.year} {vehicle?.make} {vehicle?.model}</h1>
-              <p className="text-gray-500 text-sm">{vehicle?.trim || ''}</p>
-              {vehicleId && (
-                <p className="text-xs text-green-600 font-medium mt-2">✓ Vehicle ID: {vehicleId}</p>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => navigate('/select-vehicle')} className="text-xs font-medium border-b border-black pb-0.5">← Edit</button>
-              <button
-                onClick={onCartClick}
-                className="p-2 bg-[#D4F49B] rounded-lg hover:bg-lime-400 transition-colors relative"
-                title="View cart"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="9" cy="21" r="1"/>
-                  <circle cx="20" cy="21" r="1"/>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                </svg>
-                {items.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                    {items.length}
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
+  const handleRemoveService = (title: string) => {
+    if (!vehicleCartItem) return;
+    const updatedServices = cartServices.filter(s => s.title !== title);
+    updateCartItem(vehicleCartItem.id, { ...vehicleCartItem, services: updatedServices });
+  };
 
+  const handleRemovePackage = () => {
+    if (!vehicleCartItem) return;
+    const pkg = PACKAGES.find(p => p.tier === cartPkgId);
+    const price = pkg ? parseFloat(pkg[isLarge ? 'priceLarge' : 'priceSmall'].replace('$', '')) : 0;
+    updateCartItem(vehicleCartItem.id, { ...vehicleCartItem, packageName: null, totalPrice: vehicleCartItem.totalPrice - price });
+  };
+
+  const handleEditService = (title: string) => {
+    const svc = SERVICES.find(s => s.name === title);
+    const cartSvc = cartServices.find(s => s.title === title);
+    if (svc && cartSvc) {
+      handleOpenSvcModal(svc, cartSvc.answers);
+    }
+  };
+
+  const filteredServices = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    const showPromo = (activeCat === 'All' || activeCat === 'Promo') && !q;
+    
+    let list = SERVICES;
+    if (activeCat !== 'Promo' && activeCat !== 'All') {
+      list = list.filter(s => s.cat === activeCat);
+    }
+    if (q) {
+      list = SERVICES.filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        s.cat.toLowerCase().includes(q) || 
+        s.desc.toLowerCase().includes(q)
+      );
+    }
+
+    return activeCat === 'Promo' && !q ? [] : list;
+  }, [activeCat, searchTerm]);
+
+  const showPromo = (activeCat === 'All' || activeCat === 'Promo') && !searchTerm;
+
+  const cartCount = (cartPkgId ? 1 : 0) + cartServices.length;
+  const cartTotalText = useMemo(() => {
+    if (!vehicleCartItem) return '—';
+    const pkg = PACKAGES.find(p => p.tier === cartPkgId);
+    const pkgPrice = pkg ? pkg[isLarge ? 'priceLarge' : 'priceSmall'] : null;
+    if (pkgPrice) {
+      return `From ${pkgPrice}${cartServices.length ? ' + quotes' : ''}`;
+    }
+    return cartServices.length ? 'Quoted at service' : '—';
+  }, [vehicleCartItem, cartPkgId, cartServices, isLarge]);
+
+  return (
+    <div className="service-selection-container">
+      {/* NAV */}
+      <nav className="nav">
+        <a href="/" className="nav-logo" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+          AUTO <span>VIVO.</span>
+        </a>
+        <button className="nav-back" onClick={() => navigate('/select-vehicle')}>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M10 3L5 8l5 5"/></svg>
+          Back
+        </button>
+      </nav>
+
+      {/* VEHICLE HEADER */}
+      <div className="vehicle-bar">
+        <div className="vb-info">
+          <span className="vb-car">🚗</span>
+          <span className="vb-name">{vehicle?.year} {vehicle?.make} {vehicle?.model} {vehicle?.trim}</span>
+          <span className="vb-sep"></span>
+          <span className="vb-loc">📍 {vehicle?.location || 'Select Location'}</span>
+        </div>
+        <button className="vb-cart-btn" onClick={() => setIsCartOpen(true)} type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+          Cart
+          <span className={`cart-badge ${cartCount > 0 ? 'show' : ''}`}>{cartCount}</span>
+        </button>
+      </div>
+
+      {/* PROGRESS */}
+      <div className="booking-progress">
+        <div className="progress-inner">
+          <div className="progress-step done"><div className="step-bubble">✓</div><span className="step-name">Vehicle</span></div>
+          <div className="progress-line"></div>
+          <div className="progress-step active" aria-current="step"><div className="step-bubble">2</div><span className="step-name">Service</span></div>
+          <div className="progress-line"></div>
+          <div className="progress-step"><div className="step-bubble">3</div><span className="step-name">Schedule</span></div>
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-10 py-8">
-        {/* Toggle Switch */}
-        <div className="inline-flex bg-gray-200 p-1 rounded-lg mb-10">
-          {['Maintenance', 'Detailing'].map((cat) => (
-            <button
+      {/* MAIN */}
+      <main className="page">
+        <header className="anim">
+          <div className="page-eyebrow">Step 2 of 3</div>
+          <h1 className="page-title">Choose Your Services</h1>
+          <p className="page-sub">Select a package or individual services — or mix and match both.</p>
+        </header>
+
+        <div className="svc-controls anim d1">
+          <div className="svc-search-wrap">
+            <span className="svc-search-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="7" cy="7" r="5"/><path d="M12 12l3 3"/></svg></span>
+            <input 
+              className="svc-search" 
+              type="search" 
+              placeholder="Search services..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoComplete="off" 
+            />
+          </div>
+        </div>
+
+        <div className="filter-bar anim d2">
+          {CATEGORIES.map(cat => (
+            <button 
               key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-                activeCategory === cat ? 'bg-[#D4F49B] shadow-sm' : 'text-gray-600'
-              }`}
+              className={`filter-pill ${cat === 'Promo' ? 'promo-pill' : ''} ${activeCat === cat ? 'active' : ''}`}
+              onClick={() => setActiveCat(cat)}
             >
               {cat}
             </button>
           ))}
         </div>
 
-        {/* Packages Section */}
-        <div className="mb-14">
-          <h2 className="text-2xl font-bold mb-6">Packages</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {packages.map((pkg) => (
-              <div key={pkg.name} className={`bg-white rounded-2xl p-8 border border-gray-100 shadow-sm flex flex-col transition-all ${pkg.popular ? 'ring-2 ring-[#D4F49B]' : ''} ${selectedPackage === pkg.name ? 'ring-2 ring-blue-500 border-blue-500' : ''}`}>
-                <h3 className="font-bold text-xl mb-2">{pkg.name}</h3>
-                <p className="text-xs text-gray-500 mb-6 leading-relaxed">
-                  Unlock premium benefits with our {pkg.name} level package! Enjoy exclusive access to top-tier services and features designed just for you.
-                </p>
-                <div className="text-4xl font-extrabold mb-8">${pkg.price}</div>
-                <div className="space-y-4 mb-10 flex-1">
-                  {pkg.features.map((feat, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm font-medium">
-                      <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 5.5L4.5 9L13 1" stroke="black" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      {feat}
-                    </div>
-                  ))}
+        <div className="svc-grid">
+          {/* Promo Packages */}
+          {showPromo && PACKAGES.map(pkg => {
+            const price = isLarge ? pkg.priceLarge : pkg.priceSmall;
+            const inCart = cartPkgId === pkg.tier;
+            return (
+              <div key={pkg.id} className={`svc-card promo-card ${inCart ? 'in-cart' : ''}`} onClick={() => handleOpenPkgModal(pkg)}>
+                <div className="svc-body">
+                  <div className="svc-name">{pkg.icon} {pkg.tier} Package</div>
+                  <div className="svc-meta">
+                    <span className="svc-cat promo">Promo</span>
+                    <span className="svc-time">from {price}</span>
+                    {pkg.featured && <span className="svc-has-qs">Most Popular</span>}
+                  </div>
+                  <div className="svc-desc">{pkg.services.join(' · ')}</div>
                 </div>
-                <button
-                  onClick={() => handleSelectPackage(pkg.name, pkg.price)}
-                  className={`w-full py-3 rounded-xl font-bold border transition-colors ${
-                    selectedPackage === pkg.name
-                      ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
-                      : pkg.popular
-                      ? 'bg-[#D4F49B] border-[#D4F49B] hover:bg-lime-300'
-                      : 'bg-white border-gray-200 hover:bg-gray-50'
-                  }`}>
-                  {selectedPackage === pkg.name ? '✓ Selected' : 'Select Package'}
+                <button className={`svc-add promo-add ${inCart ? 'added' : ''}`} type="button">
+                  {inCart ? '✓' : '+'}
                 </button>
               </div>
-            ))}
-          </div>
-        </div>
+            );
+          })}
 
-        {/* All Services Section */}
-        <div className="mb-20">
-          <h2 className="text-2xl font-bold mb-6">All Services</h2>
-
-          <div className="bg-[#5C7130] rounded-t-2xl overflow-hidden">
-            <div className="p-4 md:p-6 flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1 md:max-w-md">
-                <input
-                  type="text"
-                  placeholder="Search for a specific service"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-[#4E5E28] border-none text-white text-sm py-2.5 pl-4 pr-10 rounded-md placeholder:text-gray-300 focus:ring-1 focus:ring-lime-200"
-                />
-                <svg className="absolute right-3 top-3 text-gray-300" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
-              </div>
-              <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-                {['Maintenance', 'Inspection/Diagnosis', 'Performance', 'Modification'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`whitespace-nowrap text-sm font-medium px-4 py-2 rounded-md transition-colors ${
-                      activeTab === tab ? 'bg-[#D4F49B] text-black' : 'text-white/80 hover:text-white'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#E5E7EB] rounded-b-2xl divide-y divide-gray-300">
-            {filteredServices.length > 0 ? (
-              filteredServices.map((s, i) => (
-                <div key={i} className="p-6 md:p-8 flex flex-col md:flex-row justify-between gap-4">
-                  <div className="md:max-w-3xl">
-                    <h4 className="font-bold text-lg mb-2">{s.title}</h4>
-                    <p className="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
+          {/* Regular Services */}
+          {filteredServices.map(svc => {
+            const inCart = cartServices.some(s => s.title === svc.name);
+            const hasQs = svc.questions && svc.questions.filter(q => q.type !== 'comment').length > 0;
+            return (
+              <div key={svc.id} className={`svc-card ${inCart ? 'in-cart' : ''}`}>
+                <div className="svc-body" onClick={() => handleToggleService(svc)} style={{ cursor: 'pointer' }}>
+                  <div className="svc-name">{svc.name}</div>
+                  <div className="svc-meta">
+                    <span className="svc-cat">{svc.cat}</span>
+                    {svc.time && <span className="svc-time">{svc.time}</span>}
+                    {hasQs && <span className="svc-has-qs">Intake form</span>}
                   </div>
-                  <div className="flex items-center gap-4">
-                    {i === 0 ? (
-                      <div className="flex flex-col items-end gap-2">
-                        {estimates[i] ? (
-                          <div className="flex flex-col items-end gap-1">
-                            <div className="font-bold text-lg md:text-xl text-green-600">{estimates[i].value}</div>
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              estimates[i].source === 'database'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-cyan-100 text-cyan-700'
-                            }`}>
-                              {estimates[i].source === 'database' ? '🔄 Cached' : '🌐 Web Search'}
-                            </span>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleGetEstimate(i, s)}
-                            disabled={estimatingIndex !== null}
-                            className="px-4 py-2 bg-[#D4F49B] text-black font-semibold text-sm rounded hover:bg-lime-400 transition-colors disabled:opacity-50"
-                          >
-                            {estimatingIndex === i ? 'Loading...' : 'Get Estimate'}
-                          </button>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="font-bold text-lg md:text-xl">${s.price}</div>
-                    )}
-                  </div>
+                  {svc.desc && <div className="svc-desc">{svc.desc}</div>}
                 </div>
-              ))
-            ) : (
-              <div className="p-6 md:p-8 text-center text-gray-600">
-                <p>No services found matching your search.</p>
+                <button 
+                  className={`svc-add ${inCart ? 'added' : ''}`} 
+                  onClick={() => handleToggleService(svc)}
+                >
+                  {inCart ? '✓' : '+'}
+                </button>
               </div>
-            )}
-          </div>
+            );
+          })}
+
+          {!filteredServices.length && !showPromo && (
+            <div className="svc-empty">
+              <h3>No services found</h3>
+              <p>Try a different search or category.</p>
+            </div>
+          )}
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-100 border-t border-gray-300 px-6 md:px-16 py-8 md:py-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-            <div className="flex items-center gap-2">
-              <img src={Union} alt="APEX logo" className="h-5 w-5" />
-              <div className="font-semibold text-black text-sm uppercase tracking-wider">APEX Auto Hub</div>
+      {/* SERVICE POPUP MODAL */}
+      <div className={`svc-modal-overlay ${modalSvc || modalPkg ? 'open' : ''}`} onClick={handleCloseModal}>
+        <div className="svc-modal" onClick={e => e.stopPropagation()}>
+          <div className="svc-modal-header">
+            <div className="svc-modal-title-group">
+              <div className="svc-modal-eyebrow">
+                {modalPkg ? 'Maintenance Package' : 'A few quick questions'}
+              </div>
+              <div className="svc-modal-title">
+                {modalPkg ? `${modalPkg.icon} ${modalPkg.tier} Package` : modalSvc?.name}
+              </div>
             </div>
-            <div className="flex items-center gap-6">
-              <a href="#/features" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black font-medium cursor-pointer">Features</a>
-              <a href="#/learn" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black font-medium cursor-pointer">Learn More</a>
-              <a href="#/support" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black font-medium cursor-pointer">Support</a>
-            </div>
+            <button className="svc-modal-close" onClick={handleCloseModal}>✕</button>
+          </div>
+          
+          <div className="svc-modal-body">
+            {modalPkg ? (
+              <>
+                <div className="pkg-modal-prices">
+                  <div className="pkg-modal-price-row">
+                    <span className="pkg-modal-price-type">{isLarge ? 'Truck / Large SUV' : 'Car / Small SUV'}</span>
+                    <span className="pkg-modal-price-val hi">from {isLarge ? modalPkg.priceLarge : modalPkg.priceSmall}</span>
+                  </div>
+                  <div className="pkg-modal-price-row">
+                    <span className="pkg-modal-price-type">{!isLarge ? 'Truck / Large SUV' : 'Car / Small SUV'}</span>
+                    <span className="pkg-modal-price-val">from {!isLarge ? modalPkg.priceLarge : modalPkg.priceSmall}</span>
+                  </div>
+                </div>
+                <ul className="pkg-modal-services">
+                  {modalPkg.services.map((s: string) => <li key={s}>{s}</li>)}
+                </ul>
+                <button className="pkg-modal-hc-toggle" onClick={() => setIsHcOpen(!isHcOpen)}>
+                  {isHcOpen ? 'Hide Health Check details' : 'View 15-point Health Check details'}
+                </button>
+                {isHcOpen && (
+                  <ul className="pkg-modal-hc-list open">
+                    {HEALTH_CHECK.map(h => <li key={h}>{h}</li>)}
+                  </ul>
+                )}
+                <p className="pkg-modal-fine">* Includes up to 5L of Dexos full synthetic oil, OE filter, lube and 15-point check. Diesel engines subject to surcharge (+$99.95). Not valid with same service offers/discounts.</p>
+              </>
+            ) : (
+              <>
+                {modalSvc?.questions?.length ? (
+                  <p className="svc-modal-intro">Please answer the questions below so our technician can prepare for your appointment.</p>
+                ) : (
+                  <p className="svc-modal-intro">No additional information required. Click "Add to Cart" to proceed.</p>
+                )}
+                {modalSvc?.questions?.map((q, qi) => (
+                  <div key={qi} className="modal-q-block">
+                    <div className="modal-q-label">{q.text} {q.type !== 'comment' && <span className="modal-q-required">*</span>}</div>
+                    
+                    {q.type === 'yesno' && (
+                      <div className="modal-radio-group">
+                        {['Yes', 'No'].map(opt => (
+                          <label key={opt} className={`modal-radio-opt ${modalAnswers[qi] === opt ? 'selected' : ''}`} onClick={() => handleModalAnswerChange(qi, opt)}>
+                            <div className="modal-radio-dot"></div>
+                            <span className="modal-radio-text">{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {q.type === 'select' && (
+                      <div className="modal-radio-group">
+                        {q.options?.map(opt => (
+                          <label key={opt} className={`modal-radio-opt ${modalAnswers[qi] === opt ? 'selected' : ''}`} onClick={() => handleModalAnswerChange(qi, opt)}>
+                            <div className="modal-radio-dot"></div>
+                            <span className="modal-radio-text">{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {q.type === 'text' && (
+                      <input 
+                        className="modal-text-input" 
+                        type="text" 
+                        placeholder="Type your answer..." 
+                        value={modalAnswers[qi] || ''}
+                        onChange={(e) => handleModalAnswerChange(qi, e.target.value)}
+                      />
+                    )}
+
+                    {q.type === 'comment' && (
+                      <textarea 
+                        className="modal-textarea" 
+                        placeholder="Optional — add any notes for your technician..." 
+                        rows={3}
+                        value={modalAnswers[qi] || ''}
+                        onChange={(e) => handleModalAnswerChange(qi, e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </>
+            )}
           </div>
 
-          <div className="flex items-center gap-6">
-            {/* Instagram */}
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
-            </a>
-            {/* LinkedIn */}
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M16 11.5v5.5"></path><path d="M8 11.5v5.5"></path><path d="M12 7.5a2 2 0 0 1 2 2v2"></path></svg>
-            </a>
-            {/* Twitter/X */}
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.82 1.08A4.48 4.48 0 0 0 16.11 0c-2.63 0-4.73 2.59-4.07 5.08A12.94 12.94 0 0 1 1.64 1.15 4.48 4.48 0 0 0 2.9 7.86 4.41 4.41 0 0 1 .89 7v.06A4.48 4.48 0 0 0 4.48 11a4.52 4.52 0 0 1-2 .08 4.48 4.48 0 0 0 4.18 3.12A9 9 0 0 1 0 19.54a12.75 12.75 0 0 0 6.92 2.03c8.3 0 12.84-6.88 12.84-12.84v-.58A9.18 9.18 0 0 0 23 3z"></path></svg>
-            </a>
+          <div className="svc-modal-footer">
+            <button className="btn-modal-cancel" onClick={handleCloseModal}>Cancel</button>
+            <button 
+              className={`btn-modal-add ${isModalReady ? 'ready' : ''}`} 
+              disabled={!isModalReady}
+              onClick={handleAddToCart}
+            >
+              {modalPkg ? (cartPkgId === modalPkg.tier ? 'Remove Package' : 'Add to Cart') : (modalEditMode ? 'Save Changes' : 'Add to Cart')}
+            </button>
           </div>
         </div>
-      </footer>
+      </div>
+
+      {/* CART MODAL (SIDE PANEL) */}
+      <div className={`cart-overlay ${isCartOpen ? 'open' : ''}`} onClick={() => setIsCartOpen(false)}></div>
+      <div className={`cart-panel ${isCartOpen ? 'open' : ''}`}>
+        <div className="cart-header">
+          <h2 className="cart-title">Your Cart {cartCount > 0 && `(${cartCount})`}</h2>
+          <button className="cart-close" onClick={() => setIsCartOpen(false)}>✕</button>
+        </div>
+        
+        <div className="cart-items">
+          {cartCount === 0 ? (
+            <div className="cart-empty">
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>🛒</div>
+              <p>Your cart is empty.<br />Add a package or individual services.</p>
+            </div>
+          ) : (
+            <>
+              {cartPkgId && (
+                <>
+                  <div className="cart-section-label">Package</div>
+                  <div className="cart-item">
+                    <div className="cart-item-main">
+                      <div className="cart-item-body">
+                        <div className="cart-item-name">
+                          {PACKAGES.find(p => p.tier === cartPkgId)?.icon} {cartPkgId} Maintenance Package
+                        </div>
+                        <div className="cart-item-detail">Oil change, health check & more</div>
+                      </div>
+                      <span className="cart-item-price">
+                        {PACKAGES.find(p => p.tier === cartPkgId)?.[isLarge ? 'priceLarge' : 'priceSmall']}
+                      </span>
+                      <div className="cart-item-actions">
+                        <button className="cart-item-btn cart-item-rm" onClick={handleRemovePackage}>✕</button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              
+              {cartServices.length > 0 && (
+                <>
+                  <div className="cart-section-label">Individual Services</div>
+                  {cartServices.map((s, idx) => (
+                    <div key={idx} className="cart-item">
+                      <div className="cart-item-main">
+                        <div className="cart-item-body">
+                          <div className="cart-item-name">{s.title}</div>
+                          <div className="cart-item-detail">{s.price}</div>
+                        </div>
+                        <span className="cart-item-price" style={{ color: 'var(--color-neutral-400)', fontSize: 'var(--text-xs)' }}>Quote</span>
+                        <div className="cart-item-actions">
+                          {s.answers?.length ? (
+                            <button className="cart-item-btn cart-item-edit" onClick={() => handleEditService(s.title)}>✎</button>
+                          ) : null}
+                          <button className="cart-item-btn cart-item-rm" onClick={() => handleRemoveService(s.title)}>✕</button>
+                        </div>
+                      </div>
+                      {s.answers?.length ? (
+                        <div className="cart-answers">
+                          {s.answers.map((a, ai) => (
+                            <div key={ai} className="cart-answer-row">
+                              <span className="cart-answer-q">{a.question.substring(0, 40)}:</span>
+                              <span className="cart-answer-a">{a.answer}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="cart-footer">
+          <div className="cart-total-row">
+            <span className="cart-total-label">Estimated Total</span>
+            <span className="cart-total-val">{cartTotalText}</span>
+          </div>
+          <p className="cart-note">Individual service pricing confirmed at appointment. Package prices are starting rates.</p>
+          <button className="btn-cart-continue" disabled={cartCount === 0} onClick={() => navigate('/booking-appointment')}>
+            Next: Schedule
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 3l6 5-6 5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* STICKY BAR */}
+      <div className="sticky-bar">
+        <div className="sb-info">
+          <span className="sb-label">Your Cart</span>
+          <div className="sb-detail">
+            {cartCount === 0 ? (
+              <span className="muted">No items yet</span>
+            ) : (
+              <>
+                {cartPkgId ? `${cartPkgId} Package` : ''}
+                {cartPkgId && cartServices.length ? ' + ' : ''}
+                {cartServices.length ? `${cartServices.length} service${cartServices.length !== 1 ? 's' : ''}` : ''}
+              </>
+            )}
+          </div>
+        </div>
+        <div className="sb-actions">
+          <button className="btn-view-cart" onClick={() => setIsCartOpen(true)}>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ width: '14px', height: '14px' }}><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+            View Cart
+          </button>
+          <button className={`btn-continue ${cartCount > 0 ? 'active' : ''}`} disabled={cartCount === 0} onClick={() => navigate('/booking-appointment')}>
+            Next: Schedule
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 3l6 5-6 5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* FLOATING RESUME CART */}
+      {cartCount > 0 && !isFloatingCartDismissed && (
+        <div className="floating-cart visible">
+          <button className="floating-cart-bubble" onClick={() => setIsCartOpen(true)}>
+            <div className="floating-cart-icon">
+              <svg viewBox="0 0 16 16"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+              <span className="floating-cart-count">{cartCount}</span>
+            </div>
+            <div className="floating-cart-text">
+              <span className="floating-cart-label">Resume booking</span>
+              <span className="floating-cart-detail">Your selections are saved</span>
+            </div>
+          </button>
+          <button className="floating-cart-dismiss" onClick={() => setIsFloatingCartDismissed(true)}>✕</button>
+        </div>
+      )}
     </div>
   );
 };

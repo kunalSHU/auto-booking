@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import vehicleImage from '../Assets/vehicle_image.png';
-import Union from '../Assets/Union.svg';
 import { useCart } from '../context/CartContext';
+import '../styles/VehiclePage.css';
 
 interface VehicleOption {
     make: string;
@@ -15,21 +14,38 @@ interface VehiclePageProps {
     onCartClick?: () => void;
 }
 
+const LOCATIONS = [
+    { id: 'loc-scarborough', name: 'Scarborough', region: 'Durham Region East', icon: '🏙️', tag: 'Same-day available' },
+    { id: 'loc-pickering', name: 'Pickering', region: 'Durham Region', icon: '🌊', tag: 'Same-day available' },
+    { id: 'loc-ajax', name: 'Ajax', region: 'Durham Region West', icon: '🏘️', tag: 'Same-day available' },
+];
+
 const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
     const navigate = useNavigate();
     const { items } = useCart();
-    // State for Mobile Menu
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
+    // Form State
     const [vehicleData, setVehicleData] = useState({
         vin: "",
         make: "",
         model: "",
         trim: "",
         year: "",
+        location: "",
     });
 
+    // To prevent clearing fields when auto-filling from VIN
+    const isAutoFilling = React.useRef(false);
+
+    // UI State
+    const [isVinOpen, setIsVinOpen] = useState(false);
+    const [isVinTooltipOpen, setIsVinTooltipOpen] = useState(false);
+    const [isCartDismissed, setIsCartDismissed] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDecoding, setIsDecoding] = useState(false);
+    const [decodeResult, setDecodeResult] = useState<'success' | 'partial' | 'none'>('none');
+
+    // Data State
     const [makes, setMakes] = useState<VehicleOption[]>([]);
     const [models, setModels] = useState<VehicleOption[]>([]);
     const [trims, setTrims] = useState<VehicleOption[]>([]);
@@ -42,6 +58,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
 
+    // Fetch Makes when Year changes
     useEffect(() => {
         if (!vehicleData.year) {
             setMakes([]); setModels([]); setTrims([]);
@@ -51,17 +68,20 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             setLoadingMakes(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}`);
-
                 const data = await response.json();
                 setMakes(data);
-                setModels([]); setTrims([]);
-                setVehicleData((prev) => ({ ...prev, make: "", model: "", trim: "" }));
+                
+                if (!isAutoFilling.current) {
+                    setModels([]); setTrims([]);
+                    setVehicleData((prev) => ({ ...prev, make: "", model: "", trim: "" }));
+                }
             } catch (error) { console.error("Error fetching makes:", error); }
             finally { setLoadingMakes(false); }
         };
         fetchMakes();
     }, [vehicleData.year]);
 
+    // Fetch Models when Make changes
     useEffect(() => {
         if (!vehicleData.year || !vehicleData.make) {
             setModels([]); setTrims([]);
@@ -71,17 +91,20 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             setLoadingModels(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
-
                 const data = await response.json();
                 setModels(data);
-                setTrims([]);
-                setVehicleData((prev) => ({ ...prev, model: "", trim: "" }));
+                
+                if (!isAutoFilling.current) {
+                    setTrims([]);
+                    setVehicleData((prev) => ({ ...prev, model: "", trim: "" }));
+                }
             } catch (error) { console.error("Error fetching models:", error); }
             finally { setLoadingModels(false); }
         };
         fetchModels();
     }, [vehicleData.year, vehicleData.make]);
 
+    // Fetch Trims when Model changes
     useEffect(() => {
         if (!vehicleData.year || !vehicleData.make || !vehicleData.model) {
             setTrims([]);
@@ -93,7 +116,10 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}&model=${vehicleData.model}`);
                 const data = await response.json();
                 setTrims(Array.isArray(data) ? data : [data]);
-                setVehicleData((prev) => ({ ...prev, trim: "" }));
+                
+                if (!isAutoFilling.current) {
+                    setVehicleData((prev) => ({ ...prev, trim: "" }));
+                }
             } catch (error) { console.error("Error fetching trims:", error); }
             finally { setLoadingTrims(false); }
         };
@@ -101,10 +127,55 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
     }, [vehicleData.year, vehicleData.make, vehicleData.model]);
 
     const handleInputChange = (field: string, value: string) => {
+        isAutoFilling.current = false;
         setVehicleData((prev) => ({ ...prev, [field]: value }));
+        if (field === 'vin') {
+            setDecodeResult('none');
+        }
     };
 
-    const handleServiceSelection = async () => {
+    const handleDecodeVin = async () => {
+        if (vehicleData.vin.length < 11) return;
+
+        setIsDecoding(true);
+        setDecodeResult('none');
+        isAutoFilling.current = true;
+
+        try {
+            const response = await fetch('/api/vehicle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ vin: vehicleData.vin }),
+            });
+            const result = await response.json();
+            
+            if (result.vehicle) {
+                const { make, model, year, trim } = result.vehicle;
+                setVehicleData(prev => ({
+                    ...prev,
+                    make: make || prev.make,
+                    model: model || prev.model,
+                    year: year?.toString() || prev.year,
+                    trim: trim || prev.trim,
+                }));
+                
+                if (make && model && year && trim) {
+                    setDecodeResult('success');
+                } else if (make || year) {
+                    setDecodeResult('partial');
+                }
+            }
+        } catch (error) {
+            console.error('Error decoding VIN:', error);
+            isAutoFilling.current = false;
+        } finally {
+            setIsDecoding(false);
+            // We keep isAutoFilling.current = true for a short bit so effects can run
+            setTimeout(() => { isAutoFilling.current = false; }, 1000);
+        }
+    };
+
+    const handleContinue = async () => {
         try {
             setIsLoading(true);
             const response = await fetch('/api/vehicle', {
@@ -115,9 +186,13 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 body: JSON.stringify(vehicleData),
             });
             const result = await response.json();
-            console.log('Vehicle submission response:', result);
+            
+            // Save location to session storage as per template logic
+            sessionStorage.setItem('autovivo_vehicle', JSON.stringify({
+                ...vehicleData,
+                location: vehicleData.location
+            }));
 
-            // Navigate to ServiceSelectionPage with vehicle data and image
             navigate('/', {
                 state: {
                     vehicle: result.vehicle,
@@ -128,204 +203,361 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             console.error('Error submitting vehicle data:', error);
             setIsLoading(false);
         }
-    }
+    };
+
+    const isVehicleComplete = vehicleData.year && vehicleData.make && vehicleData.model && vehicleData.trim;
+    const isFormComplete = isVehicleComplete && vehicleData.location;
+
+    const totalCartItems = items.length;
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-200 overflow-x-hidden">
-            {/* Mobile Drawer Overlay */}
-            <div
-                className={`fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                onClick={() => setIsMenuOpen(false)}
-            />
+        <div className="vehicle-page-container">
+            {/* NAVIGATION */}
+            <nav className="nav" role="navigation" aria-label="Booking navigation">
+                <a href="/" className="nav-logo" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+                    AUTO <span>VIVO.</span>
+                </a>
+                <a href="/" className="nav-back" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M10 3L5 8l5 5"/>
+                    </svg>
+                    Back to Home
+                </a>
+            </nav>
 
-            {/* Mobile Side Drawer */}
-            <div className={`fixed top-0 right-0 h-full w-64 bg-white z-[70] shadow-2xl transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                <div className="p-6 flex flex-col gap-8">
-                    <button onClick={() => setIsMenuOpen(false)} className="self-end p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                    <nav className="flex flex-col gap-6">
-                        <span className="text-lg font-medium text-black cursor-pointer border-b pb-2">Services</span>
-                        <span className="text-lg font-medium text-black cursor-pointer border-b pb-2">Pricing</span>
-                        <span className="text-lg font-medium text-black cursor-pointer border-b pb-2">Contact</span>
-                        <button className="w-full py-4 bg-lime-300 text-black font-bold rounded-sm hover:bg-lime-400">
-                            Book Now
-                        </button>
-                    </nav>
+            {/* PROGRESS STEPPER */}
+            <div className="booking-progress" role="navigation" aria-label="Booking steps">
+                <div className="progress-inner">
+                    <div className="progress-step active" aria-current="step">
+                        <div className="step-bubble" aria-hidden="true">1</div>
+                        <div className="step-info">
+                            <span className="step-name">Vehicle</span>
+                            <span className="step-desc">Make, model & location</span>
+                        </div>
+                    </div>
+                    <div className="progress-line" aria-hidden="true"></div>
+                    <div className="progress-step">
+                        <div className="step-bubble" aria-hidden="true">2</div>
+                        <div className="step-info">
+                            <span className="step-name">Service</span>
+                            <span className="step-desc">What needs attention?</span>
+                        </div>
+                    </div>
+                    <div className="progress-line" aria-hidden="true"></div>
+                    <div className="progress-step">
+                        <div className="step-bubble" aria-hidden="true">3</div>
+                        <div className="step-info">
+                            <span className="step-name">Schedule</span>
+                            <span className="step-desc">Pick a time & confirm</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Header */}
-            <header className="sticky top-0 z-50 bg-white px-6 md:px-16 py-4 md:py-6 flex justify-between items-center shadow-md">
-                <div className="flex items-center gap-2">
-                    <img src={Union} alt="APEX logo" className="h-6 w-6 md:h-8 md:w-8" />
-                    <div className="text-lg md:text-xl font-semibold text-black">APEX Auto Hub</div>
-                </div>
-                <nav className="flex items-center gap-4 md:gap-6">
-                    <div className="hidden md:flex items-center gap-6">
-                        <span className="text-xs font-medium text-black cursor-pointer">Services</span>
-                        <span className="text-xs font-medium text-black cursor-pointer">Pricing</span>
-                        <span className="text-xs font-medium text-black cursor-pointer">Contact</span>
+            {/* MAIN CONTENT */}
+            <main className="booking-page">
+                <header className="page-header anim">
+                    <span className="page-eyebrow">Step 1 of 3</span>
+                    <h1 className="page-title">Select Your Vehicle</h1>
+                    <p className="page-subtitle">Tell us what you're driving and where we should meet you.</p>
+                </header>
+
+                {/* PANEL 1 — VEHICLE DETAILS */}
+                <section className={`panel anim d1 ${isVehicleComplete ? 'complete' : ''}`} id="vehicle-panel">
+                    <div className="panel-header">
+                        <div className="panel-title-group">
+                            <span className="panel-icon" aria-hidden="true">🚗</span>
+                            <h2 className="panel-title">Vehicle Details</h2>
+                        </div>
+                        <span className="panel-badge" style={{ display: isVehicleComplete ? 'flex' : 'none' }}>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            Complete
+                        </span>
                     </div>
-                    <button className="px-3 py-2 md:py-3 bg-lime-300 text-black text-[10px] md:text-xs font-normal rounded-sm hover:bg-lime-400">
-                        Book Now
-                    </button>
-                    <button 
-                        onClick={onCartClick}
-                        className="p-2 bg-[#D4F49B] rounded hover:bg-lime-300 transition-colors relative hidden md:flex items-center justify-center"
-                        title="View cart"
-                    >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="9" cy="21" r="1"/>
-                          <circle cx="20" cy="21" r="1"/>
-                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                        </svg>
-                        {items.length > 0 && (
-                          <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                            {items.length}
-                          </span>
-                        )}
-                    </button>
-                    {/* Hamburger Button */}
-                    <button
-                        className="md:hidden flex flex-col gap-1 cursor-pointer p-1"
-                        onClick={() => setIsMenuOpen(true)}
-                    >
-                        <div className="w-6 h-0.5 bg-black"></div>
-                        <div className="w-6 h-0.5 bg-black"></div>
-                        <div className="w-6 h-0.5 bg-black"></div>
-                    </button>
-                </nav>
-            </header>
 
-            {/* Main Content */}
-            <div
-                style={{ background: 'linear-gradient(0deg, rgba(57, 69, 8, 0.70) 0%, rgba(57, 69, 8, 0.70) 100%), #5a6b10' }}
-                className="flex-1 flex flex-col items-center justify-start pt-10 md:pt-20 px-4 md:px-8"
-            >
-                {/* Responsive Title */}
-                <h1 className="text-5xl md:text-5xl font-bold text-white text-center mb-8 md:mb-12 max-w-2xl leading-tight">
-                    Tell us about your vehicle
-                </h1>
+                    <div className="field-grid-4">
+                        {/* Year */}
+                        <div className="field">
+                            <label className="field-label" htmlFor="sel-year">Year</label>
+                            <div className="select-wrap">
+                                <select 
+                                    className={`field-select ${vehicleData.year ? 'has-value' : ''}`}
+                                    id="sel-year"
+                                    value={vehicleData.year}
+                                    onChange={(e) => handleInputChange('year', e.target.value)}
+                                >
+                                    <option value="" disabled>Year</option>
+                                    {years.map(y => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                            </div>
+                        </div>
 
-                {/* Form - Optimized for Desktop (Single Row) and Mobile (Stacked) */}
-                <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 w-full max-w-[1100px] mb-12 md:mb-20 shadow-xl">
-                    <div className="flex flex-col lg:flex-row gap-4 xl:gap-6 items-center justify-between">
-                        <div className="relative w-full lg:w-50">
-                            <input
-                                type="text"
-                                placeholder="VIN Number (Optional)"
-                                value={vehicleData.vin}
-                                onChange={(e) => handleInputChange("vin", e.target.value)}
-                                className="w-full h-10 border-b border-gray-300 text-sm focus:outline-none focus:border-lime-500 bg-white pr-10"
-                            />
-                            <button
-                                // onClick={openVinScanner}
-                                className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 text-gray-600 hover:text-gray-900 transition-colors"
-                                title="Scan VIN with camera"
+                        {/* Make */}
+                        <div className="field">
+                            <label className="field-label" htmlFor="sel-make">Make</label>
+                            <div className="select-wrap">
+                                <select 
+                                    className={`field-select ${vehicleData.make ? 'has-value' : ''}`}
+                                    id="sel-make"
+                                    value={vehicleData.make}
+                                    onChange={(e) => handleInputChange('make', e.target.value)}
+                                    disabled={!vehicleData.year || loadingMakes}
+                                >
+                                    <option value="" disabled>{loadingMakes ? 'Loading...' : 'Make'}</option>
+                                    {makes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Model */}
+                        <div className={`field ${!vehicleData.make ? 'field-locked' : ''}`}>
+                            <label className="field-label" htmlFor="sel-model">Model</label>
+                            <div className="select-wrap">
+                                <select 
+                                    className={`field-select ${vehicleData.model ? 'has-value' : ''}`}
+                                    id="sel-model"
+                                    value={vehicleData.model}
+                                    onChange={(e) => handleInputChange('model', e.target.value)}
+                                    disabled={!vehicleData.make || loadingModels}
+                                >
+                                    <option value="" disabled>{loadingModels ? 'Loading...' : 'Model'}</option>
+                                    {models.map(m => <option key={m.model} value={m.model ?? ""}>{m.model}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Trim */}
+                        <div className="field">
+                            <label className="field-label" htmlFor="input-trim">Trim</label>
+                            <div className="select-wrap">
+                                <select 
+                                    className={`field-select ${vehicleData.trim ? 'has-value' : ''}`}
+                                    id="input-trim"
+                                    value={vehicleData.trim}
+                                    onChange={(e) => handleInputChange('trim', e.target.value)}
+                                    disabled={!vehicleData.model || loadingTrims}
+                                >
+                                    <option value="" disabled>{loadingTrims ? 'Loading...' : 'Trim'}</option>
+                                    {trims.map((t, idx) => <option key={`${t.model_trim}-${idx}`} value={t.model_trim ?? ""}>{t.model_trim}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* VIN Toggle */}
+                    <div className="vin-toggle-row">
+                        <span className="vin-toggle-label">Know your VIN? Enter it to auto-fill the fields above.</span>
+                        <button 
+                            className={`btn-vin-toggle ${isVinOpen ? 'open' : ''}`}
+                            onClick={() => setIsVinOpen(!isVinOpen)}
+                            type="button"
+                        >
+                            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                <path d="M2 5l5 5 5-5"/>
+                            </svg>
+                            {isVinOpen ? 'Hide VIN' : 'Enter VIN'}
+                        </button>
+                    </div>
+
+                    {/* Collapsible VIN Section */}
+                    <div className={`vin-section ${isVinOpen ? 'open' : ''}`} aria-hidden={!isVinOpen}>
+                        <div className="vin-label-row">
+                            <label className="field-label" htmlFor="vin-input">VIN Number <span style={{fontWeight:400,textTransform:'none',letterSpacing:0,fontFamily:'var(--font-body)',color:'var(--color-neutral-400)'}}>(optional — auto-fills above)</span></label>
+                            <button className="vin-where" type="button" onClick={() => setIsVinTooltipOpen(true)}>Where's my VIN?</button>
+                        </div>
+
+                        <div className="vin-input-row">
+                            <div className="vin-input-wrap">
+                                <input
+                                    className="field-input"
+                                    id="vin-input"
+                                    type="text"
+                                    maxLength={17}
+                                    placeholder="e.g. 1HGCM82633A004352"
+                                    value={vehicleData.vin}
+                                    onChange={(e) => handleInputChange('vin', e.target.value.toUpperCase())}
+                                />
+                                {vehicleData.vin && (
+                                    <button className="vin-clear show" onClick={() => handleInputChange('vin', '')} type="button">✕</button>
+                                )}
+                            </div>
+                            <button 
+                                className={`btn-decode ${vehicleData.vin.length === 17 ? 'ready' : ''} ${isDecoding ? 'loading' : ''}`}
+                                onClick={handleDecodeVin}
+                                disabled={vehicleData.vin.length !== 17 || isDecoding}
+                                type="button"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                                    <circle cx="12" cy="13" r="3"></circle>
-                                </svg>
+                                {!isDecoding ? (
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+                                    </svg>
+                                ) : (
+                                    <svg className="icon-spin" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        <path d="M14 8A6 6 0 1 1 8 2"/>
+                                    </svg>
+                                )}
+                                <span>{isDecoding ? 'Decoding...' : 'Decode VIN'}</span>
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-4 xl:gap-6 w-full items-center">
-                            <select
-                                value={vehicleData.year}
-                                onChange={(e) => handleInputChange("year", e.target.value)}
-                                className="w-full lg:w-auto min-w-[120px] h-10 border-b border-gray-300 text-sm focus:outline-none bg-transparent cursor-pointer"
-                            >
-                                <option value="">Select Year</option>
-                                {years.map((year) => <option key={year} value={year}>{year}</option>)}
-                            </select>
-
-                            <select
-                                value={vehicleData.make}
-                                onChange={(e) => handleInputChange("make", e.target.value)}
-                                disabled={makes.length === 0 || loadingMakes}
-                                className="w-full lg:w-auto min-w-[140px] h-10 border-b border-gray-300 text-sm focus:outline-none bg-transparent cursor-pointer disabled:opacity-50"
-                            >
-                                <option value="">{loadingMakes ? "Loading..." : "Select Make"}</option>
-                                {makes.map((make) => <option value={make.make}>{make.make}</option>)}
-                            </select>
-
-                            <select
-                                value={vehicleData.model}
-                                onChange={(e) => handleInputChange("model", e.target.value)}
-                                disabled={models.length === 0 || loadingModels}
-                                className="w-full lg:w-auto min-w-[140px] h-10 border-b border-gray-300 text-sm focus:outline-none bg-transparent cursor-pointer disabled:opacity-50"
-                            >
-                                <option value="">{loadingModels ? "Loading..." : "Select Model"}</option>
-                                {models.map((model) => <option value={model.model ?? ""}>{model.model}</option>)}
-                            </select>
-
-                            <select
-                                value={vehicleData.trim}
-                                onChange={(e) => handleInputChange("trim", e.target.value)}
-                                disabled={trims.length === 0 || loadingTrims}
-                                className="w-full lg:w-auto min-w-[140px] h-10 border-b border-gray-300 text-sm focus:outline-none bg-transparent cursor-pointer disabled:opacity-50"
-                            >
-                                <option value="">{loadingTrims ? "Loading..." : "Select Trim"}</option>
-                                {trims.map((trim, index) => <option value={trim.model_trim ?? ""}>{trim.model_trim}</option>)}
-                            </select>
+                        <div className="vin-meta">
+                            <span className="vin-hint-text">17-character Vehicle Identification Number</span>
+                            <span className={`vin-counter ${vehicleData.vin.length === 17 ? 'ready' : ''}`}>{vehicleData.vin.length} / 17</span>
                         </div>
 
-                        <button onClick={handleServiceSelection} disabled={isLoading} className="w-full lg:w-auto px-6 py-3 bg-lime-300 text-black font-semibold text-sm rounded hover:bg-lime-400 transition-colors whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                            {isLoading ? (
-                                <>
-                                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        {decodeResult === 'success' && (
+                            <div className="vin-result success show" role="status">
+                                <span className="vin-result-icon">✅</span>
+                                <div className="vin-result-text">
+                                    <strong>VIN Decoded Successfully</strong>
+                                    Fields have been auto-filled above — please review and confirm the details.
+                                </div>
+                            </div>
+                        )}
+                        {decodeResult === 'partial' && (
+                            <div className="vin-result partial show" role="status">
+                                <span className="vin-result-icon">⚠️</span>
+                                <div className="vin-result-text">
+                                    <strong>Partial Match</strong>
+                                    We identified the make and year — please fill in the remaining fields above.
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </section>
+
+                {/* PANEL 2 — SERVICE LOCATION */}
+                <section className={`panel anim d2 ${vehicleData.location ? 'complete' : ''}`} id="location-panel">
+                    <div className="panel-header">
+                        <div className="panel-title-group">
+                            <span className="panel-icon" aria-hidden="true">📍</span>
+                            <h2 className="panel-title">Service Location</h2>
+                        </div>
+                        <span className="panel-badge" style={{ display: vehicleData.location ? 'flex' : 'none' }}>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            Selected
+                        </span>
+                    </div>
+
+                    <p style={{fontSize:'var(--text-sm)',color:'var(--color-neutral-400)',marginBottom:'var(--space-6)',lineHeight:'var(--leading-normal)'}}>
+                        Choose the area closest to where you'd like us to come. We'll confirm the exact address on the next step.
+                    </p>
+
+                    <div className="location-grid" role="radiogroup">
+                        {LOCATIONS.map(loc => (
+                            <label 
+                                key={loc.id}
+                                className={`location-card ${vehicleData.location === loc.name ? 'selected' : ''}`}
+                            >
+                                <input 
+                                    type="radio" 
+                                    name="location" 
+                                    value={loc.name}
+                                    checked={vehicleData.location === loc.name}
+                                    onChange={() => handleInputChange('location', loc.name)}
+                                />
+                                <div className="loc-check" aria-hidden="true"></div>
+                                <span className="loc-icon" aria-hidden="true">{loc.icon}</span>
+                                <div className="loc-name">{loc.name}</div>
+                                <div className="loc-region">{loc.region}</div>
+                                <span className="loc-tag">
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+                                        <circle cx="5" cy="5" r="4"/><path d="M5 3v2l1.5 1.5"/>
                                     </svg>
-                                    Loading...
-                                </>
-                            ) : (
-                                'Select Your Service'
-                            )}
-                        </button>
+                                    {loc.tag}
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            {/* STICKY CONTINUE BAR */}
+            <div className="continue-bar" role="contentinfo">
+                <div className="continue-summary">
+                    <span className="continue-label">Your selection</span>
+                    <div className="continue-detail">
+                        {isFormComplete ? (
+                            <>
+                                {vehicleData.year} {vehicleData.make} {vehicleData.model} 
+                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span> 
+                                {vehicleData.trim} 
+                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span> 
+                                {vehicleData.location}
+                            </>
+                        ) : (
+                            <span className="placeholder">Complete both sections to continue</span>
+                        )}
                     </div>
                 </div>
-
-                {/* Responsive Image Grid */}
-                <div className="w-full max-w-5xl px-2 md:px-0 mt-auto">
-                    <img
-                        src={vehicleImage}
-                        alt="Vehicle Collage"
-                        className="w-full h-auto object-cover rounded-t-2xl md:rounded-t-[32px] border-x-4 border-t-4 md:border-x-8 md:border-t-8 border-white shadow-2xl"
-                    />
-                </div>
+                <button 
+                    className={`btn-continue ${isFormComplete ? 'active' : ''}`}
+                    disabled={!isFormComplete || isLoading}
+                    onClick={handleContinue}
+                >
+                    {isLoading ? 'Processing...' : 'Next: Service'}
+                    {!isLoading && (
+                        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M6 4l6 5-6 5"/>
+                        </svg>
+                    )}
+                </button>
             </div>
 
-            {/* Footer */}
-            <footer className="bg-gray-100 border-t border-gray-300 px-6 md:px-16 py-8 md:py-10">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-                        <div className="flex items-center gap-2">
-                            <img src={Union} alt="APEX logo" className="h-5 w-5" />
-                            <div className="font-semibold text-black text-sm">APEX Auto Hub</div>
+            {/* VIN TOOLTIP MODAL */}
+            {isVinTooltipOpen && (
+                <div className="vin-tooltip-overlay show" role="dialog" aria-modal="true">
+                    <div className="vin-tooltip-box">
+                        <button className="vin-tooltip-close" onClick={() => setIsVinTooltipOpen(false)}>✕</button>
+                        <h3>Where to Find Your VIN</h3>
+                        <p>Your Vehicle Identification Number (VIN) is a unique 17-character code that identifies your vehicle. Here's where to look:</p>
+                        <div className="vin-locations">
+                            <div className="vin-loc-item">
+                                <span className="vin-loc-icon">🚗</span>
+                                <div>
+                                    <div className="vin-loc-label">Dashboard (Driver's side)</div>
+                                    <div className="vin-loc-desc">Look through the windshield at the lower corner of the dashboard on the driver's side.</div>
+                                </div>
+                            </div>
+                            <div className="vin-loc-item">
+                                <span className="vin-loc-icon">🚪</span>
+                                <div>
+                                    <div className="vin-loc-label">Driver's Door Frame</div>
+                                    <div className="vin-loc-desc">Open the driver's door and look at the door frame or door jamb for a sticker or plate.</div>
+                                </div>
+                            </div>
+                            <div className="vin-loc-item">
+                                <span className="vin-loc-icon">📄</span>
+                                <div>
+                                    <div className="vin-loc-label">Vehicle Documents</div>
+                                    <div className="vin-loc-desc">Found on your registration, insurance card, and title — usually labelled "VIN".</div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-6">
-                            <a href="#/features" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Features</a>
-                            <a href="#/learn" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Learn More</a>
-                            <a href="#/support" onClick={(e) => e.preventDefault()} className="text-[10px] md:text-xs text-gray-600 hover:text-black cursor-pointer">Support</a>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-6">
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M16 11.5v5.5"></path><path d="M8 11.5v5.5"></path><path d="M12 7.5a2 2 0 0 1 2 2v2"></path></svg>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.82 1.08A4.48 4.48 0 0 0 16.11 0c-2.63 0-4.73 2.59-4.07 5.08A12.94 12.94 0 0 1 1.64 1.15 4.48 4.48 0 0 0 2.9 7.86 4.41 4.41 0 0 1 .89 7v.06A4.48 4.48 0 0 0 4.48 11a4.52 4.52 0 0 1-2 .08 4.48 4.48 0 0 0 4.18 3.12A9 9 0 0 1 0 19.54a12.75 12.75 0 0 0 6.92 2.03c8.3 0 12.84-6.88 12.84-12.84v-.58A9.18 9.18 0 0 0 23 3z"></path></svg>
-                        </a>
                     </div>
                 </div>
-            </footer>
+            )}
+
+            {/* FLOATING RESUME CART */}
+            {totalCartItems > 0 && !isCartDismissed && (
+                <div className="floating-cart visible" id="floating-cart">
+                    <a href="/" className="floating-cart-bubble" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+                        <div className="floating-cart-icon">
+                            <svg viewBox="0 0 16 16"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+                            <span className="floating-cart-count">{totalCartItems}</span>
+                        </div>
+                        <div className="floating-cart-text">
+                            <span className="floating-cart-label">Resume booking</span>
+                            <span className="floating-cart-detail">You have {totalCartItems} item{totalCartItems !== 1 ? 's' : ''} in cart</span>
+                        </div>
+                    </a>
+                    <button className="floating-cart-dismiss" onClick={() => setIsCartDismissed(true)}>✕</button>
+                </div>
+            )}
         </div>
     );
 };
