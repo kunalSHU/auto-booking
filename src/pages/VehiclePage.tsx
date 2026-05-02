@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import vehicleImage from '../Assets/vehicle_image.png';
 import Union from '../Assets/Union.svg';
+import { useCart } from '../context/CartContext';
 
 interface VehicleOption {
     make: string;
@@ -10,8 +11,13 @@ interface VehicleOption {
     model_year: number;
 }
 
-const VehiclePage: React.FC = () => {
+interface VehiclePageProps {
+    onCartClick?: () => void;
+}
+
+const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
     const navigate = useNavigate();
+    const { items } = useCart();
     // State for Mobile Menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -163,6 +169,22 @@ const VehiclePage: React.FC = () => {
                     </div>
                     <button className="px-3 py-2 md:py-3 bg-lime-300 text-black text-[10px] md:text-xs font-normal rounded-sm hover:bg-lime-400">
                         Book Now
+                    </button>
+                    <button 
+                        onClick={onCartClick}
+                        className="p-2 bg-[#D4F49B] rounded hover:bg-lime-300 transition-colors relative hidden md:flex items-center justify-center"
+                        title="View cart"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="9" cy="21" r="1"/>
+                          <circle cx="20" cy="21" r="1"/>
+                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        {items.length > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                            {items.length}
+                          </span>
+                        )}
                     </button>
                     {/* Hamburger Button */}
                     <button

@@ -1,6 +1,7 @@
 const db = require('../db');
 const express = require('express');
 const router = express.Router();
+const { getPerplexityEstimate } = require('../utils/perplexityEstimator');
 
 // Import fetch (works with both old and new node-fetch versions)
 let fetch;
@@ -72,7 +73,35 @@ const getOrCreateVehicle = async (vehicle) => {
   }
 };
 
-// POST /api/services/estimate - Get AI estimate for a service
+// Service name mapping: frontend display names to database service names
+const serviceNameMap = {
+  'Oil & Filter Change': 'Oil Change',
+  'Tire Rotation': 'Tire Rotation',
+  'Fluid Top-up': 'Power Steering Fluid Top-Up',
+  'Battery Check & Service': 'Battery Replacement',
+  'Air Filter Replacement': 'Air Filter Replacement',
+  'Computer Diagnostic Scan': 'Computer Diagnostic Scan',
+  'Brake Inspection': 'Brake Service',
+  'Engine Inspection': 'Engine Inspection',
+  'Transmission Check': 'Transmission Fluid Change',
+  'Suspension Inspection': 'Suspension Inspection',
+  'Engine Performance Tuning': 'Engine Performance Tuning',
+  'Suspension Upgrade': 'Suspension Upgrade',
+  'Brake System Upgrade': 'Brake System Upgrade',
+  'Exhaust System Upgrade': 'Exhaust System Upgrade',
+  'Fuel System Cleaning': 'Fuel System Cleaning',
+  'Custom Wheels Installation': 'Custom Wheels Installation',
+  'Body Kit Installation': 'Body Kit Installation',
+  'Window Tint Application': 'Window Tint Application',
+  'Custom Paint Service': 'Custom Paint Service',
+  'Interior Customization': 'Interior Customization',
+  'Basic Wash & Dry': 'Basic Wash & Dry',
+  'Undercarriage Wash': 'Undercarriage Wash',
+  'Carpet & Mat Cleaning': 'Carpet & Mat Cleaning',
+  'Seat Conditioning': 'Seat Conditioning',
+};
+
+// POST /api/services/estimate - Get price estimate using Groq
 router.post('/estimate', async (req, res) => {
   const { vehicle, serviceTitle } = req.body;
 
@@ -84,86 +113,65 @@ router.post('/estimate', async (req, res) => {
     // Get or create vehicle and get vehicle_id
     const vehicleId = await getOrCreateVehicle(vehicle);
 
-    // Check if estimate already exists in database using vehicle_id
+    // Map frontend service name to database service name
+    const dbServiceName = serviceNameMap[serviceTitle] || serviceTitle;
+
+    console.log(`Getting estimate for ${vehicle.year} ${vehicle.make} ${vehicle.model} - ${dbServiceName}`);
+
+    // Look up service_id by service name
+    const service = await db.oneOrNone(
+      'SELECT service_id FROM "Services" WHERE name = $1',
+      [dbServiceName]
+    );
+
+    if (!service) {
+      return res.status(404).json({ error: `Service "${serviceTitle}" not found in database` });
+    }
+
+    const serviceId = service.service_id;
+    console.log(`✓ Found service ID ${serviceId} for "${serviceTitle}"`);
+
+    // Check if estimate already exists in database using service_id and vehicle_id
     const existingEstimate = await db.oneOrNone(
       'SELECT * FROM "ServiceEstimates" WHERE service_id = $1 AND vehicle_id = $2',
-      [serviceTitle, vehicleId]
+      [serviceId, vehicleId]
     );
 
     if (existingEstimate) {
       const estimate = `$${existingEstimate.price_min}-${existingEstimate.price_max}`;
-      console.log('Estimate found in database:', estimate);
+      console.log('✓ Estimate found in database:', estimate);
       return res.json({ estimate, source: 'database', vehicleId });
     }
 
-    // Get estimate from AI if not in database
-    const apiKey = process.env.openai_key;
-    if (!apiKey) {
-      return res.status(500).json({ error: 'API key not configured' });
-    }
-
-    const prompt = `You are an automotive service pricing expert. Provide a realistic cost estimate for the following service in city of Mississauga, Ontario Canada.
-Service: ${serviceTitle}
-Vehicle: ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim || ''}
-
-Provide ONLY a price range in the format "$XX-YY" (e.g., "$45-65"). Nothing else. Just the price range.`;
-
-    console.log('AI Prompt:', prompt);
-
-    const response = await fetchWithTimeout(
-      'https://openrouter.ai/api/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // model: 'meta-llama/llama-3.3-70b-instruct:free',
-          // model: 'openai/gpt-oss-120b:free',
-          model: 'deepseek/deepseek-r1-0528:free',
-          // model: 'z-ai/glm-4.5-air:free',
-          // model: 'openai/gpt-oss-20b:free',
-          messages: [
-            {
-              role: 'user',
-              content: prompt,
-            },
-          ],
-        }),
-      },
-      30000 // 30 second timeout for AI API
+    // Get estimate from Perplexity (performs web search)
+    const estimate = await getPerplexityEstimate(
+      vehicle.year,
+      vehicle.make,
+      vehicle.model,
+      vehicle.trim,
+      serviceTitle
     );
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('OpenRouter API error:', errorData);
-      return res.status(response.status).json({ error: 'Failed to get estimate from AI' });
-    }
-
-    const data = await response.json();
-    const estimate = data.choices?.[0]?.message?.content?.trim();
-
     if (!estimate) {
-      return res.status(500).json({ error: 'No estimate generated' });
+      return res.status(500).json({ error: 'Failed to get estimate from Perplexity' });
     }
 
-    // Parse and save estimate to database using vehicle_id
+    // Parse and save estimate to database using service_id and vehicle_id
     const parsedPrice = parsePriceEstimate(estimate);
     if (parsedPrice) {
       try {
         await db.none(
           'INSERT INTO "ServiceEstimates" (service_id, vehicle_id, price_min, price_max, created_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)',
-          [serviceTitle, vehicleId, parsedPrice.price_min, parsedPrice.price_max]
+          [serviceId, vehicleId, parsedPrice.price_min, parsedPrice.price_max]
         );
-        console.log('Estimate saved to database:', estimate);
+        console.log('✓ Estimate saved to database:', estimate);
       } catch (dbError) {
-        console.error('Error saving estimate to database:', dbError);
+        console.error('❌ Error saving estimate to database:', dbError);
         // Continue anyway, still return the estimate
       }
     }
 
-    res.json({ estimate, source: 'ai', vehicleId });
+    res.json({ estimate, source: 'web-search', vehicleId });
   } catch (error) {
     console.error('Error getting estimate:', error);
     res.status(500).json({ error: 'Failed to get service estimate' });

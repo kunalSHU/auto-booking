@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config(); // Load environment variables from .env file
 
 const servicesRoutes = require('./routes/servicesRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
@@ -44,7 +45,7 @@ app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
-  
+
   // Start the Pub/Sub worker
   listenForMessages();
 });

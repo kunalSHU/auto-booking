@@ -4,7 +4,6 @@ CREATE TYPE location_type_enum AS ENUM ('drop-off', 'customer-location');
 CREATE TYPE booking_status_enum AS ENUM ('pending', 'confirmed', 'completed', 'canceled');
 CREATE TYPE payment_method_enum AS ENUM ('credit_card', 'debit_card', 'paypal', 'stripe');
 CREATE TYPE payment_status_enum AS ENUM ('pending', 'successful', 'failed');
-CREATE TYPE service_difficulty_enum AS ENUM ('easy', 'medium', 'hard');
 
 -- Create Tables
 CREATE TABLE "Users" (
@@ -28,15 +27,29 @@ CREATE TABLE "Vehicles" (
 );
 
 CREATE TABLE "Services" (
-  "service_id" varchar(30) PRIMARY KEY,
+  "service_id" SERIAL PRIMARY KEY,
   "category" varchar,
   "name" varchar,
-  "estimated_time" int4range,
-  "tools_required" text,
-  "difficulty" service_difficulty_enum,
-  "avg_cost" numrange,
   "description" text,
+  "service_active" boolean DEFAULT true,
   "created_at" timestamp
+);
+
+CREATE TABLE "PopupQuestions" (
+  "question_id" SERIAL PRIMARY KEY,
+  "service_id" int,
+  "question_text" text NOT NULL,
+  "question_order" int,
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "PopupAnswers" (
+  "answer_id" SERIAL PRIMARY KEY,
+  "question_id" int,
+  "answer_text" text NOT NULL,
+  "is_option" boolean DEFAULT false,
+  "answer_order" int,
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "DetailingOptions" (
@@ -50,7 +63,7 @@ CREATE TABLE "DetailingOptions" (
 
 CREATE TABLE "ServiceEstimates" (
   "estimate_id" SERIAL PRIMARY KEY,
-  "service_id" varchar(30),
+  "service_id" int,
   "vehicle_id" int,
   "price_min" decimal,
   "price_max" decimal,
@@ -94,7 +107,11 @@ ALTER TABLE "Bookings" ADD FOREIGN KEY ("detailing_id") REFERENCES "DetailingOpt
 ALTER TABLE "Payments" ADD FOREIGN KEY ("booking_id") REFERENCES "Bookings" ("booking_id");
 ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
 ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("vehicle_id") REFERENCES "Vehicles" ("vehicle_id");
+ALTER TABLE "PopupQuestions" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
+ALTER TABLE "PopupAnswers" ADD FOREIGN KEY ("question_id") REFERENCES "PopupQuestions" ("question_id");
 
 -- Indexes
 CREATE INDEX idx_services_category ON "Services" ("category");
 CREATE INDEX idx_service_estimates_lookup ON "ServiceEstimates" ("service_id", "vehicle_id");
+CREATE INDEX idx_popup_questions_service ON "PopupQuestions" ("service_id");
+CREATE INDEX idx_popup_answers_question ON "PopupAnswers" ("question_id");

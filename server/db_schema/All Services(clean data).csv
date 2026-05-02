@@ -1,0 +1,770 @@
+Category,Service,Pop-up Question(s),Answer(s),Estimated Time,Description,Service Active
+Popular ,Oil Change,1. Synthetic (recommended) or conventional?,"1.1  Y
+1.2  N
+1.3  Not sure",30 min,"Drain the old engine oil, replace it with fresh oil, and install a new oil filter to keep the engine properly lubricated and running smoothly.",Y
+,,2. Is there an oil leak?,"2.1  Y
+2.2  N",,,
+Popular ,"Tires (Repair, Replacement & Flat Fix)",1. What type of tire service do you need?,"1.1  Seasonal swap (winter ↔ summer on rims)
+1.2  Tire replacement (new tires)
+1.3  Flat tire change (install spare)
+1.4  Not sure",30–60 min,"We safely remove and install your tires at your location, ensuring they are properly mounted and ready for the road.",Y
+,,2. Do you have the tires ready at the location?,"2.1  Yes
+2.2  No",,,
+,,3. Do you have a wheel lock key (if applicable)?,"3.1  Yes
+3.2  No
+3.3  Not sure",,,
+Popular ,Brake Pad Replacement,"1. Are you replacing front, rear, or both?","1.1 Front
+1.2 Rear
+1.3 Both",45–60 min,Remove worn brake pads and install new ones to restore safe stopping power and prevent damage to the brake rotors,Y
+,,2. Any squeaking or grinding noises?,"2.1 Yes
+2.2 No",,,
+,,3. Want the rotors inspected/replaced too?,"3.1 Yes
+3.2 No ",,,
+Popular ,Battery Replacement,1. What’s happening with the car?,"1.1  Won’t start
+1.2  Slow crank
+1.3  Battery light on
+1.4  Dead",30–45 min,Remove the old battery and install a new one to ensure the vehicle starts reliably and the electrical system functions properly.,Y
+,,2. Do you have jumper cables or need a boost?,"2.1  Yes
+2.2  No",,,
+,,3. About how old is your battery?,"3.1  <2 yrs
+3.2  2–4 yrs
+3.3  4+ yrs
+3.4  Not sure",,,
+Popular ,Tire Rotation,1. Do you have a wheel lock key?,"1.1  Yes
+1.2  No",20–30 min,Move tires between the front and rear positions to promote even tire wear and extend the life of the tires.,Y
+,,2. Any vibrations or pulling while driving?,"2.1 Yes 
+2.2 No",,,
+Popular ,Engine Air Filter Replacement,1. Any noticeable loss of power or unusual engine sounds?,"1.1 Yes 
+1.2 No",15–20 min,Install a new engine air filter to ensure the engine receives clean air for efficient combustion.,Y
+Popular ,Cabin Air Filter Replacement,,,15–20 min,Replace the cabin air filter to improve the quality of air entering the vehicle’s interior through the ventilation system.,Y
+Popular ,Spark Plug Replacement,,,30–45 min,"Install new spark plugs to improve engine ignition, fuel efficiency, and overall engine performance.",Y
+Popular ,Coolant Flush,,,45–60 min,Drain old coolant from the cooling system and refill with fresh coolant to help prevent engine overheating and corrosion.,Y
+Popular ,Transmission Fluid Change,1. Are you currently experiencing any transmission issues?,"1.1  No issues
+1.2  Vibrating or shaking
+1.3  Jerking during acceleration
+1.4  Unusual noises
+1.5  Other (please describe)",45–60 min,Replace old transmission fluid with new fluid to help maintain smooth gear shifting and protect the transmission.,Y
+,,2. How is your vehicle shifting?,"2.1  Shifting normally
+2.2  Hard or rough shifting
+2.3  Slipping between gears
+2.4  Delayed engagement (slow to move after shifting)",,,
+,,3. When was your last transmission service?,"3.1  Within the last 30,000 km
+3.2  30,000 – 60,000 km ago
+3.3  Over 60,000 km ago
+3.4  Not sure",,,
+Popular ,Brake Fluid Flush,1. Any soft brakes or warning lights?,"1.1  Yes
+1.2  No",30–45 min,Remove contaminated brake fluid and refill with fresh fluid to maintain proper braking performance and safety.,Y
+Popular ,Serpentine Belt Replacement,1. Any noise from the engine?,"1.1  Yes
+1.2  No","30–60 min
+",Install a new serpentine belt to restore proper operation of engine-driven components like the alternator and AC.,Y
+,,2. Has the belt ever been replaced before?,"2.1  Yes
+2.2  No
+2.3  Unsure",,,
+Popular ,Power Steering Fluid Replacement ,1. Any difficulty turning the wheel?,"1.1  Yes
+1.2  No",15–20 min,Check the power steering system and add fluid if necessary to ensure smooth and easy steering.,Y
+Popular ,Light Bulb Replacement ,1. Which light?,"1.1  Headlight
+1.2  Taillight
+1.3  Brake
+1.4  Turn signal
+1.5  Fog
+1.6  Interior",20–30 min,Replace faulty or burnt-out headlight or taillight bulbs to restore proper vehicle visibility and road safety.,Y
+,,2. Which side?,"2.1  Driver
+2.2  Passenger
+2.3  Both",,,
+,,3. Bulb type preference?,"3.1  LED
+3.2  Halogen
+3.3  HID
+3.4  Xenon
+3.5  Not sure",,,
+Popular ,Windshield Wiper Replacement,"1. Wipers for front, rear, or both?","1.1 Front
+1.2 Rear
+1.3 Both",10–15 min,"Install new windshield wiper blades to improve visibility during rain, snow, or windshield cleaning.",Y
+,,2. Wiper type preference?,"2.1  Standard
+2.2  Winter
+2.3  Premium",,,
+Popular ,Alternator Replacement,1. Symptoms?,"1.1  Dim lights
+1.2  Battery keeps dying
+1.3  Car won’t start",60–90 min,Remove a faulty alternator and install a new one to restore proper battery charging and electrical system performance.,Y
+,,2. Check engine light on?,"2.1  Yes
+2.2  No",,,
+,,3. is the battery light on,"3.1  Yes
+3.2  No",,,
+Popular ,Check Engine Light Inspection ,1. Is the car running normally?,"1.1  Yes
+1.2  No",15–30 min,"Scan your vehicle’s computer for engine codes, identify potential issues, and reset the check engine light if appropriate.",Y
+,,"2. Any sounds, smells, or issues when the light is on?",,,,
+,,3. Add comment,,,,
+Packages ,Bronze Package – Essential Checkup,1. “Anything else the technician should know?”,,45-60 min,"Inspect & top up all under-hood fluid levels
+4-wheel tire rotation
+Brake inspection
+Battery health test
+Steering & suspension inspection
+Inspect CV axle boots
+Check lights, wipers & washers
+Inspect air & cabin filters
+Weatherstrip lubrication
+Underbody inspection for leaks/damage",Y
+Packages ,Silver Maintenace Package - Preventive Care,1. “Anything else the technician should know?”,,45-60 min,"Oil & filter change
+Tire pressure check + adjustment
+Brake cleaning & adjustment
+Detailed fluid condition check (not just top-up)
+Scan for basic diagnostic codes",Y
+Packages ,Gold Mainteanance Package - Premium Service,1. “Anything else the technician should know?”,,45-60 min,"Full vehicle diagnostic scan
+Battery terminal cleaning
+Cabin + engine air filter replacement (if needed)
+Brake system deeper inspection (pads + rotors condition report)
+Minor fluid top-offs included (washer fluid, coolant, etc.)
+Priority booking + faster service",Y
+Scheduled Maintenace ,5000 km,,,45–60 minutes,"Perform a routine inspection including oil level check, tire inspection, fluid checks, and general safety inspection at the 5,000 km interval.",Y
+Scheduled Maintenace ,"10,000 km",,,60–75 minutes,"Perform manufacturer-recommended maintenance including oil change, tire inspection, cabin filter check, air filter check, fluid checks, and system inspection at the 10,000 km service interval.",Y
+Scheduled Maintenace ,"15,000 km",,,60–90 minutes,"Perform a 15,000 km preventative maintenance service with a full multi-point inspection of key systems, including fluids, brakes, tires, and battery to ensure optimal performance and safety. Air and cabin filters are inspected and replaced if needed based on their condition.",Y
+Scheduled Maintenace ,"20,000 km",,,75–90 minutes,"Perform scheduled maintenance including fluid checks, tire inspection, and system diagnostics at the 20,000 km interval.",Y
+Scheduled Maintenace ,"25,000 km",,,60–90 minutes,"Carry out preventative maintenance tasks and vehicle system inspections recommended at 25,000 km.",Y
+Scheduled Maintenace ,"30,000 km",,,90–120 minutes,"Perform manufacturer-recommended maintenance including filter inspection, fluid checks, and component inspection at the 30,000 km milestone.",Y
+Scheduled Maintenace ,"35,000 km",,,60–90 minutes,"Conduct routine maintenance and system checks recommended at the 35,000 km interval.",Y
+Scheduled Maintenace ,"40,000 km",,,90–120 minutes,"Perform a comprehensive 40,000 km scheduled service including full fluid, brake, and tire inspections to maintain performance and safety. Service includes engine oil change, brake fluid, transmission and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"45,000 km",,,75–105 minutes,"Perform routine inspection and preventative maintenance tasks recommended at 45,000 km.",Y
+Scheduled Maintenace ,"50,000 km",,,120–180 minutes,"Perform a comprehensive maintenance service including inspection of engine components, brakes, suspension, and fluids at 50,000 km.",Y
+Scheduled Maintenace ,"55,000 km",,,75–105 minutes,"Perform a comprehensive maintenance service including inspection of engine components, brakes, suspension, and fluids at 55,000 km.",Y
+Scheduled Maintenace ,"60,000 km",,,120–180 minutes,"Perform major scheduled maintenance including component inspection, fluid replacement, and preventative servicing recommended at 60,000 km.",Y
+Scheduled Maintenace ,"65,000 km",,,75–105 minutes,"Performs routine vehicle inspection and maintenance at 65,000 km including fluid level checks, tire inspection, and basic system evaluations.",Y
+Scheduled Maintenace ,"70,000 km",,,90–120 minutes,"Performs scheduled maintenance at 70,000 km including inspection of brakes, suspension components, belts, hoses, and engine performance systems.",Y
+Scheduled Maintenace ,"75,000 km",,,90–150 minutes,"Performs manufacturer-recommended maintenance at 75,000 km including oil service, fluid checks, and inspection of critical vehicle systems.",Y
+Scheduled Maintenace ,"80,000 km",,,120–180 minutes,"Perform a comprehensive 80,000 km scheduled maintenance including inspection of engine components, brakes, belts, hoses, filters, and all fluid conditions to ensure long-term reliability. Service includes engine oil change, brake, transmission, and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"85,000 km",,,90–120 minutes,"Performs routine maintenance and inspection at 85,000 km to ensure engine, braking, and electrical systems continue operating properly.",Y
+Scheduled Maintenace ,"90,000 km",,,120–180 minutes,"Performs comprehensive 90,000 km maintenance including inspection of drivetrain, suspension, fluids, filters, and major engine components.",Y
+Scheduled Maintenace ,"95,000 km",,,90–120 minutes,"Performs routine service at 95,000 km including inspection of vehicle safety systems, fluid levels, and wear components.",Y
+Scheduled Maintenace ,"100,000 km",,,150–210 minutes,"Performs major manufacturer-recommended maintenance at 100,000 km including inspection or replacement of key components such as spark plugs, filters, fluids, and belts where required.",Y
+Scheduled Maintenace ,"105,000 km",,,90–120 minutes,"Performs scheduled vehicle maintenance at 105,000 km including system inspections, fluid checks, and replacement of minor service items.",Y
+Scheduled Maintenace ,"110,000 km",,,120–180 minutes,"Performs preventative maintenance at 110,000 km including inspection of braking, steering, cooling, and engine systems.",Y
+Scheduled Maintenace ,"115,000 km",,,90–120 minutes,"Performs routine service at 115,000 km including fluid level inspection, safety checks, and evaluation of wear components.",Y
+Scheduled Maintenace ,"120,000 km",,,150–210 minutes,"Perform a major 120,000 km maintenance service including inspection of timing components, drivetrain, cooling system, and engine performance systems to ensure peak reliability. Service includes engine oil change, brake, transmission, and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"125,000 km",,,90–120 minutes,"Performs routine vehicle maintenance at 125,000 km including fluid checks, brake inspection, and engine performance evaluation.",Y
+Scheduled Maintenace ,"130,000 km",,,120–180 minutes,"Performs preventative maintenance service at 130,000 km including inspection of suspension, steering, engine, and electrical systems.",Y
+Scheduled Maintenace ,"135,000 km",,,120–180 minutes,"Performs routine service at 135,000 km including system diagnostics, safety checks, and fluid inspections.",Y
+Scheduled Maintenace ,"140,000 km",,,90–120 minutes,"Performs scheduled maintenance at 140,000 km including inspection of belts, hoses, brakes, suspension components, and fluid conditions.",Y
+Scheduled Maintenace ,"145,000 km",,,90–120 minutes,"Performs preventative maintenance at 145,000 km including inspection of engine performance systems and vehicle safety components.",Y
+Scheduled Maintenace ,"150,000 km",,,90–120 minutes,"Performs major maintenance service at 150,000 km including inspection and possible replacement of key drivetrain, ignition, and fluid components.",Y
+Scheduled Maintenace ,"155,000 km",,,90–120 minutes,"Performs routine inspection and maintenance at 155,000 km including fluid checks and evaluation of wear items.",Y
+Scheduled Maintenace ,"160,000 km",,,90–120 minutes,"Perform a comprehensive 160,000 km scheduled maintenance including inspection of engine, cooling, suspension, and braking systems to ensure continued performance and safety. Service includes engine oil change, brake, transmission, and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"165,000 km",,,90–120 minutes,"Performs preventative maintenance service at 165,000 km including safety inspections and fluid system evaluations.",Y
+Scheduled Maintenace ,"170,000 km",,,90–120 minutes,"Performs routine vehicle maintenance at 170,000 km including inspection of belts, hoses, filters, and brake components.",Y
+Scheduled Maintenace ,"175,000 km",,,90–120 minutes,"Performs scheduled inspection and maintenance at 175,000 km including checks of major vehicle systems.",Y
+Scheduled Maintenace ,"180,000 km",,,90–120 minutes,"Performs major maintenance at 180,000 km including detailed inspection of drivetrain, engine performance components, and cooling systems.",Y
+Scheduled Maintenace ,"185,000 km",,,90–120 minutes,"Performs preventative service at 185,000 km including fluid inspection, safety checks, and system diagnostics.",Y
+Scheduled Maintenace ,"190,000 km",,,90–120 minutes,"Performs routine maintenance and inspection at 190,000 km to ensure continued vehicle reliability.",Y
+Scheduled Maintenace ,"195,000 km",,,90–120 minutes,"Performs scheduled service at 195,000 km including inspection of engine, braking, electrical, and suspension systems.",Y
+Scheduled Maintenace ,"200,000 km",,,90–120 minutes,"Performs major high-mileage service at 200,000 km including inspection of critical engine components, drivetrain systems, and fluid replacements where necessary.",Y
+Scheduled Maintenace ,"205,000 km",,,90–120 minutes,"Performs routine maintenance at 205,000 km including system inspections and fluid checks.",Y
+Scheduled Maintenace ,"210,000 km",,,90–120 minutes,"Performs preventative maintenance service at 210,000 km including evaluation of engine performance and safety systems.",Y
+Scheduled Maintenace ,"215,000 km",,,90–120 minutes,"Performs routine vehicle maintenance at 215,000 km including inspection of key wear components and fluid systems.",Y
+Scheduled Maintenace ,"220,000 km",,,90–120 minutes,"Performs scheduled maintenance at 220,000 km including inspection of drivetrain, suspension, and cooling system components.",Y
+Scheduled Maintenace ,"225,000 km",,,90–120 minutes,"Performs preventative maintenance at 225,000 km including system diagnostics, fluid checks, and safety inspections.",Y
+Scheduled Maintenace ,"230,000 km",,,90–120 minutes,"Performs high-mileage maintenance at 230,000 km including inspection of major vehicle systems to ensure continued safe operation.",Y
+Scheduled Maintenace ,"235,000 km",,,90–120 minutes,"Performs high-mileage preventative maintenance at 235,000 km including inspection of engine performance, drivetrain components, fluids, and safety systems.",Y
+Scheduled Maintenace ,"240,000 km",,,90–120 minutes,"Perform a comprehensive 240,000 km scheduled maintenance including inspection of cooling, braking, suspension, and engine components to ensure long-term reliability. Service includes engine oil change, brake, transmission, and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"245,000 km",,,90–120 minutes,"Performs routine high-mileage service at 245,000 km including fluid inspections, safety checks, and evaluation of wear components.",Y
+Scheduled Maintenace ,"250,000 km",,,90–120 minutes,"Performs major high-mileage maintenance at 250,000 km including inspection of drivetrain systems, engine components, belts, hoses, and fluid conditions.",Y
+Scheduled Maintenace ,"255,000 km",,,90–120 minutes,"Performs preventative maintenance at 255,000 km including system diagnostics, brake inspection, and fluid level checks.",Y
+Scheduled Maintenace ,"260,000 km",,,90–120 minutes,"Performs scheduled service at 260,000 km including inspection of suspension, steering, engine performance systems, and cooling components.",Y
+Scheduled Maintenace ,"265,000 km",,,90–120 minutes,"Performs routine maintenance at 265,000 km including inspection of safety systems, fluid conditions, and high-wear engine components.",Y
+Scheduled Maintenace ,"270,000 km",,,90–120 minutes,"Performs preventative high-mileage service at 270,000 km including inspection of drivetrain components, engine systems, and braking systems.",Y
+Scheduled Maintenace ,"275,000 km",,,90–120 minutes,"Performs scheduled maintenance at 275,000 km including system diagnostics, fluid inspections, and evaluation of major vehicle systems.",Y
+Scheduled Maintenace ,"280,000 km",,,90–120 minutes,"Perform a comprehensive 280,000 km high-mileage maintenance including inspection of engine performance components, cooling systems, and suspension to ensure continued reliability. Service includes engine oil change, brake, transmission, and differential fluid changes, tire rotation, washer fluid top-up, and air & cabin filter replacement.",Y
+Scheduled Maintenace ,"285,000 km",,,90–120 minutes,"Performs routine preventative service at 285,000 km including inspection of fluid systems, brakes, and vehicle safety components.",Y
+Scheduled Maintenace ,"290,000 km",,,90–120 minutes,"Performs scheduled service at 290,000 km including inspection of drivetrain systems, belts, hoses, and electrical components.",Y
+Scheduled Maintenace ,295.000 km,,,90–120 minutes,"Performs preventative maintenance at 295,000 km including system inspections, fluid evaluations, and safety checks.",Y
+Scheduled Maintenace ,"300,000 km",,,90–120 minutes,"Performs major high-mileage service at 300,000 km including a comprehensive inspection of engine, drivetrain, suspension, braking, and cooling systems to ensure continued safe operation.",Y
+Diagonsis & Testiing ,Check Engine Light On,1. Is the light flashing or solid?,"1.1 Flashing 
+1.2 Solid ",30–60 min,Perform a diagnostic scan and inspection to identify the cause of the check engine light and recommend next steps.,Y
+,,2. Is the vehicle drivable?,"2.1  Yes
+2.2  No",,,
+,,3. Any loss of power?,"3.1  Yes
+3.2  No",,,
+,,4. Is the car vibrating,"4.1  Yes
+4.2  No",,,
+,,5. Is there any noise,"5.1  Yes
+5.2  No
+5.3  Add any comments",,,
+Diagonsis & Testiing ,Car Won’t Start (No Sound or Clicking),1. Does the dashboard/ignition turn on?,"1.1  Yes
+1.2  No",30–60 minutes,"Diagnose starting system issues including battery, starter, and electrical faults preventing the engine from turning over.",Y
+,,2. Do you hear any clicking or cranking?,"2.1  Yes
+2.2  No",,,
+,,3. Any fluid leaks,"3.1  Yes
+3.2  No
+3.3  Add any comments",,,
+Diagonsis & Testiing ,Car Shaking or Vibrating,1. When does it happen?,"1.1  Idle
+1.2  Driving
+1.3  Braking",45–75 min,"Inspect tires, suspension, and engine components to identify the source of vibrations and restore smooth driving.",Y
+,,2. Where is it felt?,"2.1  Steering
+2.2  Seat
+2.3  Whole car
+2.4  Add any comments",,,
+Diagonsis & Testiing ,Brake Noise (Squeaking or Grinding),1. What type of noise?,"1.1  Squeaking
+1.2  Grinding",30–60 min,"Inspect brake pads, rotors, and hardware to diagnose noise and ensure safe braking performance.",Y
+,,2. When do you hear it?,"2.1  Light braking
+2.2  Hard braking
+2.3  Constant",,,
+,,3. Is the brake light on the dashboard,"3.1  Yes
+3.2  No
+3.3  Add any comments",,,
+Diagonsis & Testiing ,Car Overheating,1. Is the temperature gauge high?,"1.1  Yes
+1.2  No",45–75 minutes,"Diagnose cooling system issues including leaks, thermostat, or radiator problems to prevent engine damage.",Y
+,,2. Any coolant leaks or low levels?,"2.1  Yes
+2.2  No
+2.3  Unsure
+2.4  Add any comments",,,
+Diagonsis & Testiing ,"Strange Noises (Clicking, Knocking)",1. What type of noise?,"1.1  Clicking
+1.2  Knocking
+1.3  Other",45–75 min,"Identify abnormal noises from engine, suspension, or drivetrain components to prevent further damage.",Y
+,,2. When do you hear it?,"2.1  Startup
+2.2  Driving
+2.3  Turning
+2.4  Add any comments",,,
+Diagonsis & Testiing ,Not Sure What’s Wrong (Full Diagnosis),1. What symptoms are you noticing? (Short text or select),Optional,60–120 min,Perform a comprehensive multi-point inspection and diagnostic scan to identify any underlying issues.,Y
+,,2. Is the car drivable?,"2.1  Yes
+2.2  No
+2.3  Add any comments",,,
+Diagonsis & Testiing ,Tire Pressure Light On (TPMS),1. Do you have a flat tire?,"1.1  Yes
+1.2  No
+1.3  Add any comments",15–30 min,Check tire pressures and TPMS sensors to ensure proper inflation and system accuracy.,Y
+Diagonsis & Testiing ,AC Not Working (No Cold Air),1. Is there any airflow from vents?,"1.1  Yes
+1.2  No",45–75 min,"Diagnose AC system issues including refrigerant levels, compressor function, and airflow problems.",Y
+,,2. Is the air warm or slightly cool?,2.2  Add any comments,,,
+Diagonsis & Testiing ,Heater Not Working ,1. Is there any airflow from vents?,"1.1  Yes
+1.2  No",45–75 min,"Diagnose and repair heating system issues by checking airflow from vents, assessing air temperature, 
+and identifying any underlying problems to restore proper cabin heating and comfort.",Y
+,,2. Is the air warm or slightly cool?,2.2  Add any comments,,,
+Diagonsis & Testiing ,Oil or Fluid Leak,1. Where do you see the leak?,"1.1  Front
+1.2  Middle
+1.3  Rear",45–90 min,Identify the source of leaks and recommend repairs to prevent damage and fluid loss.,Y
+,,2. What color is the fluid?,"2.1  Dark
+2.2  Brown
+2.3  Green
+2.4  Clear
+2.5  Unsure
+2.6  Add any comments",,,
+Diagonsis & Testiing ,Steering Issues (Pulling or Hard to Turn),1. Is the car pulling to one side?,"1.1  Yes
+1.2  No",45–75 min,Inspect steering and suspension components to resolve handling issues and ensure safe control.,Y
+,,2. Is steering stiff or noisy?,"2.1  Yes
+2.2  No
+2.3  Add any comments",,,
+Diagonsis & Testiing ,Burning Smell from Car,1. What kind of smell?,"1.1  Rubber
+1.2  Oil
+1.3  Electrical",45–75 min,Identify the source of burning smells to prevent potential mechanical or electrical failures.,Y
+,,2. When do you notice it?,"2.1  Driving
+2.2  Idle
+2.3  After driving
+2.4  Add any comments",,,
+Diagonsis & Testiing ,"Excessive Smoke (White, Blue, Black)",1. What color is the smoke?,"1.1  White
+1.2  Blue
+1.3  Black",45–90 min,Diagnose engine or exhaust issues based on smoke color to prevent serious engine damage.,Y
+,,2. When does it occur?,"2.1  Startup
+2.2  Driving
+2.3  Acceleration
+2.4  Add any comments",,,
+Diagonsis & Testiing ,Car Stalling While Driving,1. When does it stall?,"1.1  Idle
+1.2  Driving
+1.3  Stopping",60–90 min,"Diagnose fuel, air, or electrical system issues causing the vehicle to stall unexpectedly.",Y
+,,2. Does it restart easily?,"2.1  Yes
+2.2  No
+2.3  Add any comments",,,
+Brakes ,Brake Service  - Brake Pads & Rotors Replacement (Combined) ,1. Which axle?,"1.1  Front
+1.2  Rear
+1.3  Both",60–120 min,Replace both pads and rotors together for complete brake system restoration and optimal performance.,Y
+,,2. Any noise or vibration?,"2.1  Yes
+2.2  No",,,
+Brakes ,Brake Shoes Replacement (Rear),1. Is this for rear drum brakes?,"1.1  Yes
+1.2  No
+1.3  Unsure",60–90 min,Replace rear brake shoes to restore proper braking function in drum brake systems.,Y
+,,2. Any weak parking brake?,"2.1  Yes
+2.2  No",,,
+Brakes ,Brake System Flush,1. When was last brake fluid service? (Approximate),,30–60 min,Flush and replace old brake fluid to maintain braking performance and protect system components.,Y
+,,2. Any soft or spongy brake pedal?,"2.1  Yes
+2.2  No
+2.3  Unsure",,,
+Brakes ,Parking Brake Service / Adjustment,1. Is the parking brake loose or not holding?,"1.1  Yes
+1.2  No",30–60 min,Adjust or service the parking brake system to ensure proper hold and safety when parked.,Y
+,,2. Does it need adjustment or full service?,"2.1  Unsure
+2.2  Adjust",,,
+Brakes ,Brake Fluid Top-Up / Minor Brake Maintenance,1. Is the brake fluid low?,"1.1  Yes
+1.2  No
+1.3  Unsure",10–20 min,Top up brake fluid and perform minor checks to maintain safe braking operation.,Y
+,,2. Any warning lights on?,"2.1  Yes
+2.2  No",,,
+Brakes ,General Brake Service / Inspection,1. Any issues noticed?,"1.1  Noise
+1.2  Weak braking
+1.3  None",30–60 min,"Inspect the full brake system to identify wear, safety issues, and recommended repairs.",Y
+,,2. When was last brake service? (Approximate),,,,
+Brakes ,Brake Caliper Replacement,1. Is one wheel sticking or overheating?,"1.1  Yes
+1.2  No",60–120 min,Replace faulty brake calipers to restore proper braking pressure and prevent uneven wear.,Y
+,,2. Any uneven braking?,"2.1  Yes
+2.2  No",,,
+,,3. Which wheel needs service?,"3.2  Front Left
+3.3  Front Right
+3.4  Rear Left
+3.5  Rear Right
+3.6  Not sure",,,
+Brakes ,Brake Master Cylinder Replacement,1. Is the brake pedal soft or sinking?,"1.1  Yes
+1.2  No",90–150 min,Replace the master cylinder to restore proper hydraulic pressure across the braking system.,Y
+,,2. Any brake fluid leaks?,"2.1  Yes
+2.2  No",,,
+Brakes ,Brake Booster Replacement,1. Is the brake pedal hard to press?,"1.1  Yes
+1.2  No",90–150 min,Replace the brake booster to restore assisted braking and reduce pedal effort.,Y
+,,2. Any hissing noise when braking?,"2.1  Yes
+2.2  No",,,
+Brakes ,Brake Lines / Hose Repair,1. Any visible leaks under the car?,"1.1  Yes
+1.2  No",60–120 min,Repair or replace damaged brake lines or hoses to ensure safe and leak-free braking.,Y
+,,2. Brake warning light on?,"2.1  Yes
+2.2  No",,,
+,,3. How does your brake pedal feel when you press it?,"3.2  Normal
+3.3  Soft or spongy
+3.4  Goes very low / close to the floor",,,
+Brakes ,Wheel Hub Assembly Replacement/Wheel Hub Bearing ,1. Any humming or grinding noise while driving?,"1.1  Yes
+1.2  No",60–120 min,Replace worn wheel hub assembly to eliminate noise and ensure proper wheel rotation and safety.,Y
+,,2. Does noise change with speed?,"2.1  Yes
+2.2  No",,,
+,,3. Which wheel is the issue coming from?,"3.2  Front Left
+3.3  Front Right
+3.4  Rear Left
+3.5  Rear Right
+3.6  Not sure",,,
+Brakes ,ABS System Reset / ABS Sensor Replacement,1. Is the ABS light on?,"1.1  Yes
+1.2  No",45–90 min,Diagnose and repair ABS system issues to restore anti-lock braking functionality and safety.,Y
+Car Buying ,Pre Purchase Car Inspection,1. Where is the vehicle located?,"1.2  Seller’s home
+1.3  Dealership
+1.4  Other",1-2 hours,"Inspect a vehicle before purchase to identify mechanical issues, accident damage, or maintenance concerns.",Y
+,,2. Has the car been driven recently?,"2.2  Yes
+2.3  No
+2.4  Not sure",,,
+,,3. Anything specific you want us to focus on?,"3.2  Engine
+3.3  Brakes
+3.4  Body / accident damage
+3.5  Full inspection
+3.6  Not sure",,,
+Car Buying ,Used Car Inspection,1. What’s the main reason for the inspection?,"1.2  General check-up
+1.3  Issue diagnosis
+1.4  Preparing for sale
+1.5  Not sure",1-2 hours,Perform a comprehensive inspection of a used vehicle to identify mechanical issues and estimate repair needs.,Y
+,,2. Any known issues with the vehicle?,"2.1  Yes
+2.2  No
+2.3  Not sure",,,
+,,3. Would you like a repair estimate included?,"3.1  Yes
+3.2  No",,,
+Electrical & Lights ,Car Won’t Start (Battery / Starter Issue),1. Do you hear clicking or cranking?,"1.1  Yes
+1.2  No",30–60 min,"Diagnose no-start issues related to the battery, starter, or electrical system and recommend the fix.",Y
+,,2. Do dashboard lights turn on?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Car Battery Dead / Needs Boost,1. Is the car completely dead?,"1.1  Yes
+1.2  No",15–30 min,Provide a battery boost to get your vehicle started and check for underlying issues.,Y
+,,2. Do you need a jump-start now?,"2.1  Yes
+2.2  No",,,
+,,3. Does the car stay running after disconnecting the jump-start?,"3.1  Yes
+3.2  No",,,
+Electrical & Lights ,Battery Replacement,1. Do you already have a battery?,"1.1  Yes
+1.2  No",20–30 min,Replace your vehicle battery to restore reliable starting and electrical performance.,Y
+,,2. Is the current battery completely dead?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Battery Keeps Dying (Charging System Check),1. How often does the battery die?,"1.1  Once
+1.2  Repeatedly",30–60 min,Test the charging system to identify battery drain or alternator-related issues.,Y
+,,2. Are there any warning lights on?,"2.1  Yes
+2.2  No",,,
+,,3. Are there any aftermarket accessories plugged into the vehicle?,"3.1  Yes
+3.2  No",,,
+Electrical & Lights ,Car Not Charging (Alternator Issue),1. Is the battery light on?,"1.1  Yes
+1.2  No",45–75 min,Diagnose alternator and charging system faults to restore proper battery charging.,Y
+,,2. Does the car die while driving?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Alternator / Charging System Service,1. Any dim lights or electrical issues?,"1.1  Yes
+1.2  No",60–120 min,Service or replace alternator components to ensure consistent power supply.,Y
+,,2. Battery recently replaced?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Starter Replacement,1. Do you hear a clicking sound?,"1.1  Yes
+1.2  No",60–120 min,Replace a faulty starter motor to restore proper engine starting.,Y
+,,2. Engine not cranking at all?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,"Lights Not Working (Headlights, Brake Lights, Signals)",1. Which lights are out?,"1.1  Headlights
+1.2  Brake
+1.3  Signals",15–45 min,Diagnose and repair lighting issues to ensure visibility and road safety.,Y
+,,2. Fully out or intermittent?,,,,
+Electrical & Lights ,Dashboard Warning Lights On,1. Which light is on?,"1.1  Battery
+1.2  Engine
+1.3  ABS
+1.4  Other",30–60 min,Scan and diagnose dashboard warning lights to identify system faults.,Y
+,,2. Is the car driving normally?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Wipers Not Working (Blades / Motor / Pump),1. Are wipers not moving or just ineffective?,,30–60 min,Diagnose and repair wiper system issues for clear visibility in all conditions.,Y
+,,2. Washer fluid spraying?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Power Locks Not Working,1. All doors or just one?,,45–75 min,Diagnose and repair door lock system faults for proper vehicle security.,Y
+,,2. Using key fob or interior switch?,2.2  Add comment,,,
+Electrical & Lights ,Backup Camera / Sensors Not Working,1. Camera not showing or sensors not beeping?,,45–90 min,Diagnose and repair parking camera or sensor issues for safe reversing.,Y
+,,2. Any recent impact or damage?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Electrical Issue Diagnosis,1. What issue are you experiencing?,"1.1  Short input
+1.2  select",60–120 min,Perform a full electrical system diagnosis to locate faults and recommend repairs.,Y
+,,2. Is it constant or intermittent?,,,,
+Electrical & Lights ,Key Fob Battery Replacement,1. Is the key fob unresponsive or weak?,"1.1  Yes
+1.2  No",5–10 min,Replace the key fob battery to restore remote locking and unlocking functionality.,Y
+,,2. Do you have a spare key?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Battery Test,1. Any starting issues?,"1.1  Yes
+1.2  No",10–20 min,Test battery health and performance to determine if replacement is needed.,Y
+,,2. Battery age known?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Parasitic Draw Testing (Battery Drain),1. Does the battery die overnight?,"1.1  Yes
+1.2  No",60–120 min,Identify electrical drains causing battery discharge when the vehicle is off.,N
+,,2. Any recent electrical installs?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Battery Cable / Terminal Service or Replacement,1. Any corrosion on terminals?,"1.1  Yes
+1.2  No",20–45 min,Clean or replace battery cables and terminals to restore proper electrical flow.,N
+,,2. Intermittent power issues?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Headlight / Taillight / Turn Signal Bulb Replacement,1. Which bulb needs replacement?,"1.1  Headlight
+1.2  Taillight
+1.3  Turn signal",10–25 min,Replace faulty bulbs to maintain visibility and compliance with road safety laws.,N
+,,2. Is the bulb fully out or dim?,"2.1  Fully out
+2.2  Dim",,,
+,,3. Is the bulb an aftermarket type?,"3.1  LED
+3.2  HID
+3.3  Halogen
+3.4  OEM / Standard
+3.5  Not Sure",,,
+Electrical & Lights ,Brake Light Switch Replacement,1. Brake lights not turning on?,"1.1  Yes
+1.2  No",30–60 min,Replace the brake light switch to restore proper brake light and system function.,N
+,,2. Cruise control issues?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Windshield Wiper Motor Replacement,1. Are the wipers not moving at all?,"1.1  Yes
+1.2  No",60–120 min,Replace faulty wiper motor to restore proper windshield clearing.,N
+,,"2. Is only one wiper arm moving, or are none moving?","2.1  One arm moving
+2.2  None moving",,,
+,,3. Are you noticing any unusual noises from the wipers?,"3.1  Yes
+3.2  No",,,
+Electrical & Lights ,Windshield Washer Pump Replacement,1. No fluid spraying?,"1.1  Yes
+1.2  No",30–60 min,Replace washer pump to restore windshield cleaning function.,N
+,,2. Pump noise present?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Ignition Switch Replacement,1. Key not turning or no response?,"1.1  Yes
+1.2  No",60–120 min,Replace ignition switch to restore proper vehicle startup and electrical control.,N
+,,2. Any intermittent starting issues?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Multi-Function Switch Replacement,1. Which function not working?,"1.1  Signals
+1.2  Wipers
+1.3  Lights",60–120 min,Replace the multi-function switch to restore control of key driving functions.,N
+,,2. Is it intermittent or fully not working?,,,,
+Electrical & Lights ,Horn Replacement,1. Horn not working at all?,"1.1  Yes
+1.2  No",30–60 min,Replace faulty horn to ensure proper vehicle signaling and safety.,Y
+,,2. Any clicking sound when pressed?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Power Door Lock/Window Glass Not Working ,1. Which door is affected?,"1.1  Left front
+1.2  Right front
+1.3  Left rear
+1.4  Right rear",60–120 min,Replace faulty actuator to restore automatic locking and unlocking.,Y
+,,2. Are you hearing any unusual noise when locking or unlocking?,"2.1  Yes
+2.2  No",,,
+Electrical & Lights ,Backup Sensor Replacement,1. Which sensor not working?,"1.1  Front
+1.2  Rear
+1.3  Unsure",45–90 min,Replace faulty parking sensors to restore accurate obstacle detection.,N
+,,2. Constant beeping or no sound?,"2.1 Beeping 
+2.2 No Sound ",,,
+Electrical & Lights ,Park Assist Camera Replacement,1. Is the camera blank or blurry?,"1.1 Blank
+1.2 Blurry
+1.3 Other (please descibe)",60–120 min,Replace malfunctioning backup camera to restore clear rear visibility.,Y
+,,2. Any visible damage?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Diagnosis,1. What symptoms are you noticing?,,60–120 min,Perform a full engine diagnostic to identify faults and recommend repairs.,Y
+,,2. Is the car drivable?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Running Rough / Misfiring,1. Is the engine shaking or jerking?,"1.1  Yes
+1.2  No",45–75 min,"Diagnose misfires caused by ignition, fuel, or air issues to restore smooth engine performance.",Y
+,,2. Check engine light on?,"2.1  Yes
+2.2  No",,,
+Engine ,Loss of Power / Slow Acceleration,1. Happens during acceleration?,"1.1  Yes
+1.2  No",45–75 min,"Identify performance issues affecting acceleration such as fuel delivery, airflow, or engine faults.",N
+,,2. Any warning lights?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Won’t Start (Fuel / Air Issue),1. Does the engine crank?,"1.1  Yes
+1.2  No",45–75 min,Diagnose fuel or air supply issues preventing the engine from starting,Y
+,,2. Smell fuel or notice no fuel?,,,,
+Engine ,Hard Start (Takes Multiple Attempts),1. Happens when cold or warm?,,45–75 min,Identify causes of delayed starting such as fuel pressure loss or ignition issues.,N
+,,2. Recently getting worse?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Stalling,1. When does it stall?,"1.1  Idle
+1.2  Driving",60–90 min,"Diagnose stalling caused by fuel, airflow, or electrical system faults.",N
+,,2. Does it restart easily?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Overheating,1. Temperature gauge high?,"1.1  Yes
+1.2  No",45–75 min,Identify cooling system or internal issues causing the engine to overheat.,Y
+,,2. Coolant level low?,"2.1  Yes
+2.2  No
+2.3  Unsure",,,
+Engine ,Engine Knocking or Ticking Noise,1. Noise at idle or acceleration?,,45–90 min,Diagnose internal or valvetrain noises to prevent serious engine damage.,Y
+,,2. Gets louder with speed?,"2.1  Yes
+2.2  No",,,
+Engine ,Check Engine Light (Engine Related),1. Light flashing or solid?,,30–60 min,Scan engine codes and diagnose faults affecting engine performance and emissions.,Y
+,,2. Any performance issues?,"2.1  Yes
+2.2  No",,,
+Engine ,Oil Leak (Engine Area),1. Where is the leak?,"1.1  Top
+1.2  Bottom
+1.3  Unsure",45–90 min,Locate and diagnose oil leaks to prevent engine damage and fluid loss.,Y
+,,2. Any burning smell?,"2.1  Yes
+2.2  No",,,
+Engine ,Low Oil Pressure Warning,1. Warning constant or intermittent?,,45–75 min,Diagnose oil pressure issues to protect engine components from damage.,N
+,,2. Any engine noise?,"2.1  Yes
+2.2  No",,,
+Engine ,Burning Oil Smell / Oil Consumption,1. Smell while driving or after?,,45–90 min,Identify oil leaks or internal burning issues affecting engine health.,Y
+,,2. Oil level dropping quickly?,"2.1  Yes
+2.2  No",,,
+Engine ,Engine Vibration at Idle (Rough Idle),1. Only at idle?,"1.1  Yes
+1.2  No
+1.3  Is it cold or warm engine condion",45–75 min,"Diagnose rough idle caused by misfires, mounts, or airflow issues.",Y
+Engine ,Fuel Delivery Issue / Fuel Pump Problem,1. Loss of power or stalling?,"1.1  Yes
+1.2  No",60–90 min,Diagnose fuel system issues affecting pressure and engine performance,N
+,,2. Hard starting?,"2.1  Yes
+2.2  No",,,
+Engine ,Spark Plug Replacement / Tune-Up,1. Any misfires or rough running?,"1.1  Yes
+1.2  No",45–90 min,"Replace spark plugs to improve ignition, efficiency, and performance.",Y
+,,2. When last replaced?,,,,
+Engine ,Ignition Coil Replacement,1. Check engine light on?,"1.1  Yes
+1.2  No",45–90 min,Replace faulty ignition coils to restore proper engine firing.,N
+,,2. Misfire symptoms?,"2.1  Yes
+2.2  No",,,
+Engine ,Fuel System Service (Injectors / Fuel Delivery),1. Poor fuel economy or rough running?,"1.1  Yes
+1.2  No",60–120 min,Clean or service fuel system components to restore proper fuel delivery.,N
+,,2. Any hesitation?,"2.1  Yes
+2.2  No",,,
+Engine ,Throttle Body Service / Replacement,1. Rough idle or hesitation?,"1.1  Yes
+1.2  No",45–90 min,Clean or replace throttle body to improve airflow and engine response.,Y
+,,2. Any throttle response issues?,,,,
+Engine ,Air Intake / Filter Service,1. When last changed?,,15–30 min,Replace or clean air filter to ensure proper airflow and engine efficiency.,Y
+,,2. Driving in dusty conditions?,"2.1  Yes
+2.2  No",,,
+Engine ,PCV Valve Replacement,1. Oil consumption issues?,"1.1  Yes
+1.2  No",30–60 min,Replace PCV valve to regulate engine pressure and reduce oil issues,N
+,,2. Rough idle?,"2.1  Yes
+2.2  No",,,
+Engine ,Serpentine Belt Replacement,1. Any squealing noise?,"1.1  Yes
+1.2  No",30–60 min,Replace worn belt to ensure proper operation of engine accessories.,Y
+,,2. Cracks visible on belt?,"2.1  Yes
+2.2  No",,,
+Engine ,Timing Belt ,"Replacement, mainteance, damage, starting issue ",,DO NOT GIVE HOUR OR PRICE,,Y
+Engine ,Engine Mount Replacement,1. Excess vibration?,"1.1  Yes
+1.2  No",60–120 min,Replace worn mounts to reduce vibration and stabilize the engine.,Y
+,,2. Clunk when shifting?,"2.1  Yes
+2.2  No",,,
+Engine ,Radiator Replacement,1. Any visible leaks?,"1.1  Yes
+1.2  No",90–150 min,Replace radiator to restore proper cooling and prevent overheating.,Y
+,,2. Overheating issues?,"2.1  Yes
+2.2  No",,,
+Engine ,Water Pump Replacement,1. Coolant leak near engine?,"1.1  Yes
+1.2  No",90–150 min,Replace water pump to maintain coolant circulation and engine temperature.,Y
+,,2. Overheating or noise?,,,,
+Engine ,Thermostat Replacement,1. Engine overheating or not warming up?,,45–90 min,Replace thermostat to regulate engine temperature properly.,Y
+,,2. Temperature fluctuating?,"2.1  Yes
+2.2  No",,,
+Engine ,Cooling Fan / Motor Service,1. Fan running when hot?,"1.1  Yes
+1.2  No",60–120 min,Repair or replace cooling fan components to prevent overheating.,Y
+,,2. Overheating in traffic?,,,,
+Engine ,Cooling System Flush,1. When last coolant service?,,30–60 min,Flush old coolant and contaminants to maintain cooling efficiency.,Y
+,,2. Any overheating issues?,"2.1  Yes
+2.2  No",,,
+Engine ,Coolant Leak Repair,1. Where is leak visible?,,60–120 min,Identify and repair coolant leaks to prevent overheating.,Y
+,,2. Coolant level dropping?,"2.1  Yes
+2.2  No",,,
+Engine ,Valve Cover Gasket Replacement,1. Oil leaking from top of engine?,"1.1  Yes
+1.2  No",60–120 min,Replace gasket to stop oil leaks from the engine top.,Y
+,,2. Burning smell?,"2.1  Yes
+2.2  No",,,
+Engine ,Oil Pan / Gasket Replacement,1. Oil leak under vehicle?,"1.1  Yes
+1.2  No",90–150 min,Replace oil pan gasket to stop leaks from the bottom of the engine.,Y
+,,2. Oil spots when parked?,"2.1  Yes
+2.2  No",,,
+Engine ,Oil Filter Housing Gasket Replacement,1. Oil leak near filter area?,"1.1  Yes
+1.2  No",60–120 min,Replace gasket to stop leaks around the oil filter housing.,Y
+,,2. Recent oil service?,"2.1  Yes
+2.2  No",,,
+Engine ,Oil Pressure Sensor Replacement,1. Oil pressure warning light on?,"1.1  Yes
+1.2  No",30–60 min,Replace faulty sensor to ensure accurate oil pressure readings.,Y
+,,2. Any leaks near sensor?,,,,
+Engine ,Oil Cooler / Lines Replacement,1. Oil leaking near cooler lines?,,90–150 min,Replace oil cooler components to maintain proper oil temperature and flow.,Y
+,,2. Overheating or oil mixing issues?,,,,
+Engine ,EGR Valve / System Service,1. Rough idle or stalling?,"1.1  Yes
+1.2  No",60–120 min,Clean or replace EGR system to improve emissions and engine performance.,Y
+,,2. Check engine light on?,"2.1  Yes
+2.2  No",,,
+Engine ,Exhaust Manifold / Gasket Replacement,1. Loud exhaust noise?,"1.1  Yes
+1.2  No",90–150 min,Repair exhaust leaks to restore performance and reduce noise.,Y
+,,2. Smell of exhaust?,"2.1  Yes
+2.2  No",,,
+Engine ,Oxygen Sensor / Air-Fuel Sensor Replacement,1. Check engine light on?,"1.1  Yes
+1.2  No",45–90 min,Replace faulty sensors to optimize fuel mixture and emissions.,Y
+,,2. Poor fuel economy?,"2.1  Yes
+2.2  No",,,
+Engine ,Turbo / Boost / Wastegate Issues (if applicable),1. Loss of boost/power?,"1.1  Yes
+1.2  No",90–180 min,Diagnose turbo system issues affecting power and performance.,Y
+,,2. Whistling or smoke?,"2.1  Yes
+2.2  No",,,
+Engine ,Timing Cover / Gasket Replacement,1. Oil leak from front of engine?,"1.1  Yes
+1.2  No",120–240 min,Replace timing cover gasket to stop leaks and protect engine components.,Y
+,,2. Any unusual noise?,,,,
+Engine ,Timing Chain / Gear Components,1. Rattling noise at startup?,"1.1  Yes
+1.2  No",180–300 min,Service or replace timing components to maintain engine synchronization.,Y
+,,2. High mileage engine?,"2.1  Yes
+2.2  No",,,
+Engine ,Camshaft Seal Replacement,1. Oil leak near camshaft area?,"1.1  Yes
+1.2  No",90–150 min,Replace camshaft seals to prevent oil leaks and contamination.,Y
+,,2. Burning smell?,"2.1  Yes
+2.2  No",,,
+Engine ,Intake Manifold / Gasket Replacement,1. Rough idle or vacuum leaks?,"1.1  Yes
+1.2  No",90–150 min,Repair intake leaks to restore proper airflow and engine performance.,Y
+,,2. Coolant or air leak signs?,,,,
+Engine ,Cylinder Head / Head Gasket Repair,1. White smoke or overheating?,"1.1  Yes
+1.2  No",300–600 min,Repair major internal engine damage to restore compression and prevent failure.,Y
+,,2. Coolant loss with no leak?,"2.1  Yes
+2.2  No",,,
+Engine ,Variable Valve Timing (VVT) Solenoid Replacement,1. Check engine light on?,"1.1  Yes
+1.2  No",45–90 min,Replace VVT solenoid to restore proper engine timing and efficiency.,Y
+,,2. Performance issues at certain speeds?,,,,
+Performance and Modification ,ECU Tuning / Performance Tune,1. Stock vehicle or modified?,,60–120 min,"Reprogram the ECU to improve power, throttle response, and overall engine performance.",N
+,,2. Any performance goals?,"2.1  Power
+2.2  Efficiency",,,
+Performance and Modification ,Cold Air Intake Installation,1. Do you have the intake kit?,"1.1  Yes
+1.2  No",30–60 min,Install a cold air intake to increase airflow and enhance engine performance and sound.,Y
+,,2. Stock or modified engine?,,,,
+Performance and Modification ,Performance Exhaust Upgrade (Bolt-On Systems),1. Full system or axle-back?,,60–120 min,Install a performance exhaust system to improve sound and exhaust flow.,N
+,,2. Louder sound preference?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Suspension Upgrade (Lowering Springs / Coilovers),1. Springs or coilovers?,,120–240 min,"Upgrade suspension components to improve handling, stance, and ride quality.",N
+,,2. Comfort or performance focus?,,,,
+Performance and Modification ,Wheel & Spacer Installation,1. New wheels or spacers?,,30–60 min,Install wheels or spacers to improve vehicle stance and fitment.,N
+,,2. Do you need torque check?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Performance Brake Upgrade (Pads & Rotors),1. Street or performance setup?,,60–120 min,Upgrade brake components for improved stopping power and heat resistance.,Y
+,,2. Any current brake issues?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Remote Starter Installation,1. Automatic or manual vehicle?,,90–180 min,Install a remote starter system for convenient vehicle start from a distance.,Y
+,,2. Do you have a kit?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Apple CarPlay / Android Auto Upgrade,1. Wired or wireless preference?,,60–120 min,"Upgrade your system to enable smartphone integration for navigation, calls, and media.",Y
+,,2. Factory screen or aftermarket?,,,,
+Performance and Modification ,Aftermarket Stereo / Subwoofer Installation,1. Full system or sub only?,,90–180 min,Install audio components to enhance sound quality and bass performance.,Y
+,,2. Do you have components?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Backup Camera Installation,1. Factory screen available?,"1.1  Yes
+1.2  No",60–120 min,Install a backup camera system to improve rear visibility and safety.,Y
+,,2. Need wiring integration?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Dash Cam Installation,1. Front only or front/rear?,,30–90 min,Install dash cam for continuous recording and driving security.,Y
+,,2. Hardwire or plug-in?,,,,
+Performance and Modification ,LED Lighting Upgrade (Interior / Exterior),1. Interior or exterior lights?,,30–60 min,Upgrade lighting to LED for improved visibility and modern styling.,Y
+,,2. Color preference?,,,,
+Performance and Modification ,Sway Bar Installation,"1. Front, rear, or both?",,60–120 min,Install sway bars to improve cornering stability and reduce body roll.,N
+,,2. Handling upgrade goal?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Throttle Body Cleaning Service ,,,,,Y
+Performance and Modification ,Lift Kit Installation (Trucks / SUVs),1. Lift height?,,180–360 min,Install lift kit to increase ground clearance and off-road capability.,Y
+,,2. Off-road or appearance?,,,,
+Performance and Modification ,Performance Tire Installation,1. Do you have tires already?,"1.1  Yes
+1.2  No",30–60 min,"Install performance tires for improved grip, handling, and safety.",Y
+,,2. Seasonal or performance tires?,,,,
+Performance and Modification ,Interior Ambient Lighting Upgrade,1. Single color or multi-color?,,60–120 min,Install ambient lighting to enhance interior aesthetics and driving experience.,Y
+,,2. App-controlled?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Custom Audio / Speaker Upgrades,1. Replace speakers or full system?,,90–180 min,Upgrade speakers and audio components for premium sound quality.,Y
+,,2. Sound preference?,"2.1  Bass
+2.2  Clarity",,,
+Performance and Modification ,USB / Charging Port Installation,1. Front or rear install?,,30–60 min,Install additional charging ports for convenience and device connectivity.,Y
+,,2. Fast charging needed?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Grille / Spoiler / Exterior Trim Installation,1. Which part installing?,,30–90 min,Install exterior components to enhance vehicle styling and appearance.,Y
+,,2. OEM or aftermarket?,,,,
+Performance and Modification ,Roof Rack Installation,1. Crossbars or full rack?,,30–60 min,Install roof rack system for additional cargo carrying capacity.,Y
+,,2. Vehicle has mounting points?,"2.1  Yes
+2.2  No",,,
+Performance and Modification ,Engine Bay Cosmetic Upgrades,"1. Covers, caps, or full kit?",,30–90 min,Enhance engine bay appearance with cosmetic upgrades and detailing components.,Y
+,,2. Show or daily use?,,,,
+Performance and Modification ,Intake + Tune Performance Packages,1. Intake already installed?,"1.1  Yes
+1.2  No",90–180 min,Combine intake upgrade with ECU tuning for noticeable performance gains.,N
+,,2. Performance goal?,,,,
+Performance and Modification ,Exhaust Component Bolt-On Mods,1. Which component?,"1.1  Muffler
+1.2  Resonator
+1.3  etc.",60–120 min,Install bolt-on exhaust components to customize sound and performance.,Y
+,,2. Sound preference?,,,,
+Doors ,Door Won’t Open / Close Properly (Diagnosis),1. What’s happening?,"1.1  Won’t open
+1.2  Won’t close
+1.3  Hard to open
+1.4  Misaligned",20–45 minutes,"We inspect your door to identify why it’s stuck, misaligned, or not closing properly and recommend the right fix.",Y
+,,2. Which door?,"2.1  Driver
+2.2  Passenger
+2.3  Rear
+2.4  Not sure",,,
+Doors ,Door Latch Replacement,1. Which door needs repair?,,45–90 min,We replace the faulty door latch so your door opens and closes securely again.,Y
+,,2. Is the door currently stuck closed?,"2.1  Yes
+2.2  No",,,
+Doors ,Door Lock Not Working (Actuator / Lock Repair),1. What’s the issue?,"1.1  Won’t lock
+1.2  Won’t unlock
+1.3  Intermittent",45–90 min,We fix or replace the locking mechanism so your door locks and unlocks properly.,Y
+,,2. Is it affecting one door or multiple?,,,,
+Doors ,Exterior Door Handle Replacement,1. Which door?,,30–60 min,We replace broken or loose exterior handles so you can open your door from outside normally.,Y
+,,2. Is the handle completely broken or just loose?,,,,
+Doors ,Interior Door Handle Replacement,1. Which door?,,30–60 min,We replace the inside door handle so you can safely open the door from within the vehicle.,Y
+,,"2. Is it snapped, loose, or not opening the door?",,,,
+Doors ,Window Not Working (Regulator / Motor Repair),1. What’s happening?,"1.1  Won’t move
+1.2  Stuck down
+1.3  Slow
+1.4  Noise",60–120 min,We repair or replace the window motor or regulator so your window moves up and down properly.,Y
+,,2. Which window?,,,,
+Doors ,Lubricate Doors / Hinges,1. Which doors need service?,"1.1  All
+1.2  Specific door",10–20 min,We lubricate door hinges and moving parts to eliminate squeaks and ensure smooth operation.,Y
+,,2. Any squeaking noise?,"2.1  Yes
+2.2  No",,,
+Doors ,Door Alignment / Adjustment,1. What’s the issue?,"1.1  Not closing
+1.2  Misaligned
+1.3  Wind noise",30–60 min,We adjust your door alignment so it closes properly and seals correctly.,Y
+,,2. Which door?,,,,
+Doors ,Trunk / Tailgate Won’t Open (Diagnosis),1. What’s happening?,"1.1  Won’t open
+1.2  Stuck
+1.3  Opens manually only",20–45 min,We diagnose why your trunk or tailgate won’t open and determine the required repair.,Y
+,,2. Is it electric or manual?,,,,
+Doors ,Trunk / Tailgate Latch Replacement,1. Is it stuck closed?,"1.1  Yes
+1.2  No",45–90 min,We replace the faulty latch so your trunk or tailgate opens and closes securely.,Y
+,,2. Manual or power trunk?,,,,
+Doors ,Trunk / Tailgate Lift Support / Shocks Replacement,1. Does the trunk fall down on its own?,"1.1  Yes
+1.2  No",20–40 min,We replace worn lift supports so your trunk or tailgate stays open safely.,Y
+,,2. One side or both sides weak?,,,,
+Doors ,Door Lock Relay / Switch Replacement,1. Are locks not responding to buttons?,"1.1  Yes
+1.2  No",45–75 min,We replace faulty switches or relays to restore proper door lock controls.,Y
+,,2. One door or all doors affected?,,,,
+Doors ,Door Striker Plate Replacement,1. Door not latching properly?,"1.1  Yes
+1.2  No",30–60 min,We replace or adjust the striker plate so your door latches securely.,N
+,,2. Which door?,,,,
+Doors ,Sliding Door Track / Roller Adjustment,1. Is the door stuck or hard to slide?,,45–90 min,We adjust or repair sliding door tracks so the door opens and closes smoothly.,Y
+,,2. Any grinding or noise?,,,,
+Doors ,Hood Latch / Hood Latch Adjustment,1. Hood won’t open or won’t close?,,20–45 min,We repair or adjust the hood latch so it opens and closes safely.,Y
+,,2. Is the latch stuck?,,,,
+Doors ,Hood Lift Support / Shocks Replacement,1. Does the hood fall down?,"1.1  Yes
+1.2  No",15–30 min,We replace worn hood supports so your hood stays open securely.,Y
+Doors ,Trunk / Tailgate Lock Cylinder Replacement,1. Key not turning or stuck?,,45–90 min,We replace the physical lock cylinder so your key works properly in the trunk.,Y
+,,2. Manual key or keyless entry vehicle?,,,,
+Doors ,Trunk / Tailgate Lock Solenoid Replacement,1. Trunk not opening with button?,,60–120 min,We replace the solenoid responsible for electronic trunk release.,Y
+,,2. Does it work manually?,,,,
+Doors ,Trunk / Tailgate Locking Assembly Replacement,1. Is the trunk/tailgate not locking or unlocking?,"1.1  Yes
+1.2  No",60–120 min,We replace the complete trunk/tailgate locking assembly so your trunk locks and unlocks reliably.,Y
+,,2. Manual or electronic locking system?,,,,
+Doors ,Trunk Latch Release Cable Replacement,1. Is the release cable broken or stretched?,"1.1  Yes
+1.2  No",45–90 min,We replace the trunk release cable so your trunk opens smoothly from inside or with the release button.,Y
+,,2. Does the trunk open manually or with a button?,,,,
+Doors ,Trunk Lock Actuator Replacement,1. Is the trunk not responding to the remote or button?,"1.1  Yes
+1.2  No",60–120 min,We replace the actuator that controls electronic trunk locking to restore proper functionality.,Y
+,,2. Works manually?,"2.1  Yes
+2.2  No
+2.3  Not sure",,,
+Doors ,Trunk Striker Plate Replacement,1. Trunk not latching properly?,"1.1  Yes
+1.2  No
+1.3  Not sure",30–60 min,We replace or adjust the striker plate to ensure the trunk latches securely every time.,Y
+,,2. Manual or power trunk?,,,,
+Doors ,Lubricate Hood / Trunk Hinge,1. Any squeaking or stiffness?,"1.1  Yes
+1.2  No",10–20 min,We lubricate hinges and moving parts on your hood and trunk to eliminate squeaks and ensure smooth operation.,Y
+,,2. Which parts need lubrication?,"2.1  Hood
+2.2  Trunk
+2.3  Both
+2.4  Not sure",,,

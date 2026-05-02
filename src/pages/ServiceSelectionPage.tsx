@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // Assuming Union is an SVG/image file in your assets
 import Union from '../Assets/Union.svg';
+import { useCart, CartItem } from '../context/CartContext';
 
 interface VehicleData {
   vin: string;
@@ -11,17 +12,22 @@ interface VehicleData {
   year: string;
 }
 
-const ServiceSelectionPage = () => {
+interface ServiceSelectionPageProps {
+  onCartClick?: () => void;
+}
+
+const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { vehicle, imageBase64 } = (location.state as { vehicle: VehicleData; imageBase64: string }) || { vehicle: null, imageBase64: null };
+  const { addToCart, items, removeFromCart, replacePackageForVehicle } = useCart();
 
   const [activeCategory, setActiveCategory] = useState('Maintenance');
   const [activeTab, setActiveTab] = useState('Maintenance');
   const [searchTerm, setSearchTerm] = useState('');
   const [estimatingIndex, setEstimatingIndex] = useState<number | null>(null);
   const [vehicleId, setVehicleId] = useState<number | null>(null);
-  const [estimates, setEstimates] = useState<{ [key: number]: { value: string; source: 'ai' | 'database' } }>({});
+  const [estimates, setEstimates] = useState<{ [key: number]: { value: string; source: 'web-search' | 'database' } }>({});
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
   const packages = [
@@ -138,12 +144,30 @@ const ServiceSelectionPage = () => {
         ...prev,
         [index]: {
           value: 'Error loading estimate',
-          source: 'ai'
+          source: 'web-search'
         }
       }));
     } finally {
       setEstimatingIndex(null);
     }
+  };
+
+  const handleSelectPackage = (packageName: string, packagePrice: string) => {
+    if (!vehicle) return;
+
+    // Create new package item
+    const cartItem: CartItem = {
+      id: `${Date.now()}-${Math.random()}`,
+      vehicle: vehicle,
+      imageBase64: imageBase64,
+      packageName: packageName,
+      services: [], // For packages, we don't have specific services
+      totalPrice: parseFloat(packagePrice),
+    };
+
+    // Replace any existing package for this vehicle with the new one
+    replacePackageForVehicle(vehicle, cartItem);
+    setSelectedPackage(packageName);
   };
 
   return (
@@ -163,23 +187,27 @@ const ServiceSelectionPage = () => {
                 <p className="text-xs text-green-600 font-medium mt-2">✓ Vehicle ID: {vehicleId}</p>
               )}
             </div>
-            <button onClick={() => navigate('/select-vehicle')} className="text-xs font-medium border-b border-black pb-0.5 ml-auto">← Edit</button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => navigate('/select-vehicle')} className="text-xs font-medium border-b border-black pb-0.5">← Edit</button>
+              <button
+                onClick={onCartClick}
+                className="p-2 bg-[#D4F49B] rounded-lg hover:bg-lime-400 transition-colors relative"
+                title="View cart"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                {items.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                    {items.length}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* Cart Card */}
-          <div className="w-full md:w-64 bg-white rounded-xl p-4 shadow-sm">
-            <h2 className="font-bold text-base">Your Cart</h2>
-            {selectedPackage ? (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium text-gray-700">{selectedPackage}</p>
-                <p className="text-xs text-gray-500">
-                  ${packages.find(p => p.name === selectedPackage)?.price}
-                </p>
-              </div>
-            ) : (
-              <p className="text-gray-400 text-sm">Empty</p>
-            )}
-          </div>
         </div>
       </div>
 
@@ -221,15 +249,15 @@ const ServiceSelectionPage = () => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setSelectedPackage(selectedPackage === pkg.name ? null : pkg.name)}
+                  onClick={() => handleSelectPackage(pkg.name, pkg.price)}
                   className={`w-full py-3 rounded-xl font-bold border transition-colors ${
                     selectedPackage === pkg.name
-                      ? 'bg-blue-500 text-white border-blue-500'
+                      ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
                       : pkg.popular
                       ? 'bg-[#D4F49B] border-[#D4F49B] hover:bg-lime-300'
                       : 'bg-white border-gray-200 hover:bg-gray-50'
                   }`}>
-                  {selectedPackage === pkg.name ? 'Remove Package' : 'Select Package'}
+                  {selectedPackage === pkg.name ? '✓ Selected' : 'Select Package'}
                 </button>
               </div>
             ))}
@@ -285,9 +313,9 @@ const ServiceSelectionPage = () => {
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               estimates[i].source === 'database'
                                 ? 'bg-blue-100 text-blue-700'
-                                : 'bg-orange-100 text-orange-700'
+                                : 'bg-cyan-100 text-cyan-700'
                             }`}>
-                              {estimates[i].source === 'database' ? '🔄 Cached' : '🤖 AI Estimate'}
+                              {estimates[i].source === 'database' ? '🔄 Cached' : '🌐 Web Search'}
                             </span>
                           </div>
                         ) : (

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Now — Select Services | AUTO VIVO</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-brand-primary:#4A7C10;--color-brand-primary-bg:#E8F7D2;--color-brand-secondary:#2D3A06;
+    --color-brand-tertiary:#619111;--color-brand-lime:#D2FD9C;--color-neutral-900:#FFFFFF;
+    --color-neutral-800:#F7F7F5;--color-neutral-700:#EFEFEB;--color-neutral-600:#E0E0DA;
+    --color-neutral-400:#8C8C86;--color-neutral-200:#3D3D3A;--color-neutral-100:#1A1A18;
+    --color-neutral-000:#0A0A08;--color-success:#1D7A45;--color-success-bg:#E8F5EE;
+    --color-warning:#A05C00;--color-warning-bg:#FEF3E2;--color-error:#C0290E;--color-error-bg:#FDECEA;
+    --font-display:'DM Serif Display',serif;--font-body:'DM Sans',sans-serif;
+    --text-xs:.75rem;--text-sm:.875rem;--text-base:1rem;--text-lg:1.125rem;--text-xl:1.25rem;
+    --text-2xl:1.5rem;--text-3xl:2rem;--text-4xl:2.75rem;
+    --leading-tight:1.1;--leading-snug:1.3;--leading-normal:1.6;
+    --tracking-tight:-0.03em;--tracking-normal:0em;--tracking-wide:.08em;--tracking-widest:.18em;
+    --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;
+    --space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;--space-20:80px;--space-24:96px;
+    --radius-sm:4px;--radius-md:8px;--radius-lg:16px;--radius-xl:24px;--radius-full:9999px;
+    --shadow-sm:0 1px 4px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+    --shadow-md:0 2px 12px rgba(0,0,0,.08),0 4px 24px rgba(0,0,0,.05);
+    --shadow-lg:0 4px 32px rgba(0,0,0,.10),0 8px 48px rgba(0,0,0,.06);
+    --ease-out:cubic-bezier(.16,1,.3,1);--duration-fast:150ms;--duration-base:250ms;--duration-slow:400ms;
+  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--color-neutral-900);color:var(--color-neutral-100);font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* NAV */
+.nav{background:rgba(255,255,255,.92);border-bottom:1px solid var(--color-neutral-600);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.nav-logo{font-family:var(--font-display);font-size:var(--text-xl);font-weight:400;color:var(--color-neutral-000);letter-spacing:-.03em;text-decoration:none}
+.nav-logo span{color:var(--color-brand-primary)}
+.nav-back{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);font-weight:500;color:var(--color-neutral-400);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .15s}
+.nav-back:hover{color:var(--color-brand-primary)}
+.nav-back svg{width:14px;height:14px}
+
+/* VEHICLE HEADER */
+.vehicle-bar{position:sticky;top:56px;z-index:90;background:var(--color-neutral-000);color:#fff;padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.vb-info{display:flex;align-items:center;gap:16px;font-size:var(--text-sm);overflow:hidden}
+.vb-car{font-size:26px;line-height:1;flex-shrink:0}
+.vb-name{font-family:var(--font-display);font-weight:400;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vb-loc{display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:rgba(255,255,255,.6);white-space:nowrap}
+.vb-sep{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0}
+.vb-cart-btn{position:relative;display:flex;align-items:center;gap:8px;background:var(--color-brand-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:8px 16px;font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .25s var(--ease-out);flex-shrink:0}
+.vb-cart-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,124,16,.3)}
+.vb-cart-btn svg{width:16px;height:16px}
+.cart-badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;background:var(--color-brand-primary);color:#fff;font-size:11px;font-weight:700;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;padding:0 5px;opacity:0;transform:scale(0);transition:all .25s var(--ease-out)}
+.cart-badge.show{opacity:1;transform:scale(1)}
+
+/* PROGRESS */
+.booking-progress{background:var(--color-neutral-800);border-bottom:1px solid var(--color-neutral-600);padding:10px 32px}
+.progress-inner{max-width:860px;margin:0 auto;display:flex;align-items:center}
+.progress-step{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.step-bubble{width:28px;height:28px;border-radius:var(--radius-full);border:2px solid var(--color-neutral-600);background:var(--color-neutral-800);display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--color-neutral-400);flex-shrink:0;transition:all .25s}
+.step-name{font-family:var(--font-body);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-400);white-space:nowrap}
+.progress-line{flex:1;height:1px;background:var(--color-neutral-600);margin:0 12px;min-width:24px}
+.progress-step.done .step-bubble{background:var(--color-brand-primary-bg);border-color:var(--color-brand-primary);color:var(--color-brand-primary)}
+.progress-step.done .step-name{color:var(--color-neutral-200)}
+.progress-step.active .step-bubble{background:var(--color-brand-primary);border-color:var(--color-brand-primary);color:#fff;box-shadow:0 0 0 3px rgba(74,124,16,.12)}
+.progress-step.active .step-name{color:var(--color-brand-primary)}
+
+/* PAGE */
+.page{max-width:1060px;margin:0 auto;padding:40px 32px 120px}
+.page-eyebrow{font-size:var(--text-xs);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--color-brand-primary);margin-bottom:8px}
+.page-title{font-family:var(--font-display);font-size:var(--text-4xl);font-weight:400;letter-spacing:-.03em;color:var(--color-neutral-000);line-height:1.1;margin-bottom:8px}
+.page-sub{font-size:var(--text-lg);color:var(--color-neutral-400);margin-bottom:40px}
+
+/* SECTION HEADERS */
+.sec-label{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.sec-label h2{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:400;color:var(--color-neutral-000);letter-spacing:-.02em}
+.sec-label-icon{font-size:22px}
+.sec-label-count{font-size:var(--text-xs);color:var(--color-neutral-400);background:var(--color-neutral-700);border-radius:var(--radius-full);padding:2px 10px;font-weight:600}
+
+/* ============================================================
+   PROMO CATEGORY BADGE
+============================================================ */
+.filter-pill.promo-pill{border-color:rgba(160,92,0,.4);color:var(--color-warning)}
+.filter-pill.promo-pill:hover{border-color:var(--color-warning);color:var(--color-warning);background:var(--color-warning-bg)}
+.filter-pill.promo-pill.active{background:var(--color-warning);color:#fff;border-color:var(--color-warning)}
+.svc-cat.promo{background:var(--color-warning-bg);color:var(--color-warning)}
+.svc-card.promo-card{border-color:rgba(160,92,0,.25)}
+.svc-card.promo-card:hover{border-color:rgba(160,92,0,.5)}
+.svc-card.promo-card.in-cart{border-color:var(--color-warning);background:rgba(160,92,0,.04)}
+.svc-add.promo-add:not(.added){border-color:rgba(160,92,0,.4);color:var(--color-warning)}
+.svc-add.promo-add:not(.added):hover{border-color:var(--color-warning);color:var(--color-warning);background:var(--color-warning-bg)}
+.pkg-price-featured{font-family:var(--font-display);font-size:var(--text-xl);font-weight:400;color:var(--color-brand-primary);line-height:1}
+.pkg-modal-prices{display:flex;flex-direction:column;gap:4px;padding:12px;background:var(--color-neutral-800);border-radius:var(--radius-md);margin-bottom:16px}
+.pkg-modal-price-row{display:flex;justify-content:space-between;align-items:center;font-size:var(--text-sm)}
+.pkg-modal-price-type{color:var(--color-neutral-400)}
+.pkg-modal-price-val{font-family:var(--font-display);font-weight:400;color:var(--color-neutral-000);font-size:var(--text-lg)}
+.pkg-modal-price-val.hi{color:var(--color-brand-primary)}
+.pkg-modal-services{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.pkg-modal-services li{display:flex;align-items:flex-start;gap:8px;font-size:var(--text-sm);color:var(--color-neutral-200);line-height:1.4}
+.pkg-modal-services li::before{content:'';width:16px;height:16px;border-radius:var(--radius-full);background:var(--color-brand-primary);border-color:var(--color-brand-primary);background-image:url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.5l2 2 4-4' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;flex-shrink:0;margin-top:2px}
+.pkg-modal-hc-toggle{font-size:var(--text-xs);color:var(--color-brand-primary);background:none;border:none;cursor:pointer;font-weight:600;padding:0;text-decoration:underline;text-underline-offset:3px;margin-bottom:8px;display:block}
+.pkg-modal-hc-list{display:none;list-style:none;padding:10px 12px;background:var(--color-neutral-800);border-radius:var(--radius-md);font-size:var(--text-xs);color:var(--color-neutral-400);line-height:1.8;margin-bottom:12px}
+.pkg-modal-hc-list.open{display:block}
+.pkg-modal-fine{font-size:11px;color:var(--color-neutral-400);line-height:1.6;padding-top:12px;border-top:1px solid var(--color-neutral-700)}
+
+/* SERVICES */
+.svc-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.svc-search-wrap{position:relative;flex:1;min-width:200px}
+.svc-search{width:100%;height:44px;padding:0 16px 0 40px;background:var(--color-neutral-800);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-neutral-100);outline:none;transition:border-color .15s,box-shadow .15s}
+.svc-search::placeholder{color:var(--color-neutral-400)}
+.svc-search:focus{border-color:var(--color-brand-primary);box-shadow:0 0 0 3px rgba(74,124,16,.1)}
+.svc-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--color-neutral-400);pointer-events:none}
+.svc-search-icon svg{width:16px;height:16px}
+.svc-count{font-size:var(--text-xs);color:var(--color-neutral-400);white-space:nowrap;font-weight:500}
+
+/* FILTER PILLS */
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-pill{flex-shrink:0;padding:7px 16px;border-radius:var(--radius-full);border:1.5px solid var(--color-neutral-600);background:var(--color-neutral-800);font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;color:var(--color-neutral-400);cursor:pointer;transition:all .2s var(--ease-out);white-space:nowrap;letter-spacing:.04em;text-transform:uppercase}
+.filter-pill:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary)}
+.filter-pill.active{background:var(--color-brand-primary);color:#fff;border-color:var(--color-brand-primary)}
+
+/* SERVICE CARDS */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc-card{background:var(--color-neutral-800);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-lg);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:all .2s var(--ease-out)}
+.svc-card:hover{border-color:rgba(74,124,16,.3);box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.svc-card.in-cart{border-color:var(--color-brand-primary);background:rgba(74,124,16,.03)}
+.svc-body{flex:1;min-width:0}
+.svc-name{font-family:var(--font-display);font-size:var(--text-sm);font-weight:400;color:var(--color-neutral-000);margin-bottom:4px;line-height:1.3}
+.svc-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.svc-cat{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-brand-primary);background:var(--color-brand-primary-bg);padding:2px 8px;border-radius:var(--radius-full)}
+.svc-time{font-size:var(--text-xs);color:var(--color-neutral-400)}
+.svc-has-qs{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--color-neutral-400);background:var(--color-neutral-700);padding:2px 8px;border-radius:var(--radius-full)}
+.svc-desc{font-size:var(--text-xs);color:var(--color-neutral-400);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.svc-add{width:34px;height:34px;border-radius:var(--radius-full);border:1.5px solid var(--color-neutral-600);background:var(--color-neutral-800);color:var(--color-neutral-400);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s var(--ease-out);flex-shrink:0;margin-top:2px;font-size:18px;line-height:1}
+.svc-add:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary);background:var(--color-brand-primary-bg)}
+.svc-add.added{background:var(--color-brand-primary);color:#fff;border-color:var(--color-brand-primary);font-size:14px}
+.svc-empty{grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--color-neutral-400)}
+.svc-empty h3{font-family:var(--font-display);color:var(--color-neutral-200);margin-bottom:4px}
+
+/* ============================================================
+   SERVICE POPUP MODAL
+============================================================ */
+.svc-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(4px)}
+.svc-modal-overlay.open{opacity:1;pointer-events:all}
+.svc-modal{background:var(--color-neutral-900);border:1px solid var(--color-neutral-600);border-radius:var(--radius-xl);width:100%;max-width:540px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:translateY(20px);transition:transform .3s var(--ease-out)}
+.svc-modal-overlay.open .svc-modal{transform:translateY(0)}
+.svc-modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--color-neutral-700);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0}
+.svc-modal-title-group{flex:1;min-width:0}
+.svc-modal-eyebrow{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--color-brand-primary);margin-bottom:4px}
+.svc-modal-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:400;color:var(--color-neutral-000);letter-spacing:-.02em;line-height:1.25}
+.svc-modal-close{width:32px;height:32px;border-radius:var(--radius-full);border:1px solid var(--color-neutral-600);background:none;cursor:pointer;color:var(--color-neutral-400);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.svc-modal-close:hover{background:var(--color-neutral-700);color:var(--color-neutral-000)}
+.svc-modal-body{padding:20px 24px;overflow-y:auto;flex:1}
+.svc-modal-body::-webkit-scrollbar{width:6px}
+.svc-modal-body::-webkit-scrollbar-thumb{background:var(--color-neutral-600);border-radius:3px}
+.svc-modal-intro{font-size:var(--text-sm);color:var(--color-neutral-400);margin-bottom:20px;line-height:var(--leading-snug)}
+.modal-q-block{margin-bottom:20px}
+.modal-q-block:last-child{margin-bottom:0}
+.modal-q-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-200);margin-bottom:10px;line-height:1.4}
+.modal-q-required{color:var(--color-brand-primary)}
+
+/* Radio options */
+.modal-radio-group{display:flex;flex-direction:column;gap:8px}
+.modal-radio-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-md);border:1.5px solid var(--color-neutral-600);cursor:pointer;transition:all .15s;user-select:none}
+.modal-radio-opt:hover{border-color:rgba(74,124,16,.5);background:rgba(74,124,16,.03)}
+.modal-radio-opt.selected{border-color:var(--color-brand-primary);background:var(--color-brand-primary-bg)}
+.modal-radio-opt input[type=radio]{display:none}
+.modal-radio-dot{width:18px;height:18px;border-radius:var(--radius-full);border:2px solid var(--color-neutral-600);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-radio-opt.selected .modal-radio-dot{border-color:var(--color-brand-primary);background:var(--color-brand-primary)}
+.modal-radio-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
+.modal-radio-opt.selected .modal-radio-dot::after{opacity:1}
+.modal-radio-text{font-size:var(--text-sm);color:var(--color-neutral-200);font-weight:500}
+
+/* Text input / textarea */
+.modal-text-input{width:100%;height:44px;padding:0 14px;background:var(--color-neutral-800);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-neutral-100);outline:none;transition:border-color .15s,box-shadow .15s}
+.modal-text-input::placeholder{color:var(--color-neutral-400)}
+.modal-text-input:focus{border-color:var(--color-brand-primary);box-shadow:0 0 0 3px rgba(74,124,16,.1)}
+.modal-textarea{width:100%;min-height:72px;padding:12px 14px;resize:vertical;background:var(--color-neutral-800);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-neutral-100);outline:none;transition:border-color .15s,box-shadow .15s}
+.modal-textarea::placeholder{color:var(--color-neutral-400)}
+.modal-textarea:focus{border-color:var(--color-brand-primary);box-shadow:0 0 0 3px rgba(74,124,16,.1)}
+
+/* Modal footer */
+.svc-modal-footer{padding:16px 24px;border-top:1px solid var(--color-neutral-700);display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-shrink:0}
+.btn-modal-cancel{padding:10px 20px;background:transparent;color:var(--color-neutral-200);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-modal-cancel:hover{border-color:var(--color-neutral-400);color:var(--color-neutral-000)}
+.btn-modal-add{padding:10px 24px;background:var(--color-brand-primary);color:#fff;border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .25s var(--ease-out);display:flex;align-items:center;gap:8px;opacity:.4;pointer-events:none}
+.btn-modal-add.ready{opacity:1;pointer-events:all;box-shadow:0 2px 12px rgba(74,124,16,.25)}
+.btn-modal-add.ready:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(74,124,16,.35)}
+
+/* CART MODAL */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(4px)}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100%;background:var(--color-neutral-800);z-index:201;transform:translateX(100%);transition:transform .35s var(--ease-out);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.12)}
+.cart-panel.open{transform:translateX(0)}
+.cart-header{padding:20px 24px;border-bottom:1px solid var(--color-neutral-600);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cart-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:400;color:var(--color-neutral-000)}
+.cart-close{width:32px;height:32px;border-radius:var(--radius-full);border:1px solid var(--color-neutral-600);background:none;cursor:pointer;color:var(--color-neutral-400);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cart-close:hover{background:var(--color-neutral-700);color:var(--color-neutral-000)}
+.cart-items{flex:1;overflow-y:auto;padding:16px 24px}
+.cart-section-label{font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-bottom:10px;margin-top:16px}
+.cart-section-label:first-child{margin-top:0}
+.cart-item{padding:12px 0;border-bottom:1px solid var(--color-neutral-700)}
+.cart-item:last-child{border-bottom:none}
+.cart-item-main{display:flex;align-items:center;gap:12px}
+.cart-item-body{flex:1;min-width:0}
+.cart-item-name{font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;color:var(--color-neutral-000);margin-bottom:2px}
+.cart-item-detail{font-size:var(--text-xs);color:var(--color-neutral-400)}
+.cart-item-price{font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;color:var(--color-brand-primary);white-space:nowrap}
+.cart-item-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.cart-item-btn{width:26px;height:26px;border-radius:var(--radius-full);border:1px solid var(--color-neutral-600);background:none;cursor:pointer;color:var(--color-neutral-400);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.cart-item-edit:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary);background:var(--color-brand-primary-bg)}
+.cart-item-rm:hover{border-color:#c0392b;color:#c0392b;background:rgba(192,57,43,.06)}
+
+/* Cart answers */
+.cart-answers{margin-top:8px;padding:8px 10px;background:rgba(74,124,16,.04);border:1px solid rgba(74,124,16,.15);border-radius:var(--radius-md)}
+.cart-answer-row{display:flex;gap:6px;font-size:11px;line-height:1.5}
+.cart-answer-q{color:var(--color-neutral-400);flex-shrink:0;min-width:0}
+.cart-answer-a{color:var(--color-neutral-200);font-weight:500;flex:1;min-width:0}
+
+.cart-empty{text-align:center;padding:48px 16px;color:var(--color-neutral-400)}
+.cart-empty p{font-size:var(--text-sm);margin-top:8px}
+.cart-footer{padding:20px 24px;border-top:1px solid var(--color-neutral-600);flex-shrink:0}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:16px}
+.cart-total-label{font-size:var(--text-sm);color:var(--color-neutral-400)}
+.cart-total-val{font-family:var(--font-body);font-weight:500;color:var(--color-neutral-000)}
+.cart-note{font-size:11px;color:var(--color-neutral-400);margin-bottom:16px;line-height:1.5}
+.btn-cart-continue{width:100%;padding:14px;background:var(--color-brand-primary);color:#fff;border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-base);font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .25s var(--ease-out);display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-cart-continue:hover{box-shadow:0 0 24px rgba(74,124,16,.3);transform:translateY(-1px)}
+.btn-cart-continue:disabled{opacity:.35;pointer-events:none}
+.btn-cart-continue svg{width:16px;height:16px}
+
+/* STICKY BAR */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);border-top:1px solid var(--color-neutral-600);padding:10px 32px;backdrop-filter:blur(16px);z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 -4px 24px rgba(0,0,0,.06)}
+.sb-info{display:flex;flex-direction:column;gap:2px}
+.sb-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-400);font-weight:500}
+.sb-detail{font-family:var(--font-display);font-size:var(--text-sm);font-weight:400;color:var(--color-neutral-000)}
+.sb-detail .muted{color:var(--color-neutral-400);font-weight:400;font-family:var(--font-body)}
+.sb-actions{display:flex;gap:10px;align-items:center}
+.btn-view-cart{padding:10px 20px;background:transparent;color:var(--color-neutral-200);border:1.5px solid var(--color-neutral-600);border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s var(--ease-out);display:flex;align-items:center;gap:6px}
+.btn-view-cart:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary)}
+.btn-continue{padding:10px 24px;background:var(--color-brand-primary);color:#fff;border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .25s var(--ease-out);display:flex;align-items:center;gap:8px;opacity:.35;pointer-events:none}
+.btn-continue.active{opacity:1;pointer-events:all;box-shadow:0 0 16px rgba(74,124,16,.2)}
+.btn-continue.active:hover{transform:translateY(-1px);box-shadow:0 0 28px rgba(74,124,16,.3)}
+.btn-continue svg{width:16px;height:16px}
+
+/* FLOATING RESUME CART */
+.floating-cart{position:fixed;bottom:28px;right:28px;z-index:150;display:none;flex-direction:column;align-items:flex-end;gap:8px}
+.floating-cart.visible{display:flex}
+.floating-cart-bubble{display:flex;align-items:center;gap:10px;background:var(--color-neutral-000);color:#fff;border-radius:var(--radius-full);padding:12px 20px 12px 16px;box-shadow:0 4px 24px rgba(0,0,0,.18);cursor:pointer;text-decoration:none;transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out);border:none;font-family:var(--font-body)}
+.floating-cart-bubble:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.22)}
+.floating-cart-icon{width:36px;height:36px;border-radius:var(--radius-full);background:var(--color-brand-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.floating-cart-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.floating-cart-count{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;background:#fff;color:var(--color-brand-primary);font-size:10px;font-weight:700;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;padding:0 4px}
+.floating-cart-text{display:flex;flex-direction:column;gap:1px}
+.floating-cart-label{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);line-height:1}
+.floating-cart-detail{font-size:var(--text-sm);font-weight:500;color:#fff;line-height:1.3}
+.floating-cart-dismiss{width:28px;height:28px;border-radius:var(--radius-full);background:var(--color-neutral-200);border:none;color:var(--color-neutral-400);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;align-self:center}
+.floating-cart-dismiss:hover{background:var(--color-neutral-100);color:#fff}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .5s var(--ease-out) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}
+
+/* RESPONSIVE */
+@media(max-width:900px){.svc-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.svc-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .nav,.vehicle-bar,.booking-progress,.sticky-bar{padding-left:16px;padding-right:16px}
+  .page{padding:24px 16px 110px}
+  .page-title{font-size:var(--text-3xl)}
+  .svc-controls{flex-direction:column;align-items:stretch}
+  .cart-panel{width:100%}
+  .svc-modal{max-width:100%;max-height:95vh;border-radius:var(--radius-xl) var(--radius-xl) 0 0}
+  .svc-modal-overlay{align-items:flex-end;padding:0}
+  .step-name{display:none}
+  .vb-name{max-width:140px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="autovivo-home.html" class="nav-logo">AUTO <span>VIVO.</span></a>
+  <a href="autovivo-vehicle-select.html" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L5 8l5 5"/></svg>
+    Back
+  </a>
+</nav>
+
+<!-- VEHICLE HEADER -->
+<div class="vehicle-bar" id="vehicle-bar">
+  <div class="vb-info">
+    <span class="vb-car">🚗</span>
+    <span class="vb-name" id="vb-name">2003 Honda Accord EX</span>
+    <span class="vb-sep"></span>
+    <span class="vb-loc">📍 <span id="vb-loc">Pickering</span></span>
+  </div>
+  <button class="vb-cart-btn" id="open-cart-btn" type="button" aria-label="View cart">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+    Cart
+    <span class="cart-badge" id="cart-badge">0</span>
+  </button>
+</div>
+
+<!-- PROGRESS -->
+<div class="booking-progress">
+  <div class="progress-inner">
+    <div class="progress-step done"><div class="step-bubble">✓</div><span class="step-name">Vehicle</span></div>
+    <div class="progress-line"></div>
+    <div class="progress-step active" aria-current="step"><div class="step-bubble">2</div><span class="step-name">Service</span></div>
+    <div class="progress-line"></div>
+    <div class="progress-step"><div class="step-bubble">3</div><span class="step-name">Schedule</span></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="page">
+  <header class="anim">
+    <div class="page-eyebrow">Step 2 of 3</div>
+    <h1 class="page-title">Choose Your Services</h1>
+    <p class="page-sub">Select a package or individual services — or mix and match both.</p>
+  </header>
+
+  <div class="svc-controls anim d1">
+    <div class="svc-search-wrap">
+      <span class="svc-search-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5"/><path d="M12 12l3 3"/></svg></span>
+      <input class="svc-search" id="svc-search" type="search" placeholder="Search services..." autocomplete="off">
+    </div>
+  </div>
+  <div class="filter-bar anim d2" id="filter-bar"></div>
+  <div class="svc-grid" id="svc-grid"></div>
+
+</main>
+
+<!-- SERVICE POPUP MODAL -->
+<div class="svc-modal-overlay" id="svc-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="svc-modal-title">
+  <div class="svc-modal" id="svc-modal">
+    <div class="svc-modal-header">
+      <div class="svc-modal-title-group">
+        <div class="svc-modal-eyebrow" id="svc-modal-eyebrow">A few quick questions</div>
+        <div class="svc-modal-title" id="svc-modal-title">Service Name</div>
+      </div>
+      <button class="svc-modal-close" id="svc-modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="svc-modal-body" id="svc-modal-body">
+      <!-- injected by JS -->
+    </div>
+    <div class="svc-modal-footer">
+      <button class="btn-modal-cancel" id="btn-modal-cancel" type="button">Cancel</button>
+      <button class="btn-modal-add" id="btn-modal-add" type="button">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 1v12M1 7h12"/></svg>
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-panel" id="cart-panel" role="dialog" aria-modal="true" aria-label="Your cart">
+  <div class="cart-header">
+    <h2 class="cart-title" id="cart-title">Your Cart</h2>
+    <button class="cart-close" id="cart-close" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer" id="cart-footer">
+    <div class="cart-total-row"><span class="cart-total-label">Estimated Total</span><span class="cart-total-val" id="cart-total">—</span></div>
+    <p class="cart-note">Individual service pricing confirmed at appointment. Package prices are starting rates.</p>
+    <button class="btn-cart-continue" id="btn-cart-continue" disabled>
+      Next: Schedule
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l6 5-6 5"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar">
+  <div class="sb-info">
+    <span class="sb-label">Your Cart</span>
+    <div class="sb-detail" id="sb-detail"><span class="muted">No items yet</span></div>
+  </div>
+  <div class="sb-actions">
+    <button class="btn-view-cart" id="sb-view-cart" type="button">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+      View Cart
+    </button>
+    <button class="btn-continue" id="sb-continue" type="button">
+      Next: Schedule
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l6 5-6 5"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- FLOATING RESUME CART -->
+<div class="floating-cart" id="floating-cart">
+  <a href="autovivo-service-select.html" class="floating-cart-bubble" id="floating-cart-bubble">
+    <div class="floating-cart-icon">
+      <svg viewBox="0 0 16 16"><circle cx="6" cy="14" r="1"/><circle cx="13" cy="14" r="1"/><path d="M1 1h2l1.7 8.5a1 1 0 0 0 1 .8h7.1a1 1 0 0 0 1-.7L15 4H5"/></svg>
+      <span class="floating-cart-count" id="floating-cart-count">0</span>
+    </div>
+    <div class="floating-cart-text">
+      <span class="floating-cart-label">Resume booking</span>
+      <span class="floating-cart-detail" id="floating-cart-detail">Your selections are saved</span>
+    </div>
+  </a>
+  <button class="floating-cart-dismiss" id="floating-cart-dismiss" aria-label="Dismiss">✕</button>
+</div>
+
+<script>
+/* ============================================================
+   VEHICLE DATA
+============================================================ */
+const FALLBACK = {year:'2003',make:'Honda',model:'Accord',trim:'EX',location:'Pickering'};
+let V;
+try { V = JSON.parse(sessionStorage.getItem('autovivo_vehicle')) || FALLBACK; } catch(e){ V = FALLBACK; }
+document.getElementById('vb-name').textContent = `${V.year} ${V.make} ${V.model} ${V.trim}`;
+document.getElementById('vb-loc').textContent = V.location;
+
+const LARGE_MODELS = ['F-150','Silverado','Sierra','Tundra','Tacoma','1500','2500','3500','Colorado','Canyon','Ranger','Frontier','Titan','Ridgeline','Maverick','Gladiator','Tahoe','Suburban','Expedition','Yukon','Sequoia','Armada','Wagoneer','4Runner','Highlander','Pilot','Palisade','Telluride','Ascent','Atlas','Traverse','Explorer','Pathfinder','CX-90','GLS','X7','QX80','XC90','GX','LX','Durango','Grand Cherokee','Cybertruck'];
+const isLarge = LARGE_MODELS.includes(V.model);
+
+/* ============================================================
+   PACKAGE DATA
+============================================================ */
+const PACKAGES = [
+  {id:'bronze',tier:'Bronze',icon:'🥉',priceSmall:'$119.95',priceLarge:'$149.95',services:['Oil Change','Vehicle Health Check'],sub:'Essential'},
+  {id:'silver',tier:'Silver',icon:'⭐',priceSmall:'$159.95',priceLarge:'$189.95',services:['Oil Change','Alignment Inspection','Vehicle Health Check'],sub:'Popular',featured:true},
+  {id:'gold',tier:'Gold',icon:'🥇',priceSmall:'$319.95',priceLarge:'$349.95',services:['Oil Change','Alignment Inspection','Brake Fluid Flush','Cabin Air Filter','Vehicle Health Check'],sub:'Complete'}
+];
+const HEALTH_CHECK = ['Inspect & adjust all fluid levels under hood','4-wheel tire rotation','Brake inspection','Battery test','Steering & suspension inspection','Inspect CV axle boot condition','Inspect lights, wipers & washers','Inspect air & cabin air filter','Weatherstrip lubrication','Check underbody for damage or leaks'];
+
+/* ============================================================
+   SERVICES DATA (from Excel workbook)
+============================================================ */
+const SERVICES = [
+  {id:0,cat:'Popular',name:'Oil Change',time:'30 min',desc:'Drain the old engine oil, replace it with fresh oil, and install a new oil filter to keep the engine properly lubricated and running smoothly.',questions:[{"text": "Synthetic (recommended) or conventional? Not sure", "type": "yesno"}, {"text": "Is there an oil leak?", "type": "yesno"}]},
+  {id:1,cat:'Popular',name:'Tires (Repair, Replacement & Flat Fix)',time:'30–60 min',desc:'We safely remove and install your tires at your location, ensuring they are properly mounted and ready for the road.',questions:[{"text": "What type of tire service do you need?", "type": "select", "options": ["Seasonal swap (winter ↔ summer on rims)", "Tire replacement (new tires)", "Flat tire change (install spare)", "Not sure"]}, {"text": "Do you have the tires ready at the location?", "type": "select", "options": ["Yes", "No"]}, {"text": "Do you have a wheel lock key (if applicable)?", "type": "select", "options": ["Yes", "No", "Not sure"]}]},
+  {id:2,cat:'Popular',name:'Brake Pad Replacement',time:'45–60 min',desc:'Remove worn brake pads and install new ones to restore safe stopping power and prevent damage to the brake rotors',questions:[{"text": "Are you replacing front, rear, or both?", "type": "text", "options": []}, {"text": "Any squeaking or grinding noises?", "type": "text", "options": []}, {"text": "Want the rotors inspected/replaced too?", "type": "text", "options": []}]},
+  {id:3,cat:'Popular',name:'Battery Replacement',time:'30–45 min',desc:'Remove the old battery and install a new one to ensure the vehicle starts reliably and the electrical system functions properly.',questions:[{"text": "What’s happening with the car?", "type": "select", "options": ["Won’t start", "Slow crank", "Battery light on", "Dead"]}, {"text": "Do you have jumper cables or need a boost?", "type": "yesno"}, {"text": "About how old is your battery? (<2 yrs / 2–4 yrs / 4+ yrs / Not sure)", "type": "text", "options": []}]},
+  {id:4,cat:'Popular',name:'Tire Rotation',time:'20–30 min',desc:'Move tires between the front and rear positions to promote even tire wear and extend the life of the tires.',questions:[{"text": "Do you have a wheel lock key?", "type": "yesno"}, {"text": "Any vibrations or pulling while driving?", "type": "text", "options": []}]},
+  {id:5,cat:'Popular',name:'Engine Air Filter Replacement',time:'15–20 min',desc:'Install a new engine air filter to ensure the engine receives clean air for efficient combustion.',questions:[{"text": "Any noticeable loss of power or unusual engine sounds?", "type": "text", "options": []}]},
+  {id:6,cat:'Popular',name:'Cabin Air Filter Replacement',time:'15–20 min',desc:'Replace the cabin air filter to improve the quality of air entering the vehicle’s interior through the ventilation system.',questions:[]},
+  {id:7,cat:'Popular',name:'Spark Plug Replacement',time:'30–45 min',desc:'Install new spark plugs to improve engine ignition, fuel efficiency, and overall engine performance.',questions:[]},
+  {id:8,cat:'Popular',name:'Coolant Flush',time:'45–60 min',desc:'Drain old coolant from the cooling system and refill with fresh coolant to help prevent engine overheating and corrosion.',questions:[]},
+  {id:9,cat:'Popular',name:'Transmission Fluid Change',time:'45–60 min',desc:'Replace old transmission fluid with new fluid to help maintain smooth gear shifting and protect the transmission.',questions:[{"text": "Are you currently experiencing any transmission issues?", "type": "select", "options": ["No issues", "Vibrating or shaking", "Jerking during acceleration", "Unusual noises", "Other (please describe)"]}, {"text": "How is your vehicle shifting?", "type": "select", "options": ["Shifting normally", "Hard or rough shifting", "Slipping between gears", "Delayed engagement (slow to move after shifting)"]}, {"text": "When was your last transmission service?", "type": "select", "options": ["Within the last 30,000 km", "30,000 – 60,000 km ago", "Over 60,000 km ago", "Not sure"]}]},
+  {id:10,cat:'Popular',name:'Brake Fluid Flush',time:'30–45 min',desc:'Remove contaminated brake fluid and refill with fresh fluid to maintain proper braking performance and safety.',questions:[{"text": "Any soft brakes or warning lights?", "type": "yesno"}]},
+  {id:11,cat:'Popular',name:'Serpentine Belt Replacement',time:'30–60 min',desc:'Install a new serpentine belt to restore proper operation of engine-driven components like the alternator and AC.',questions:[{"text": "Any squealing noise from the engine?", "type": "yesno"}, {"text": "Has the belt ever been replaced before?", "type": "yesno"}]},
+  {id:12,cat:'Popular',name:'Power Steering Fluid Replacement',time:'15–20 min',desc:'Check the power steering system and add fluid if necessary to ensure smooth and easy steering.',questions:[{"text": "Any difficulty turning the wheel?", "type": "yesno"}]},
+  {id:13,cat:'Popular',name:'Light Bulb Replacement',time:'20–30 min',desc:'Replace faulty or burnt-out headlight or taillight bulbs to restore proper vehicle visibility and road safety.',questions:[{"text": "Which light?", "type": "select", "options": ["Headlight", "Taillight", "Brake", "Turn signal", "Fog", "Interior"]}, {"text": "Which side?", "type": "select", "options": ["Driver", "Passenger", "Both"]}, {"text": "Bulb type preference?", "type": "select", "options": ["LED", "Halogen", "HID", "Xenon", "Not sure"]}]},
+  {id:14,cat:'Popular',name:'Windshield Wiper Replacement',time:'10–15 min',desc:'Install new windshield wiper blades to improve visibility during rain, snow, or windshield cleaning.',questions:[{"text": "Wipers for front, rear, or both?", "type": "text", "options": []}, {"text": "Wiper type preference?", "type": "select", "options": ["Standard", "Winter", "Premium"]}]},
+  {id:15,cat:'Popular',name:'Alternator Replacement',time:'60–90 min',desc:'Remove a faulty alternator and install a new one to restore proper battery charging and electrical system performance.',questions:[{"text": "Symptoms?", "type": "select", "options": ["Dim lights", "Battery keeps dying", "Car won’t start"]}, {"text": "Check engine light on?", "type": "yesno"}, {"text": "is the battery light on", "type": "yesno"}]},
+  {id:16,cat:'Popular',name:'Check Engine Light Inspection',time:'15–30 min',desc:'Scan your vehicle’s computer for engine codes, identify potential issues, and reset the check engine light if appropriate.',questions:[{"text": "Is the car running normally?", "type": "yesno"}, {"text": "Any sounds, smells, or issues when the light is on?", "type": "text", "options": []}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:17,cat:'Scheduled Maintenance',name:'5000 km Service',time:'',desc:'45–60 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:18,cat:'Scheduled Maintenance',name:'10,000 km Service',time:'',desc:'60–75 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:19,cat:'Scheduled Maintenance',name:'15,000 km Service',time:'',desc:'60–90 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:20,cat:'Scheduled Maintenance',name:'20,000 km Service',time:'',desc:'75–90 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:21,cat:'Scheduled Maintenance',name:'25,000 km Service',time:'',desc:'60–90 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:22,cat:'Scheduled Maintenance',name:'30,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:23,cat:'Scheduled Maintenance',name:'35,000 km Service',time:'',desc:'60–90 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:24,cat:'Scheduled Maintenance',name:'40,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:25,cat:'Scheduled Maintenance',name:'45,000 km Service',time:'',desc:'75–105 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:26,cat:'Scheduled Maintenance',name:'50,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:27,cat:'Scheduled Maintenance',name:'55,000 km Service',time:'',desc:'75–105 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:28,cat:'Scheduled Maintenance',name:'60,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:29,cat:'Scheduled Maintenance',name:'65,000 km Service',time:'',desc:'75–105 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:30,cat:'Scheduled Maintenance',name:'70,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:31,cat:'Scheduled Maintenance',name:'75,000 km Service',time:'',desc:'90–150 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:32,cat:'Scheduled Maintenance',name:'80,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:33,cat:'Scheduled Maintenance',name:'85,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:34,cat:'Scheduled Maintenance',name:'90,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:35,cat:'Scheduled Maintenance',name:'95,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:36,cat:'Scheduled Maintenance',name:'100,000 km Service',time:'',desc:'150–210 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:37,cat:'Scheduled Maintenance',name:'105,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:38,cat:'Scheduled Maintenance',name:'110,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:39,cat:'Scheduled Maintenance',name:'115,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:40,cat:'Scheduled Maintenance',name:'120,000 km Service',time:'',desc:'150–210 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:41,cat:'Scheduled Maintenance',name:'125,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:42,cat:'Scheduled Maintenance',name:'130,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:43,cat:'Scheduled Maintenance',name:'135,000 km Service',time:'',desc:'120–180 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:44,cat:'Scheduled Maintenance',name:'140,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:45,cat:'Scheduled Maintenance',name:'145,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:46,cat:'Scheduled Maintenance',name:'150,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:47,cat:'Scheduled Maintenance',name:'155,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:48,cat:'Scheduled Maintenance',name:'160,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:49,cat:'Scheduled Maintenance',name:'165,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:50,cat:'Scheduled Maintenance',name:'170,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:51,cat:'Scheduled Maintenance',name:'175,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:52,cat:'Scheduled Maintenance',name:'180,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:53,cat:'Scheduled Maintenance',name:'185,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:54,cat:'Scheduled Maintenance',name:'190,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:55,cat:'Scheduled Maintenance',name:'195,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:56,cat:'Scheduled Maintenance',name:'200,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:57,cat:'Scheduled Maintenance',name:'205,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:58,cat:'Scheduled Maintenance',name:'210,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:59,cat:'Scheduled Maintenance',name:'215,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:60,cat:'Scheduled Maintenance',name:'220,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:61,cat:'Scheduled Maintenance',name:'225,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:62,cat:'Scheduled Maintenance',name:'230,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:63,cat:'Scheduled Maintenance',name:'235,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:64,cat:'Scheduled Maintenance',name:'240,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:65,cat:'Scheduled Maintenance',name:'245,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:66,cat:'Scheduled Maintenance',name:'250,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:67,cat:'Scheduled Maintenance',name:'255,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:68,cat:'Scheduled Maintenance',name:'260,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:69,cat:'Scheduled Maintenance',name:'265,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:70,cat:'Scheduled Maintenance',name:'270,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:71,cat:'Scheduled Maintenance',name:'275,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:72,cat:'Scheduled Maintenance',name:'280,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:73,cat:'Scheduled Maintenance',name:'285,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:74,cat:'Scheduled Maintenance',name:'290,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:75,cat:'Scheduled Maintenance',name:'295.000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:76,cat:'Scheduled Maintenance',name:'300,000 km Service',time:'',desc:'90–120 minutes',questions:[{"text": "What is your vehicle's current mileage? (Optional)", "type": "text"}, {"text": "Any known issues or concerns?", "type": "comment"}]},
+  {id:77,cat:'Diagnosis & Testing',name:'Popular Issues',time:'',desc:'',questions:[]},
+  {id:78,cat:'Diagnosis & Testing',name:'Check Engine Light On',time:'30–60 min',desc:'Perform a diagnostic scan and inspection to identify the cause of the check engine light and recommend next steps.',questions:[{"text": "Is the light flashing or solid?", "type": "text", "options": []}, {"text": "Is the vehicle drivable?", "type": "yesno"}, {"text": "Any loss of power?", "type": "yesno"}, {"text": "Is the car vibrating", "type": "yesno"}, {"text": "Is there any noise", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:79,cat:'Diagnosis & Testing',name:'Car Won’t Start (No Sound or Clicking)',time:'30–60 minutes',desc:'Diagnose starting system issues including battery, starter, and electrical faults preventing the engine from turning over.',questions:[{"text": "Does the dashboard/ignition turn on?", "type": "yesno"}, {"text": "Do you hear any clicking or cranking?", "type": "yesno"}, {"text": "Any fluid leaks", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:80,cat:'Diagnosis & Testing',name:'Car Shaking or Vibrating',time:'45–75 min',desc:'Inspect tires, suspension, and engine components to identify the source of vibrations and restore smooth driving.',questions:[{"text": "When does it happen?", "type": "select", "options": ["Idle", "Driving", "Braking"]}, {"text": "Where is it felt?", "type": "select", "options": ["Steering", "Seat", "Whole car"]}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:81,cat:'Diagnosis & Testing',name:'Brake Noise (Squeaking or Grinding)',time:'30–60 min',desc:'Inspect brake pads, rotors, and hardware to diagnose noise and ensure safe braking performance.',questions:[{"text": "What type of noise?", "type": "select", "options": ["Squeaking", "Grinding"]}, {"text": "When do you hear it?", "type": "select", "options": ["Light braking", "Hard braking", "Constant"]}, {"text": "Is the brake light on the dashboard", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:82,cat:'Diagnosis & Testing',name:'Car Overheating',time:'45–75 minutes',desc:'Diagnose cooling system issues including leaks, thermostat, or radiator problems to prevent engine damage.',questions:[{"text": "Is the temperature gauge high?", "type": "yesno"}, {"text": "Any coolant leaks or low levels?", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:83,cat:'Diagnosis & Testing',name:'Strange Noises (Clicking, Knocking)',time:'45–75 min',desc:'Identify abnormal noises from engine, suspension, or drivetrain components to prevent further damage.',questions:[{"text": "What type of noise?", "type": "select", "options": ["Clicking", "Knocking", "Other"]}, {"text": "When do you hear it?", "type": "select", "options": ["Startup", "Driving", "Turning"]}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:84,cat:'Diagnosis & Testing',name:'Not Sure What’s Wrong (Full Diagnosis)',time:'60–120 min',desc:'Perform a comprehensive multi-point inspection and diagnostic scan to identify any underlying issues.',questions:[{"text": "What symptoms are you noticing? (Short text or select)", "type": "text", "options": []}, {"text": "Is the car drivable?", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:85,cat:'Diagnosis & Testing',name:'Tire Pressure Light On (TPMS)',time:'15–30 min',desc:'Check tire pressures and TPMS sensors to ensure proper inflation and system accuracy.',questions:[{"text": "Do you have a flat tire?", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:86,cat:'Diagnosis & Testing',name:'AC Not Working (No Cold Air)',time:'45–75 min',desc:'Diagnose AC system issues including refrigerant levels, compressor function, and airflow problems.',questions:[{"text": "Is there any airflow from vents?", "type": "yesno"}, {"text": "Is the air warm or slightly cool?", "type": "text", "options": []}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:87,cat:'Diagnosis & Testing',name:'Heater Not Working',time:'45–75 min',desc:'Diagnose and repair heating system issues by checking airflow from vents, assessing air temperature, and identifying any underlying problems to restore proper cabin heating and comfort.',questions:[{"text": "Is there any airflow from vents?", "type": "yesno"}, {"text": "Is the air warm or slightly cool?", "type": "text", "options": []}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:88,cat:'Diagnosis & Testing',name:'Oil or Fluid Leak',time:'45–90 min',desc:'Identify the source of leaks and recommend repairs to prevent damage and fluid loss.',questions:[{"text": "Where do you see the leak?", "type": "select", "options": ["Front", "Middle", "Rear"]}, {"text": "What color is the fluid?", "type": "select", "options": ["Dark", "Brown", "Green", "Clear", "Unsure"]}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:89,cat:'Diagnosis & Testing',name:'Steering Issues (Pulling or Hard to Turn)',time:'45–75 min',desc:'Inspect steering and suspension components to resolve handling issues and ensure safe control.',questions:[{"text": "Is the car pulling to one side?", "type": "yesno"}, {"text": "Is steering stiff or noisy?", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:90,cat:'Diagnosis & Testing',name:'Burning Smell from Car',time:'45–75 min',desc:'Identify the source of burning smells to prevent potential mechanical or electrical failures.',questions:[{"text": "What kind of smell?", "type": "select", "options": ["Rubber", "Oil", "Electrical"]}, {"text": "When do you notice it?", "type": "select", "options": ["Driving", "Idle", "After driving"]}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:91,cat:'Diagnosis & Testing',name:'Excessive Smoke (White, Blue, Black)',time:'45–90 min',desc:'Diagnose engine or exhaust issues based on smoke color to prevent serious engine damage.',questions:[{"text": "What color is the smoke?", "type": "select", "options": ["White", "Blue", "Black"]}, {"text": "When does it occur?", "type": "select", "options": ["Startup", "Driving", "Acceleration"]}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:92,cat:'Diagnosis & Testing',name:'Car Stalling While Driving',time:'60–90 min',desc:'Diagnose fuel, air, or electrical system issues causing the vehicle to stall unexpectedly.',questions:[{"text": "When does it stall?", "type": "select", "options": ["Idle", "Driving", "Stopping"]}, {"text": "Does it restart easily?", "type": "yesno"}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:93,cat:'Diagnosis & Testing',name:'Pre-Purchase Car Inspection',time:'',desc:'',questions:[]},
+  {id:94,cat:'Brakes',name:'Brake Service  - Brake Pads & Rotors Replacement (Combined)',time:'60–120 min',desc:'Replace both pads and rotors together for complete brake system restoration and optimal performance.',questions:[{"text": "Which axle?", "type": "select", "options": ["Front", "Rear", "Both"]}, {"text": "Any noise or vibration?", "type": "yesno"}]},
+  {id:95,cat:'Brakes',name:'Brake Shoes Replacement (Rear)',time:'60–90 min',desc:'Replace rear brake shoes to restore proper braking function in drum brake systems.',questions:[{"text": "Is this for rear drum brakes?", "type": "yesno"}, {"text": "Any weak parking brake?", "type": "yesno"}]},
+  {id:96,cat:'Brakes',name:'Brake System Flush',time:'30–60 min',desc:'Flush and replace old brake fluid to maintain braking performance and protect system components.',questions:[{"text": "When was last brake fluid service? (Approximate)", "type": "text", "options": []}, {"text": "Any soft or spongy brake pedal?", "type": "yesno"}]},
+  {id:97,cat:'Brakes',name:'Parking Brake Service / Adjustment',time:'30–60 min',desc:'Adjust or service the parking brake system to ensure proper hold and safety when parked.',questions:[{"text": "Is the parking brake loose or not holding?", "type": "yesno"}, {"text": "Does it need adjustment or full service?", "type": "select", "options": ["Unsure", "Adjust"]}]},
+  {id:98,cat:'Brakes',name:'Brake Fluid Top-Up / Minor Brake Maintenance',time:'10–20 min',desc:'Top up brake fluid and perform minor checks to maintain safe braking operation.',questions:[{"text": "Is the brake fluid low?", "type": "yesno"}, {"text": "Any warning lights on?", "type": "yesno"}]},
+  {id:99,cat:'Brakes',name:'General Brake Service / Inspection',time:'30–60 min',desc:'Inspect the full brake system to identify wear, safety issues, and recommended repairs.',questions:[{"text": "Any issues noticed?", "type": "select", "options": ["Noise", "Weak braking", "None"]}, {"text": "When was last brake service? (Approximate)", "type": "text", "options": []}]},
+  {id:100,cat:'Brakes',name:'Brake Caliper Replacement',time:'60–120 min',desc:'Replace faulty brake calipers to restore proper braking pressure and prevent uneven wear.',questions:[{"text": "Is one wheel sticking or overheating?", "type": "yesno"}, {"text": "Any uneven braking?", "type": "yesno"}, {"text": "Which wheel needs service?", "type": "select", "options": ["Front Left", "Front Right", "Rear Left", "Rear Right", "Not sure"]}]},
+  {id:101,cat:'Brakes',name:'Brake Master Cylinder Replacement',time:'90–150 min',desc:'Replace the master cylinder to restore proper hydraulic pressure across the braking system.',questions:[{"text": "Is the brake pedal soft or sinking?", "type": "yesno"}, {"text": "Any brake fluid leaks?", "type": "yesno"}]},
+  {id:102,cat:'Brakes',name:'Brake Booster Replacement',time:'90–150 min',desc:'Replace the brake booster to restore assisted braking and reduce pedal effort.',questions:[{"text": "Is the brake pedal hard to press?", "type": "yesno"}, {"text": "Any hissing noise when braking?", "type": "yesno"}]},
+  {id:103,cat:'Brakes',name:'Brake Lines / Hose Repair',time:'60–120 min',desc:'Repair or replace damaged brake lines or hoses to ensure safe and leak-free braking.',questions:[{"text": "Any visible leaks under the car?", "type": "yesno"}, {"text": "Brake warning light on?", "type": "yesno"}, {"text": "How does your brake pedal feel when you press it?", "type": "select", "options": ["Normal", "Soft or spongy", "Goes very low / close to the floor"]}]},
+  {id:104,cat:'Brakes',name:'Wheel Hub Assembly Replacement/Wheel Hub Bearing',time:'60–120 min',desc:'Replace worn wheel hub assembly to eliminate noise and ensure proper wheel rotation and safety.',questions:[{"text": "Any humming or grinding noise while driving?", "type": "yesno"}, {"text": "Does noise change with speed?", "type": "yesno"}, {"text": "Which wheel is the issue coming from?", "type": "select", "options": ["Front Left", "Front Right", "Rear Left", "Rear Right", "Not sure"]}]},
+  {id:105,cat:'Brakes',name:'ABS System Reset / ABS Sensor Replacement',time:'45–90 min',desc:'Diagnose and repair ABS system issues to restore anti-lock braking functionality and safety.',questions:[{"text": "Is the ABS light on?", "type": "yesno"}]},
+  {id:106,cat:'Car Buying',name:'Pre Purchase Car Inspection',time:'1-2 hours',desc:'Inspect a vehicle before purchase to identify mechanical issues, accident damage, or maintenance concerns.',questions:[{"text": "Where is the vehicle located?", "type": "select", "options": ["Seller’s home", "Dealership", "Other"]}, {"text": "Has the car been driven recently?", "type": "select", "options": ["Yes", "No", "Not sure"]}, {"text": "Anything specific you want us to focus on?", "type": "select", "options": ["Engine", "Brakes", "Body / accident damage", "Full inspection", "Not sure"]}]},
+  {id:107,cat:'Car Buying',name:'Used Car Inspection',time:'1-2 hours',desc:'Perform a comprehensive inspection of a used vehicle to identify mechanical issues and estimate repair needs.',questions:[{"text": "What’s the main reason for the inspection?", "type": "select", "options": ["General check-up", "Issue diagnosis", "Preparing for sale", "Not sure"]}, {"text": "Any known issues with the vehicle?", "type": "select", "options": ["Yes", "No", "Not sure"]}, {"text": "Would you like a repair estimate included?", "type": "select", "options": ["Yes", "No"]}]},
+  {id:108,cat:'Electrical & Lights',name:'Car Won’t Start (Battery / Starter Issue)',time:'30–60 min',desc:'Diagnose no-start issues related to the battery, starter, or electrical system and recommend the fix.',questions:[{"text": "Do you hear clicking or cranking?", "type": "yesno"}, {"text": "Do dashboard lights turn on?", "type": "yesno"}]},
+  {id:109,cat:'Electrical & Lights',name:'Car Battery Dead / Needs Boost',time:'15–30 min',desc:'Provide a battery boost to get your vehicle started and check for underlying issues.',questions:[{"text": "Is the car completely dead?", "type": "select", "options": ["Yes", "No"]}, {"text": "Do you need a jump-start now?", "type": "select", "options": ["Yes", "No"]}, {"text": "Does the car stay running after disconnecting the jump-start?", "type": "select", "options": ["Yes", "No"]}]},
+  {id:110,cat:'Electrical & Lights',name:'Battery Replacement',time:'20–30 min',desc:'Replace your vehicle battery to restore reliable starting and electrical performance.',questions:[{"text": "Do you already have a battery?", "type": "yesno"}, {"text": "Is the current battery completely dead?", "type": "yesno"}]},
+  {id:111,cat:'Electrical & Lights',name:'Battery Keeps Dying (Charging System Check)',time:'30–60 min',desc:'Test the charging system to identify battery drain or alternator-related issues.',questions:[{"text": "How often does the battery die?", "type": "select", "options": ["Once", "Repeatedly"]}, {"text": "Are there any warning lights on?", "type": "select", "options": ["Yes", "No"]}, {"text": "Are there any aftermarket accessories plugged into the vehicle?", "type": "select", "options": ["Yes", "No"]}]},
+  {id:112,cat:'Electrical & Lights',name:'Car Not Charging (Alternator Issue)',time:'45–75 min',desc:'Diagnose alternator and charging system faults to restore proper battery charging.',questions:[{"text": "Is the battery light on?", "type": "yesno"}, {"text": "Does the car die while driving?", "type": "yesno"}]},
+  {id:113,cat:'Electrical & Lights',name:'Alternator / Charging System Service',time:'60–120 min',desc:'Service or replace alternator components to ensure consistent power supply.',questions:[{"text": "Any dim lights or electrical issues?", "type": "yesno"}, {"text": "Battery recently replaced?", "type": "yesno"}]},
+  {id:114,cat:'Electrical & Lights',name:'Starter Replacement',time:'60–120 min',desc:'Replace a faulty starter motor to restore proper engine starting.',questions:[{"text": "Do you hear a clicking sound?", "type": "yesno"}, {"text": "Engine not cranking at all?", "type": "yesno"}]},
+  {id:115,cat:'Electrical & Lights',name:'Lights Not Working (Headlights, Brake Lights, Signals)',time:'15–45 min',desc:'Diagnose and repair lighting issues to ensure visibility and road safety.',questions:[{"text": "Which lights are out?", "type": "select", "options": ["Headlights", "Brake", "Signals"]}, {"text": "Fully out or intermittent?", "type": "text", "options": []}]},
+  {id:116,cat:'Electrical & Lights',name:'Dashboard Warning Lights On',time:'30–60 min',desc:'Scan and diagnose dashboard warning lights to identify system faults.',questions:[{"text": "Which light is on?", "type": "select", "options": ["Battery", "Engine", "ABS", "Other"]}, {"text": "Is the car driving normally?", "type": "yesno"}]},
+  {id:117,cat:'Electrical & Lights',name:'Wipers Not Working (Blades / Motor / Pump)',time:'30–60 min',desc:'Diagnose and repair wiper system issues for clear visibility in all conditions.',questions:[{"text": "Are wipers not moving or just ineffective?", "type": "text", "options": []}, {"text": "Washer fluid spraying?", "type": "yesno"}]},
+  {id:118,cat:'Electrical & Lights',name:'Power Locks Not Working',time:'45–75 min',desc:'Diagnose and repair door lock system faults for proper vehicle security.',questions:[{"text": "All doors or just one?", "type": "text", "options": []}, {"text": "Using key fob or interior switch?", "type": "text", "options": []}, {"text": "Additional Comments", "type": "comment"}]},
+  {id:119,cat:'Electrical & Lights',name:'Backup Camera / Sensors Not Working',time:'45–90 min',desc:'Diagnose and repair parking camera or sensor issues for safe reversing.',questions:[{"text": "Camera not showing or sensors not beeping?", "type": "text", "options": []}, {"text": "Any recent impact or damage?", "type": "yesno"}]},
+  {id:120,cat:'Electrical & Lights',name:'Electrical Issue Diagnosis',time:'60–120 min',desc:'Perform a full electrical system diagnosis to locate faults and recommend repairs.',questions:[{"text": "What issue are you experiencing?", "type": "select", "options": ["Short input", "select"]}, {"text": "Is it constant or intermittent?", "type": "text", "options": []}]},
+  {id:121,cat:'Electrical & Lights',name:'Key Fob Battery Replacement',time:'5–10 min',desc:'Replace the key fob battery to restore remote locking and unlocking functionality.',questions:[{"text": "Is the key fob unresponsive or weak?", "type": "yesno"}, {"text": "Do you have a spare key?", "type": "yesno"}]},
+  {id:122,cat:'Electrical & Lights',name:'Battery Test',time:'10–20 min',desc:'Test battery health and performance to determine if replacement is needed.',questions:[{"text": "Any starting issues?", "type": "yesno"}, {"text": "Battery age known?", "type": "yesno"}]},
+  {id:123,cat:'Electrical & Lights',name:'Horn Replacement',time:'30–60 min',desc:'Replace faulty horn to ensure proper vehicle signaling and safety.',questions:[{"text": "Horn not working at all?", "type": "yesno"}, {"text": "Any clicking sound when pressed?", "type": "yesno"}]},
+  {id:124,cat:'Electrical & Lights',name:'Power Door Lock/Window Glass Not Working',time:'60–120 min',desc:'Replace faulty actuator to restore automatic locking and unlocking.',questions:[{"text": "Which door is affected?", "type": "select", "options": ["Left front", "Right front", "Left rear", "Right rear"]}, {"text": "Are you hearing any unusual noise when locking or unlocking?", "type": "select", "options": ["Yes", "No"]}]},
+  {id:125,cat:'Electrical & Lights',name:'Park Assist Camera Replacement',time:'60–120 min',desc:'Replace malfunctioning backup camera to restore clear rear visibility.',questions:[{"text": "Is the camera blank or blurry?", "type": "text", "options": []}, {"text": "Any visible damage?", "type": "yesno"}]},
+  {id:126,cat:'Engine',name:'Engine Diagnosis',time:'60–120 min',desc:'Perform a full engine diagnostic to identify faults and recommend repairs.',questions:[{"text": "What symptoms are you noticing?", "type": "text", "options": []}, {"text": "Is the car drivable?", "type": "yesno"}]},
+  {id:127,cat:'Engine',name:'Engine Running Rough / Misfiring',time:'45–75 min',desc:'Diagnose misfires caused by ignition, fuel, or air issues to restore smooth engine performance.',questions:[{"text": "Is the engine shaking or jerking?", "type": "yesno"}, {"text": "Check engine light on?", "type": "yesno"}]},
+  {id:128,cat:'Engine',name:'Engine Won’t Start (Fuel / Air Issue)',time:'45–75 min',desc:'Diagnose fuel or air supply issues preventing the engine from starting',questions:[{"text": "Does the engine crank?", "type": "yesno"}, {"text": "Smell fuel or notice no fuel?", "type": "text", "options": []}]},
+  {id:129,cat:'Engine',name:'Engine Overheating',time:'45–75 min',desc:'Identify cooling system or internal issues causing the engine to overheat.',questions:[{"text": "Temperature gauge high?", "type": "yesno"}, {"text": "Coolant level low?", "type": "yesno"}]},
+  {id:130,cat:'Engine',name:'Engine Knocking or Ticking Noise',time:'45–90 min',desc:'Diagnose internal or valvetrain noises to prevent serious engine damage.',questions:[{"text": "Noise at idle or acceleration?", "type": "text", "options": []}, {"text": "Gets louder with speed?", "type": "yesno"}]},
+  {id:131,cat:'Engine',name:'Check Engine Light (Engine Related)',time:'30–60 min',desc:'Scan engine codes and diagnose faults affecting engine performance and emissions.',questions:[{"text": "Light flashing or solid?", "type": "text", "options": []}, {"text": "Any performance issues?", "type": "yesno"}]},
+  {id:132,cat:'Engine',name:'Oil Leak (Engine Area)',time:'45–90 min',desc:'Locate and diagnose oil leaks to prevent engine damage and fluid loss.',questions:[{"text": "Where is the leak?", "type": "select", "options": ["Top", "Bottom", "Unsure"]}, {"text": "Any burning smell?", "type": "yesno"}]},
+  {id:133,cat:'Engine',name:'Burning Oil Smell / Oil Consumption',time:'45–90 min',desc:'Identify oil leaks or internal burning issues affecting engine health.',questions:[{"text": "Smell while driving or after?", "type": "text", "options": []}, {"text": "Oil level dropping quickly?", "type": "yesno"}]},
+  {id:134,cat:'Engine',name:'Engine Vibration at Idle (Rough Idle)',time:'45–75 min',desc:'Diagnose rough idle caused by misfires, mounts, or airflow issues.',questions:[{"text": "Only at idle?", "type": "yesno"}]},
+  {id:135,cat:'Engine',name:'Spark Plug Replacement / Tune-Up',time:'45–90 min',desc:'Replace spark plugs to improve ignition, efficiency, and performance.',questions:[{"text": "Any misfires or rough running?", "type": "yesno"}, {"text": "When last replaced?", "type": "text", "options": []}]},
+  {id:136,cat:'Engine',name:'Throttle Body Service / Replacement',time:'45–90 min',desc:'Clean or replace throttle body to improve airflow and engine response.',questions:[{"text": "Rough idle or hesitation?", "type": "yesno"}, {"text": "Any throttle response issues?", "type": "text", "options": []}]},
+  {id:137,cat:'Engine',name:'Air Intake / Filter Service',time:'15–30 min',desc:'Replace or clean air filter to ensure proper airflow and engine efficiency.',questions:[{"text": "When last changed?", "type": "text", "options": []}, {"text": "Driving in dusty conditions?", "type": "yesno"}]},
+  {id:138,cat:'Engine',name:'Serpentine Belt Replacement',time:'30–60 min',desc:'Replace worn belt to ensure proper operation of engine accessories.',questions:[{"text": "Any squealing noise?", "type": "yesno"}, {"text": "Cracks visible on belt?", "type": "yesno"}]},
+  {id:139,cat:'Engine',name:'Engine Mount Replacement',time:'60–120 min',desc:'Replace worn mounts to reduce vibration and stabilize the engine.',questions:[{"text": "Excess vibration?", "type": "yesno"}, {"text": "Clunk when shifting?", "type": "yesno"}]},
+  {id:140,cat:'Engine',name:'Radiator Replacement',time:'90–150 min',desc:'Replace radiator to restore proper cooling and prevent overheating.',questions:[{"text": "Any visible leaks?", "type": "yesno"}, {"text": "Overheating issues?", "type": "yesno"}]},
+  {id:141,cat:'Engine',name:'Water Pump Replacement',time:'90–150 min',desc:'Replace water pump to maintain coolant circulation and engine temperature.',questions:[{"text": "Coolant leak near engine?", "type": "yesno"}, {"text": "Overheating or noise?", "type": "text", "options": []}]},
+  {id:142,cat:'Engine',name:'Thermostat Replacement',time:'45–90 min',desc:'Replace thermostat to regulate engine temperature properly.',questions:[{"text": "Engine overheating or not warming up?", "type": "text", "options": []}, {"text": "Temperature fluctuating?", "type": "yesno"}]},
+  {id:143,cat:'Engine',name:'Cooling Fan / Motor Service',time:'60–120 min',desc:'Repair or replace cooling fan components to prevent overheating.',questions:[{"text": "Fan running when hot?", "type": "yesno"}, {"text": "Overheating in traffic?", "type": "text", "options": []}]},
+  {id:144,cat:'Engine',name:'Cooling System Flush',time:'30–60 min',desc:'Flush old coolant and contaminants to maintain cooling efficiency.',questions:[{"text": "When last coolant service?", "type": "text", "options": []}, {"text": "Any overheating issues?", "type": "yesno"}]},
+  {id:145,cat:'Engine',name:'Coolant Leak Repair',time:'60–120 min',desc:'Identify and repair coolant leaks to prevent overheating.',questions:[{"text": "Where is leak visible?", "type": "text", "options": []}, {"text": "Coolant level dropping?", "type": "yesno"}]},
+  {id:146,cat:'Engine',name:'Valve Cover Gasket Replacement',time:'60–120 min',desc:'Replace gasket to stop oil leaks from the engine top.',questions:[{"text": "Oil leaking from top of engine?", "type": "yesno"}, {"text": "Burning smell?", "type": "yesno"}]},
+  {id:147,cat:'Engine',name:'Oil Pan / Gasket Replacement',time:'90–150 min',desc:'Replace oil pan gasket to stop leaks from the bottom of the engine.',questions:[{"text": "Oil leak under vehicle?", "type": "yesno"}, {"text": "Oil spots when parked?", "type": "yesno"}]},
+  {id:148,cat:'Engine',name:'Oil Filter Housing Gasket Replacement',time:'60–120 min',desc:'Replace gasket to stop leaks around the oil filter housing.',questions:[{"text": "Oil leak near filter area?", "type": "yesno"}, {"text": "Recent oil service?", "type": "yesno"}]},
+  {id:149,cat:'Engine',name:'Oil Pressure Sensor Replacement',time:'30–60 min',desc:'Replace faulty sensor to ensure accurate oil pressure readings.',questions:[{"text": "Oil pressure warning light on?", "type": "yesno"}, {"text": "Any leaks near sensor?", "type": "text", "options": []}]},
+  {id:150,cat:'Engine',name:'Oil Cooler / Lines Replacement',time:'90–150 min',desc:'Replace oil cooler components to maintain proper oil temperature and flow.',questions:[{"text": "Oil leaking near cooler lines?", "type": "text", "options": []}, {"text": "Overheating or oil mixing issues?", "type": "text", "options": []}]},
+  {id:151,cat:'Engine',name:'EGR Valve / System Service',time:'60–120 min',desc:'Clean or replace EGR system to improve emissions and engine performance.',questions:[{"text": "Rough idle or stalling?", "type": "yesno"}, {"text": "Check engine light on?", "type": "yesno"}]},
+  {id:152,cat:'Engine',name:'Exhaust Manifold / Gasket Replacement',time:'90–150 min',desc:'Repair exhaust leaks to restore performance and reduce noise.',questions:[{"text": "Loud exhaust noise?", "type": "yesno"}, {"text": "Smell of exhaust?", "type": "yesno"}]},
+  {id:153,cat:'Engine',name:'Oxygen Sensor / Air-Fuel Sensor Replacement',time:'45–90 min',desc:'Replace faulty sensors to optimize fuel mixture and emissions.',questions:[{"text": "Check engine light on?", "type": "yesno"}, {"text": "Poor fuel economy?", "type": "yesno"}]},
+  {id:154,cat:'Engine',name:'Turbo / Boost / Wastegate Issues (if applicable)',time:'90–180 min',desc:'Diagnose turbo system issues affecting power and performance.',questions:[{"text": "Loss of boost/power?", "type": "yesno"}, {"text": "Whistling or smoke?", "type": "yesno"}]},
+  {id:155,cat:'Engine',name:'Timing Cover / Gasket Replacement',time:'120–240 min',desc:'Replace timing cover gasket to stop leaks and protect engine components.',questions:[{"text": "Oil leak from front of engine?", "type": "yesno"}, {"text": "Any unusual noise?", "type": "text", "options": []}]},
+  {id:156,cat:'Engine',name:'Timing Chain / Gear Components',time:'180–300 min',desc:'Service or replace timing components to maintain engine synchronization.',questions:[{"text": "Rattling noise at startup?", "type": "yesno"}, {"text": "High mileage engine?", "type": "yesno"}]},
+  {id:157,cat:'Engine',name:'Camshaft Seal Replacement',time:'90–150 min',desc:'Replace camshaft seals to prevent oil leaks and contamination.',questions:[{"text": "Oil leak near camshaft area?", "type": "yesno"}, {"text": "Burning smell?", "type": "yesno"}]},
+  {id:158,cat:'Engine',name:'Intake Manifold / Gasket Replacement',time:'90–150 min',desc:'Repair intake leaks to restore proper airflow and engine performance.',questions:[{"text": "Rough idle or vacuum leaks?", "type": "yesno"}, {"text": "Coolant or air leak signs?", "type": "text", "options": []}]},
+  {id:159,cat:'Engine',name:'Cylinder Head / Head Gasket Repair',time:'300–600 min',desc:'Repair major internal engine damage to restore compression and prevent failure.',questions:[{"text": "White smoke or overheating?", "type": "yesno"}, {"text": "Coolant loss with no leak?", "type": "yesno"}]},
+  {id:160,cat:'Engine',name:'Variable Valve Timing (VVT) Solenoid Replacement',time:'45–90 min',desc:'Replace VVT solenoid to restore proper engine timing and efficiency.',questions:[{"text": "Check engine light on?", "type": "yesno"}, {"text": "Performance issues at certain speeds?", "type": "text", "options": []}]},
+  {id:161,cat:'Performance',name:'ECU Tuning / Performance Tune',time:'60–120 min',desc:'Reprogram the ECU to improve power, throttle response, and overall engine performance.',questions:[{"text": "Stock vehicle or modified?", "type": "text", "options": []}, {"text": "Any performance goals?", "type": "select", "options": ["Power", "Efficiency"]}]},
+  {id:162,cat:'Performance',name:'Cold Air Intake Installation',time:'30–60 min',desc:'Install a cold air intake to increase airflow and enhance engine performance and sound.',questions:[{"text": "Do you have the intake kit?", "type": "yesno"}, {"text": "Stock or modified engine?", "type": "text", "options": []}]},
+  {id:163,cat:'Performance',name:'Performance Exhaust Upgrade (Bolt-On Systems)',time:'60–120 min',desc:'Install a performance exhaust system to improve sound and exhaust flow.',questions:[{"text": "Full system or axle-back?", "type": "text", "options": []}, {"text": "Louder sound preference?", "type": "yesno"}]},
+  {id:164,cat:'Performance',name:'Suspension Upgrade (Lowering Springs / Coilovers)',time:'120–240 min',desc:'Upgrade suspension components to improve handling, stance, and ride quality.',questions:[{"text": "Springs or coilovers?", "type": "text", "options": []}, {"text": "Comfort or performance focus?", "type": "text", "options": []}]},
+  {id:165,cat:'Performance',name:'Wheel & Spacer Installation',time:'30–60 min',desc:'Install wheels or spacers to improve vehicle stance and fitment.',questions:[{"text": "New wheels or spacers?", "type": "text", "options": []}, {"text": "Do you need torque check?", "type": "yesno"}]},
+  {id:166,cat:'Performance',name:'Performance Brake Upgrade (Pads & Rotors)',time:'60–120 min',desc:'Upgrade brake components for improved stopping power and heat resistance.',questions:[{"text": "Street or performance setup?", "type": "text", "options": []}, {"text": "Any current brake issues?", "type": "yesno"}]},
+  {id:167,cat:'Performance',name:'Remote Starter Installation',time:'90–180 min',desc:'Install a remote starter system for convenient vehicle start from a distance.',questions:[{"text": "Automatic or manual vehicle?", "type": "text", "options": []}, {"text": "Do you have a kit?", "type": "yesno"}]},
+  {id:168,cat:'Performance',name:'Apple CarPlay / Android Auto Upgrade',time:'60–120 min',desc:'Upgrade your system to enable smartphone integration for navigation, calls, and media.',questions:[{"text": "Wired or wireless preference?", "type": "text", "options": []}, {"text": "Factory screen or aftermarket?", "type": "text", "options": []}]},
+  {id:169,cat:'Performance',name:'Aftermarket Stereo / Subwoofer Installation',time:'90–180 min',desc:'Install audio components to enhance sound quality and bass performance.',questions:[{"text": "Full system or sub only?", "type": "text", "options": []}, {"text": "Do you have components?", "type": "yesno"}]},
+  {id:170,cat:'Performance',name:'Backup Camera Installation',time:'60–120 min',desc:'Install a backup camera system to improve rear visibility and safety.',questions:[{"text": "Factory screen available?", "type": "yesno"}, {"text": "Need wiring integration?", "type": "yesno"}]},
+  {id:171,cat:'Performance',name:'Dash Cam Installation',time:'30–90 min',desc:'Install dash cam for continuous recording and driving security.',questions:[{"text": "Front only or front/rear?", "type": "text", "options": []}, {"text": "Hardwire or plug-in?", "type": "text", "options": []}]},
+  {id:172,cat:'Performance',name:'LED Lighting Upgrade (Interior / Exterior)',time:'30–60 min',desc:'Upgrade lighting to LED for improved visibility and modern styling.',questions:[{"text": "Interior or exterior lights?", "type": "text", "options": []}, {"text": "Color preference?", "type": "text", "options": []}]},
+  {id:173,cat:'Performance',name:'Sway Bar Installation',time:'60–120 min',desc:'Install sway bars to improve cornering stability and reduce body roll.',questions:[{"text": "Front, rear, or both?", "type": "text", "options": []}, {"text": "Handling upgrade goal?", "type": "yesno"}]},
+  {id:174,cat:'Performance',name:'Throttle Body Cleaning Service',time:'',desc:'',questions:[]},
+  {id:175,cat:'Performance',name:'Lift Kit Installation (Trucks / SUVs)',time:'180–360 min',desc:'Install lift kit to increase ground clearance and off-road capability.',questions:[{"text": "Lift height?", "type": "text", "options": []}, {"text": "Off-road or appearance?", "type": "text", "options": []}]},
+  {id:176,cat:'Performance',name:'Performance Tire Installation',time:'30–60 min',desc:'Install performance tires for improved grip, handling, and safety.',questions:[{"text": "Do you have tires already?", "type": "yesno"}, {"text": "Seasonal or performance tires?", "type": "text", "options": []}]},
+  {id:177,cat:'Performance',name:'Interior Ambient Lighting Upgrade',time:'60–120 min',desc:'Install ambient lighting to enhance interior aesthetics and driving experience.',questions:[{"text": "Single color or multi-color?", "type": "text", "options": []}, {"text": "App-controlled?", "type": "yesno"}]},
+  {id:178,cat:'Performance',name:'Custom Audio / Speaker Upgrades',time:'90–180 min',desc:'Upgrade speakers and audio components for premium sound quality.',questions:[{"text": "Replace speakers or full system?", "type": "text", "options": []}, {"text": "Sound preference?", "type": "select", "options": ["Bass", "Clarity"]}]},
+  {id:179,cat:'Performance',name:'USB / Charging Port Installation',time:'30–60 min',desc:'Install additional charging ports for convenience and device connectivity.',questions:[{"text": "Front or rear install?", "type": "text", "options": []}, {"text": "Fast charging needed?", "type": "yesno"}]},
+  {id:180,cat:'Performance',name:'Grille / Spoiler / Exterior Trim Installation',time:'30–90 min',desc:'Install exterior components to enhance vehicle styling and appearance.',questions:[{"text": "Which part installing?", "type": "text", "options": []}, {"text": "OEM or aftermarket?", "type": "text", "options": []}]},
+  {id:181,cat:'Performance',name:'Roof Rack Installation',time:'30–60 min',desc:'Install roof rack system for additional cargo carrying capacity.',questions:[{"text": "Crossbars or full rack?", "type": "text", "options": []}, {"text": "Vehicle has mounting points?", "type": "yesno"}]},
+  {id:182,cat:'Performance',name:'Engine Bay Cosmetic Upgrades',time:'30–90 min',desc:'Enhance engine bay appearance with cosmetic upgrades and detailing components.',questions:[{"text": "Covers, caps, or full kit?", "type": "text", "options": []}, {"text": "Show or daily use?", "type": "text", "options": []}]},
+  {id:183,cat:'Performance',name:'Exhaust Component Bolt-On Mods',time:'60–120 min',desc:'Install bolt-on exhaust components to customize sound and performance.',questions:[{"text": "Which component?", "type": "select", "options": ["Muffler", "Resonator", "etc."]}, {"text": "Sound preference?", "type": "text", "options": []}]},
+  {id:184,cat:'Doors',name:'Door Won’t Open / Close Properly (Diagnosis)',time:'20–45 minutes',desc:'We inspect your door to identify why it’s stuck, misaligned, or not closing properly and recommend the right fix.',questions:[{"text": "What’s happening?", "type": "select", "options": ["Won’t open", "Won’t close", "Hard to open", "Misaligned"]}, {"text": "Which door?", "type": "select", "options": ["Driver", "Passenger", "Rear", "Not sure"]}]},
+  {id:185,cat:'Doors',name:'Door Latch Replacement',time:'45–90 min',desc:'We replace the faulty door latch so your door opens and closes securely again.',questions:[{"text": "Which door needs repair?", "type": "text", "options": []}, {"text": "Is the door currently stuck closed?", "type": "yesno"}]},
+  {id:186,cat:'Doors',name:'Door Lock Not Working (Actuator / Lock Repair)',time:'45–90 min',desc:'We fix or replace the locking mechanism so your door locks and unlocks properly.',questions:[{"text": "What’s the issue?", "type": "select", "options": ["Won’t lock", "Won’t unlock", "Intermittent"]}, {"text": "Is it affecting one door or multiple?", "type": "text", "options": []}]},
+  {id:187,cat:'Doors',name:'Exterior Door Handle Replacement',time:'30–60 min',desc:'We replace broken or loose exterior handles so you can open your door from outside normally.',questions:[{"text": "Which door?", "type": "text", "options": []}, {"text": "Is the handle completely broken or just loose?", "type": "text", "options": []}]},
+  {id:188,cat:'Doors',name:'Interior Door Handle Replacement',time:'30–60 min',desc:'We replace the inside door handle so you can safely open the door from within the vehicle.',questions:[{"text": "Which door?", "type": "text", "options": []}, {"text": "Is it snapped, loose, or not opening the door?", "type": "text", "options": []}]},
+  {id:189,cat:'Doors',name:'Window Not Working (Regulator / Motor Repair)',time:'60–120 min',desc:'We repair or replace the window motor or regulator so your window moves up and down properly.',questions:[{"text": "What’s happening?", "type": "select", "options": ["Won’t move", "Stuck down", "Slow", "Noise"]}, {"text": "Which window?", "type": "text", "options": []}]},
+  {id:190,cat:'Doors',name:'Lubricate Doors / Hinges',time:'10–20 min',desc:'We lubricate door hinges and moving parts to eliminate squeaks and ensure smooth operation.',questions:[{"text": "Which doors need service?", "type": "select", "options": ["All", "Specific door"]}, {"text": "Any squeaking noise?", "type": "yesno"}]},
+  {id:191,cat:'Doors',name:'Door Alignment / Adjustment',time:'30–60 min',desc:'We adjust your door alignment so it closes properly and seals correctly.',questions:[{"text": "What’s the issue?", "type": "select", "options": ["Not closing", "Misaligned", "Wind noise"]}, {"text": "Which door?", "type": "text", "options": []}]},
+  {id:192,cat:'Doors',name:'Trunk / Tailgate Won’t Open (Diagnosis)',time:'20–45 min',desc:'We diagnose why your trunk or tailgate won’t open and determine the required repair.',questions:[{"text": "What’s happening?", "type": "select", "options": ["Won’t open", "Stuck", "Opens manually only"]}, {"text": "Is it electric or manual?", "type": "text", "options": []}]},
+  {id:193,cat:'Doors',name:'Trunk / Tailgate Latch Replacement',time:'45–90 min',desc:'We replace the faulty latch so your trunk or tailgate opens and closes securely.',questions:[{"text": "Is it stuck closed?", "type": "yesno"}, {"text": "Manual or power trunk?", "type": "text", "options": []}]},
+  {id:194,cat:'Doors',name:'Trunk / Tailgate Lift Support / Shocks Replacement',time:'20–40 min',desc:'We replace worn lift supports so your trunk or tailgate stays open safely.',questions:[{"text": "Does the trunk fall down on its own?", "type": "yesno"}, {"text": "One side or both sides weak?", "type": "text", "options": []}]},
+  {id:195,cat:'Doors',name:'Door Lock Relay / Switch Replacement',time:'45–75 min',desc:'We replace faulty switches or relays to restore proper door lock controls.',questions:[{"text": "Are locks not responding to buttons?", "type": "yesno"}, {"text": "One door or all doors affected?", "type": "text", "options": []}]},
+  {id:196,cat:'Doors',name:'Sliding Door Track / Roller Adjustment',time:'45–90 min',desc:'We adjust or repair sliding door tracks so the door opens and closes smoothly.',questions:[{"text": "Is the door stuck or hard to slide?", "type": "text", "options": []}, {"text": "Any grinding or noise?", "type": "text", "options": []}]},
+  {id:197,cat:'Doors',name:'Hood Latch / Hood Latch Adjustment',time:'20–45 min',desc:'We repair or adjust the hood latch so it opens and closes safely.',questions:[{"text": "Hood won’t open or won’t close?", "type": "text", "options": []}, {"text": "Is the latch stuck?", "type": "text", "options": []}]},
+  {id:198,cat:'Doors',name:'Hood Lift Support / Shocks Replacement',time:'15–30 min',desc:'We replace worn hood supports so your hood stays open securely.',questions:[{"text": "Does the hood fall down?", "type": "yesno"}]},
+  {id:199,cat:'Doors',name:'Trunk / Tailgate Lock Cylinder Replacement',time:'45–90 min',desc:'We replace the physical lock cylinder so your key works properly in the trunk.',questions:[{"text": "Key not turning or stuck?", "type": "text", "options": []}, {"text": "Manual key or keyless entry vehicle?", "type": "text", "options": []}]},
+  {id:200,cat:'Doors',name:'Trunk / Tailgate Lock Solenoid Replacement',time:'60–120 min',desc:'We replace the solenoid responsible for electronic trunk release.',questions:[{"text": "Trunk not opening with button?", "type": "text", "options": []}, {"text": "Does it work manually?", "type": "text", "options": []}]},
+  {id:201,cat:'Doors',name:'Trunk / Tailgate Locking Assembly Replacement',time:'60–120 min',desc:'We replace the complete trunk/tailgate locking assembly so your trunk locks and unlocks reliably.',questions:[{"text": "Is the trunk/tailgate not locking or unlocking?", "type": "yesno"}, {"text": "Manual or electronic locking system?", "type": "text", "options": []}]},
+  {id:202,cat:'Doors',name:'Trunk Latch Release Cable Replacement',time:'45–90 min',desc:'We replace the trunk release cable so your trunk opens smoothly from inside or with the release button.',questions:[{"text": "Is the release cable broken or stretched?", "type": "yesno"}, {"text": "Does the trunk open manually or with a button?", "type": "text", "options": []}]},
+  {id:203,cat:'Doors',name:'Trunk Lock Actuator Replacement',time:'60–120 min',desc:'We replace the actuator that controls electronic trunk locking to restore proper functionality.',questions:[{"text": "Is the trunk not responding to the remote or button?", "type": "yesno"}, {"text": "Works manually?", "type": "yesno"}]},
+  {id:204,cat:'Doors',name:'Trunk Striker Plate Replacement',time:'30–60 min',desc:'We replace or adjust the striker plate to ensure the trunk latches securely every time.',questions:[{"text": "Trunk not latching properly?", "type": "yesno"}, {"text": "Manual or power trunk?", "type": "text", "options": []}]},
+  {id:205,cat:'Doors',name:'Lubricate Hood / Trunk Hinge',time:'10–20 min',desc:'We lubricate hinges and moving parts on your hood and trunk to eliminate squeaks and ensure smooth operation.',questions:[{"text": "Any squeaking or stiffness?", "type": "yesno"}, {"text": "Which parts need lubrication?", "type": "select", "options": ["Hood", "Trunk", "Both", "Not sure"]}]},
+];
+
+const CATEGORIES = [...new Set(SERVICES.map(s => s.cat))];
+
+/* ============================================================
+   CART STATE
+============================================================ */
+let cart = { pkg: null, services: [] };
+try {
+  const saved = sessionStorage.getItem('autovivo_cart');
+  if (saved) cart = JSON.parse(saved);
+} catch(e) { cart = { pkg: null, services: [] }; }
+function cartCount(){ return (cart.pkg?1:0) + cart.services.length; }
+function hasSvc(id){ return cart.services.some(s => s.id === id); }
+function getSvcInCart(id){ return cart.services.find(s => s.id === id); }
+
+/* ============================================================
+   SERVICE POPUP MODAL STATE
+============================================================ */
+let modalSvc = null;       // current service being configured
+let modalAnswers = {};     // { qIdx: answerString }
+let modalEditMode = false; // true when editing existing cart item
+
+function openSvcModal(svc, existingAnswers = null) {
+  modalSvc = svc;
+  modalAnswers = {};
+  modalEditMode = !!existingAnswers;
+
+  document.getElementById('svc-modal-title').textContent = svc.name;
+  renderModalBody(svc.questions, existingAnswers);
+
+  const overlay = document.getElementById('svc-modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  checkModalReady();
+}
+
+function renderModalBody(questions, existing) {
+  const body = document.getElementById('svc-modal-body');
+  if (!questions || questions.length === 0) {
+    body.innerHTML = '<p class="svc-modal-intro">No additional information required. Click "Add to Cart" to proceed.</p>';
+    return;
+  }
+
+  let html = '<p class="svc-modal-intro">Please answer the questions below so our technician can prepare for your appointment.</p>';
+
+  questions.forEach((q, qi) => {
+    const existVal = existing ? existing[qi] : null;
+    html += `<div class="modal-q-block" data-qi="${qi}">`;
+    html += `<div class="modal-q-label">${escHtml(q.text)} <span class="modal-q-required">*</span></div>`;
+
+    if (q.type === 'yesno') {
+      html += `<div class="modal-radio-group">`;
+      ['Yes','No'].forEach(opt => {
+        const sel = existVal === opt ? ' selected' : '';
+        html += `<label class="modal-radio-opt${sel}" data-qi="${qi}" data-val="${opt}">
+          <input type="radio" name="mq_${qi}" value="${opt}" ${existVal===opt?'checked':''}>
+          <div class="modal-radio-dot"></div>
+          <span class="modal-radio-text">${opt}</span>
+        </label>`;
+      });
+      html += `</div>`;
+    } else if (q.type === 'select' && q.options) {
+      html += `<div class="modal-radio-group">`;
+      q.options.forEach(opt => {
+        const sel = existVal === opt ? ' selected' : '';
+        html += `<label class="modal-radio-opt${sel}" data-qi="${qi}" data-val="${escHtml(opt)}">
+          <input type="radio" name="mq_${qi}" value="${escHtml(opt)}" ${existVal===opt?'checked':''}>
+          <div class="modal-radio-dot"></div>
+          <span class="modal-radio-text">${escHtml(opt)}</span>
+        </label>`;
+      });
+      html += `</div>`;
+    } else if (q.type === 'comment') {
+      html += `<textarea class="modal-textarea" data-qi="${qi}" placeholder="Optional — add any notes for your technician..." rows="3">${existVal||''}</textarea>`;
+    } else {
+      // text
+      html += `<input class="modal-text-input" type="text" data-qi="${qi}" placeholder="Type your answer..." value="${escHtml(existVal||'')}">`;
+    }
+
+    html += `</div>`;
+  });
+
+  body.innerHTML = html;
+
+  // Attach listeners
+  body.querySelectorAll('.modal-radio-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const qi = +opt.dataset.qi;
+      const val = opt.dataset.val;
+      // deselect siblings
+      body.querySelectorAll(`.modal-radio-opt[data-qi="${qi}"]`).forEach(o => {
+        o.classList.remove('selected');
+        o.querySelector('input').checked = false;
+      });
+      opt.classList.add('selected');
+      opt.querySelector('input').checked = true;
+      modalAnswers[qi] = val;
+      checkModalReady();
+    });
+    // If pre-selected
+    if (opt.classList.contains('selected')) {
+      const qi = +opt.dataset.qi;
+      modalAnswers[qi] = opt.dataset.val;
+    }
+  });
+
+  body.querySelectorAll('.modal-text-input').forEach(inp => {
+    if (inp.value) modalAnswers[+inp.dataset.qi] = inp.value;
+    inp.addEventListener('input', () => {
+      modalAnswers[+inp.dataset.qi] = inp.value.trim();
+      checkModalReady();
+    });
+  });
+
+  body.querySelectorAll('.modal-textarea').forEach(ta => {
+    modalAnswers[+ta.dataset.qi] = ta.value; // comment optional
+    ta.addEventListener('input', () => {
+      modalAnswers[+ta.dataset.qi] = ta.value;
+    });
+  });
+}
+
+function checkModalReady() {
+  if (!modalSvc) return;
+  const qs = modalSvc.questions || [];
+  let ready = true;
+  qs.forEach((q, qi) => {
+    if (q.type === 'comment') return; // optional
+    const ans = modalAnswers[qi];
+    if (!ans || (typeof ans === 'string' && !ans.trim())) ready = false;
+  });
+
+  const btn = document.getElementById('btn-modal-add');
+  btn.classList.toggle('ready', ready);
+}
+
+function closeSvcModal() {
+  document.getElementById('svc-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  modalSvc = null;
+  modalPkg = null;
+  document.getElementById('svc-modal-eyebrow').textContent = 'A few quick questions';
+}
+
+document.getElementById('svc-modal-close').addEventListener('click', closeSvcModal);
+document.getElementById('btn-modal-cancel').addEventListener('click', closeSvcModal);
+document.getElementById('svc-modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('svc-modal-overlay')) closeSvcModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('svc-modal-overlay').classList.contains('open')) closeSvcModal();
+});
+
+document.getElementById('btn-modal-add').addEventListener('click', () => {
+  if (modalPkg) {
+    // Package modal
+    if (cart.pkg && cart.pkg.id === modalPkg.id) {
+      cart.pkg = null;
+    } else {
+      const price = isLarge ? modalPkg.priceLarge : modalPkg.priceSmall;
+      cart.pkg = { id: modalPkg.id, tier: modalPkg.tier, icon: modalPkg.icon, price };
+    }
+    modalPkg = null;
+    closeSvcModal();
+    renderServices();
+    updateUI();
+  } else if (modalSvc) {
+    // Regular service modal
+    const qs = modalSvc.questions || [];
+    const answers = qs.map((q, qi) => ({ question: q.text, answer: modalAnswers[qi] || '' }));
+    if (modalEditMode) {
+      const existing = getSvcInCart(modalSvc.id);
+      if (existing) existing.answers = answers;
+    } else {
+      cart.services.push({ id: modalSvc.id, name: modalSvc.name, cat: modalSvc.cat, time: modalSvc.time, answers });
+    }
+    closeSvcModal();
+    renderServices();
+    updateUI();
+  }
+});
+
+/* ============================================================
+   ADD SERVICE (checks for questions)
+============================================================ */
+function addService(id) {
+  const svc = SERVICES.find(s => s.id === id);
+  if (!svc) return;
+
+  const qs = (svc.questions || []).filter(q => q.type !== 'comment');
+  if (qs.length > 0) {
+    openSvcModal(svc);
+  } else {
+    cart.services.push({id: svc.id, name: svc.name, cat: svc.cat, time: svc.time, answers: []});
+    renderServices();
+    updateUI();
+  }
+}
+
+function removeService(id) {
+  cart.services = cart.services.filter(s => s.id !== id);
+  renderServices();
+  updateUI();
+}
+
+function editServiceAnswers(id) {
+  const svc = SERVICES.find(s => s.id === id);
+  const cartItem = getSvcInCart(id);
+  if (!svc || !cartItem) return;
+
+  // Build existingAnswers map: qi -> answer
+  const existing = {};
+  (cartItem.answers || []).forEach((a, qi) => { existing[qi] = a.answer; });
+
+  openSvcModal(svc, existing);
+  // Close cart while editing
+  closeCart();
+}
+
+/* ============================================================
+   PACKAGE DETAIL MODAL
+============================================================ */
+let modalPkg = null;
+
+function openPkgModal(pkg) {
+  modalPkg = pkg;
+  modalSvc  = null;
+  const price      = isLarge ? pkg.priceLarge : pkg.priceSmall;
+  const altPrice   = isLarge ? pkg.priceSmall : pkg.priceLarge;
+  const altLabel   = isLarge ? 'Car / Small SUV' : 'Truck / Large SUV';
+  const vehicleLabel = isLarge ? 'Truck / Large SUV' : 'Car / Small SUV';
+
+  document.getElementById('svc-modal-eyebrow').textContent = 'Maintenance Package';
+  document.getElementById('svc-modal-title').textContent   = `${pkg.icon} ${pkg.tier} Package`;
+
+  document.getElementById('svc-modal-body').innerHTML = `
+    <div class="pkg-modal-prices">
+      <div class="pkg-modal-price-row">
+        <span class="pkg-modal-price-type">${vehicleLabel}</span>
+        <span class="pkg-modal-price-val hi">from ${price}</span>
+      </div>
+      <div class="pkg-modal-price-row">
+        <span class="pkg-modal-price-type">${altLabel}</span>
+        <span class="pkg-modal-price-val">from ${altPrice}</span>
+      </div>
+    </div>
+    <ul class="pkg-modal-services">${pkg.services.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <button class="pkg-modal-hc-toggle" id="pkg-modal-hc-toggle" type="button">View 15-point Health Check details</button>
+    <ul class="pkg-modal-hc-list" id="pkg-modal-hc-list">${HEALTH_CHECK.map(h=>`<li>${h}</li>`).join('')}</ul>
+    <p class="pkg-modal-fine">* Includes up to 5L of Dexos full synthetic oil, OE filter, lube and 15-point check. Diesel engines subject to surcharge (+$99.95). Not valid with same service offers/discounts.</p>
+  `;
+
+  document.getElementById('pkg-modal-hc-toggle').addEventListener('click', function() {
+    const list = document.getElementById('pkg-modal-hc-list');
+    const open = list.classList.toggle('open');
+    this.textContent = open ? 'Hide Health Check details' : 'View 15-point Health Check details';
+  });
+
+  const addBtn = document.getElementById('btn-modal-add');
+  const alreadyAdded = cart.pkg && cart.pkg.id === pkg.id;
+  addBtn.innerHTML = alreadyAdded
+    ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 7l3.5 3.5L12 3"/></svg> Remove Package'
+    : '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 1v12M1 7h12"/></svg> Add to Cart';
+  addBtn.classList.add('ready');
+
+  document.getElementById('svc-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ============================================================
+   RENDER FILTER PILLS — Promo first, then service categories
+============================================================ */
+const filterBar  = document.getElementById('filter-bar');
+const ALL_CATS   = ['All', 'Promo', ...CATEGORIES];
+
+ALL_CATS.forEach(cat => {
+  const pill = document.createElement('button');
+  pill.className = 'filter-pill' + (cat === 'Promo' ? ' promo-pill active' : '') + (cat === 'Popular' ? '' : '');
+  pill.textContent = cat;
+  pill.dataset.cat = cat;
+  pill.type = 'button';
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeCat = cat;
+    renderServices();
+  });
+  filterBar.appendChild(pill);
+});
+let activeCat = 'Promo';
+
+/* ============================================================
+   RENDER SERVICES — packages as Promo cards + regular services
+============================================================ */
+const svcGrid     = document.getElementById('svc-grid');
+const svcCountEl  = document.getElementById('svc-count');
+const searchInput = document.getElementById('svc-search');
+
+function renderServices() {
+  const q        = searchInput.value.trim().toLowerCase();
+  const showPromo = (activeCat === 'All' || activeCat === 'Promo') && !q;
+  let html = '';
+
+  // Package cards (Promo category)
+  if (showPromo) {
+    PACKAGES.forEach(pkg => {
+      const price    = isLarge ? pkg.priceLarge : pkg.priceSmall;
+      const inCart   = cart.pkg && cart.pkg.id === pkg.id;
+      html += `<div class="svc-card promo-card${inCart ? ' in-cart' : ''}" data-pkg-id="${pkg.id}">
+        <div class="svc-body" style="cursor:pointer">
+          <div class="svc-name">${pkg.icon} ${pkg.tier} Package</div>
+          <div class="svc-meta">
+            <span class="svc-cat promo">Promo</span>
+            <span class="svc-time">from ${price}</span>
+            ${pkg.featured ? '<span class="svc-has-qs">Most Popular</span>' : ''}
+          </div>
+          <div class="svc-desc">${pkg.services.join(' · ')}</div>
+        </div>
+        <button class="svc-add promo-add${inCart ? ' added' : ''}" data-pkg-id="${pkg.id}" type="button" aria-label="${inCart ? 'Manage' : 'View'} ${pkg.tier} Package">${inCart ? '✓' : '+'}</button>
+      </div>`;
+    });
+  }
+
+  // Regular service cards
+  if (activeCat !== 'Promo') {
+    let filtered = SERVICES;
+    if (activeCat !== 'All') filtered = filtered.filter(s => s.cat === activeCat);
+    if (q) filtered = SERVICES.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.cat.toLowerCase().includes(q) ||
+      (s.desc && s.desc.toLowerCase().includes(q))
+    );
+
+    if (!filtered.length && !showPromo) {
+      html += '<div class="svc-empty" style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--color-neutral-400)"><h3 style="font-family:var(--font-display);color:var(--color-neutral-200);margin-bottom:4px">No services found</h3><p>Try a different search or category.</p></div>';
+    } else {
+      html += filtered.map(s => {
+        const inCart = hasSvc(s.id);
+        const hasQs  = s.questions && s.questions.filter(q => q.type !== 'comment').length > 0;
+        return `<div class="svc-card${inCart ? ' in-cart' : ''}" data-id="${s.id}">
+          <div class="svc-body">
+            <div class="svc-name">${escHtml(s.name)}</div>
+            <div class="svc-meta">
+              <span class="svc-cat">${escHtml(s.cat)}</span>
+              ${s.time ? `<span class="svc-time">${escHtml(s.time)}</span>` : ''}
+              ${hasQs ? '<span class="svc-has-qs">Intake form</span>' : ''}
+            </div>
+            ${s.desc ? `<div class="svc-desc">${escHtml(s.desc)}</div>` : ''}
+          </div>
+          <button class="svc-add${inCart ? ' added' : ''}" data-id="${s.id}" type="button" aria-label="${inCart ? 'Remove' : 'Add'} ${escHtml(s.name)}">${inCart ? '✓' : '+'}</button>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  svcGrid.innerHTML = html;
+
+  // Package card clicks → open detail modal
+  svcGrid.querySelectorAll('.promo-card .svc-body, .promo-card .svc-add').forEach(el => {
+    el.addEventListener('click', () => {
+      const card = el.closest('.promo-card');
+      const pkg  = PACKAGES.find(p => p.id === card.dataset.pkgId);
+      if (pkg) openPkgModal(pkg);
+    });
+  });
+
+  // Regular service card clicks
+  svcGrid.querySelectorAll('.svc-add:not(.promo-add)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = +btn.dataset.id;
+      if (hasSvc(id)) removeService(id);
+      else addService(id);
+    });
+  });
+}
+
+function updateTabBadges() { /* no-op — tabs removed */ }
+
+searchInput.addEventListener('input', () => {
+  if (searchInput.value.trim()) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('.filter-pill[data-cat="All"]').classList.add('active');
+    activeCat = 'All';
+  }
+  renderServices();
+});
+
+/* ============================================================
+   UPDATE ALL UI
+============================================================ */
+function updateUI() {
+  // Persist cart immediately on every change
+  sessionStorage.setItem('autovivo_cart', JSON.stringify(cart));
+  const count = cartCount();
+  const badge = document.getElementById('cart-badge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count > 0);
+
+  const sbDetail = document.getElementById('sb-detail');
+  const sbContinue = document.getElementById('sb-continue');
+  if (count === 0) {
+    sbDetail.innerHTML = '<span class="muted">No items yet</span>';
+    sbContinue.classList.remove('active');
+    sbContinue.disabled = true;
+  } else {
+    let parts = [];
+    if (cart.pkg) parts.push(cart.pkg.tier + ' Package');
+    if (cart.services.length) parts.push(cart.services.length + ' service' + (cart.services.length!==1?'s':''));
+    sbDetail.textContent = parts.join(' + ');
+    sbContinue.classList.add('active');
+    sbContinue.disabled = false;
+  }
+
+  document.getElementById('cart-title').textContent = count ? `Your Cart (${count})` : 'Your Cart';
+  updateTabBadges();
+  renderCart();
+  updateFloatingCart();
+}
+
+/* ============================================================
+   RENDER CART MODAL
+============================================================ */
+function renderCart() {
+  const itemsEl = document.getElementById('cart-items');
+  const totalEl = document.getElementById('cart-total');
+  const continueBtn = document.getElementById('btn-cart-continue');
+
+  if (cartCount() === 0) {
+    itemsEl.innerHTML = '<div class="cart-empty"><div style="font-size:48px;margin-bottom:12px">🛒</div><p>Your cart is empty.<br>Add a package or individual services.</p></div>';
+    totalEl.textContent = '—';
+    continueBtn.disabled = true;
+    return;
+  }
+
+  continueBtn.disabled = false;
+  let html = '';
+
+  if (cart.pkg) {
+    html += '<div class="cart-section-label">Package</div>';
+    html += `<div class="cart-item">
+      <div class="cart-item-main">
+        <div class="cart-item-body">
+          <div class="cart-item-name">${cart.pkg.icon} ${cart.pkg.tier} Maintenance Package</div>
+          <div class="cart-item-detail">Oil change, health check & more</div>
+        </div>
+        <span class="cart-item-price">${cart.pkg.price}</span>
+        <div class="cart-item-actions">
+          <button class="cart-item-btn cart-item-rm" data-rm-pkg="1" type="button" aria-label="Remove package" title="Remove">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if (cart.services.length) {
+    html += '<div class="cart-section-label">Individual Services</div>';
+    cart.services.forEach(s => {
+      const hasAnswers = s.answers && s.answers.some(a => a.answer);
+      const svcData = SERVICES.find(sv => sv.id === s.id);
+      const hasQs = svcData && svcData.questions && svcData.questions.filter(q => q.type !== 'comment').length > 0;
+
+      let answersHtml = '';
+      if (hasAnswers) {
+        answersHtml = '<div class="cart-answers">';
+        s.answers.forEach(a => {
+          if (!a.answer) return;
+          const shortQ = a.question.length > 40 ? a.question.substring(0,38)+'…' : a.question;
+          answersHtml += `<div class="cart-answer-row"><span class="cart-answer-q">${escHtml(shortQ)}:</span><span class="cart-answer-a">${escHtml(a.answer)}</span></div>`;
+        });
+        answersHtml += '</div>';
+      }
+
+      html += `<div class="cart-item">
+        <div class="cart-item-main">
+          <div class="cart-item-body">
+            <div class="cart-item-name">${escHtml(s.name)}</div>
+            <div class="cart-item-detail">${escHtml(s.cat)}${s.time ? ' · ' + escHtml(s.time) : ''}</div>
+          </div>
+          <span class="cart-item-price" style="color:var(--color-neutral-400);font-size:var(--text-xs)">Quote</span>
+          <div class="cart-item-actions">
+            ${hasQs ? `<button class="cart-item-btn cart-item-edit" data-edit="${s.id}" type="button" aria-label="Edit answers for ${escHtml(s.name)}" title="Edit answers">✎</button>` : ''}
+            <button class="cart-item-btn cart-item-rm" data-rm-svc="${s.id}" type="button" aria-label="Remove ${escHtml(s.name)}" title="Remove">✕</button>
+          </div>
+        </div>
+        ${answersHtml}
+      </div>`;
+    });
+  }
+
+  itemsEl.innerHTML = html;
+  totalEl.textContent = cart.pkg ? 'From ' + cart.pkg.price + (cart.services.length ? ' + quotes' : '') : 'Quoted at service';
+
+  itemsEl.querySelectorAll('[data-rm-pkg]').forEach(btn => {
+    btn.addEventListener('click', () => { cart.pkg = null; renderServices(); updateUI(); });
+  });
+  itemsEl.querySelectorAll('[data-rm-svc]').forEach(btn => {
+    btn.addEventListener('click', () => { removeService(+btn.dataset.rmSvc); });
+  });
+  itemsEl.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => { editServiceAnswers(+btn.dataset.edit); });
+  });
+}
+
+/* ============================================================
+   CART OPEN/CLOSE
+============================================================ */
+const cartOverlay = document.getElementById('cart-overlay');
+const cartPanel   = document.getElementById('cart-panel');
+
+function openCart()  { cartOverlay.classList.add('open');  cartPanel.classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeCart() { cartOverlay.classList.remove('open'); cartPanel.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.getElementById('open-cart-btn').addEventListener('click', openCart);
+document.getElementById('sb-view-cart').addEventListener('click', openCart);
+document.getElementById('cart-close').addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); } });
+
+/* Continue buttons */
+document.getElementById('btn-cart-continue').addEventListener('click', () => {
+  if (cartCount() === 0) return;
+  sessionStorage.setItem('autovivo_cart', JSON.stringify(cart));
+  closeCart();
+  window.location.href = 'autovivo-schedule.html';
+});
+document.getElementById('sb-continue').addEventListener('click', () => {
+  if (cartCount() === 0) return;
+  sessionStorage.setItem('autovivo_cart', JSON.stringify(cart));
+  window.location.href = 'autovivo-schedule.html';
+});
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ============================================================
+   FLOATING CART
+============================================================ */
+let floatingCartDismissed = false;
+
+function updateFloatingCart() {
+  const el     = document.getElementById('floating-cart');
+  const count  = document.getElementById('floating-cart-count');
+  const detail = document.getElementById('floating-cart-detail');
+  const bubble = document.getElementById('floating-cart-bubble');
+  const total  = cartCount();
+
+  if (total === 0 || floatingCartDismissed) {
+    el.classList.remove('visible');
+    return;
+  }
+
+  // On service-select page, clicking bubble opens the cart panel instead of navigating
+  bubble.href = '#';
+  bubble.onclick = e => { e.preventDefault(); openCart(); };
+
+  count.textContent = total;
+
+  const parts = [];
+  if (cart.pkg) parts.push(cart.pkg.tier + ' Package');
+  if (cart.services.length) parts.push(cart.services.length + ' service' + (cart.services.length !== 1 ? 's' : ''));
+  detail.textContent = parts.join(' + ');
+
+  el.classList.add('visible');
+}
+
+document.getElementById('floating-cart-dismiss').addEventListener('click', () => {
+  floatingCartDismissed = true;
+  document.getElementById('floating-cart').classList.remove('visible');
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+renderServices();
+updateUI();
+</script>
+</body>
+</html>

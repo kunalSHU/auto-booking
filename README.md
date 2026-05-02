@@ -7,7 +7,8 @@ This project consists of a React frontend and a Node.js (Express) backend, conta
 
 ## Setup Database in your local machine
 RUN `server/db_schema/schema_override.sh` from project directory
-* Make sure to change .env credentials to yours
+* This will drop and recreate the database schema, then load all services with their popup questions and answers
+* Make sure to update `.env` credentials if needed (default: `localhost`, user: `postgres`, password: `postgres`)
 
 
 # EXTRA INFO:

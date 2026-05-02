@@ -5,9 +5,12 @@ import LandingPage from './pages/LandingPage';
 import BookingAppointment from './pages/BookingAppointment';
 import VehiclePage from './pages/VehiclePage';
 import ServiceSelection from './pages/ServiceSelectionPage';
-const App: React.FC = () => {
+import { CartProvider } from './context/CartContext';
+import CartSidebar from './Components/CartSidebar';
 
+const AppContent: React.FC = () => {
   const [nodeResponse, setNodeResponse] = useState<string>();
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     testApiCall();
@@ -19,15 +22,26 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className='App'>
+    <>
+      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Routes>
-        <Route path="/select-vehicle" element={<VehiclePage />} />
-        <Route path="/" element={<ServiceSelection />} />
+        <Route path="/select-vehicle" element={<VehiclePage onCartClick={() => setIsCartOpen(true)} />} />
+        <Route path="/" element={<ServiceSelection onCartClick={() => setIsCartOpen(true)} />} />
         {/* <Route path="/" element={<LandingPage />} /> */}
         {/* <Route path="/booking-appointment" element={<BookingAppointment />} /> */}
       </Routes>
-    </div>
+    </>
   )
-
 }
+
+const App: React.FC = () => {
+  return (
+    <CartProvider>
+      <div className='App'>
+        <AppContent />
+      </div>
+    </CartProvider>
+  )
+}
+
 export default App;
