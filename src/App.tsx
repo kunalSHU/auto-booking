@@ -25,8 +25,8 @@ const AppContent: React.FC = () => {
     <>
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Routes>
-        <Route path="/select-vehicle" element={<VehiclePage onCartClick={() => setIsCartOpen(true)} />} />
-        <Route path="/" element={<ServiceSelection onCartClick={() => setIsCartOpen(true)} />} />
+        <Route path="/" element={<VehiclePage onCartClick={() => setIsCartOpen(true)} />} />
+        <Route path="/select-services" element={<ServiceSelection onCartClick={() => setIsCartOpen(true)} />} />
         {/* <Route path="/" element={<LandingPage />} /> */}
         {/* <Route path="/booking-appointment" element={<BookingAppointment />} /> */}
       </Routes>

@@ -1,7 +1,7 @@
 const db = require('../db');
 const express = require('express');
 const router = express.Router();
-const { getPerplexityEstimate } = require('../utils/perplexityEstimator');
+const { getPerplexityEstimate, getPerplexityBulkEstimates } = require('../utils/perplexityEstimator');
 
 // Import fetch (works with both old and new node-fetch versions)
 let fetch;
@@ -18,13 +18,14 @@ const fetchWithTimeout = (url, options = {}, timeoutMs = 10000) => {
   return Promise.race([
     fetch(url, options),
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
     ),
   ]);
 };
 
 // Helper function to parse price estimate from string like "$45-65"
 const parsePriceEstimate = (estimateString) => {
+  if (!estimateString) return null;
   const match = estimateString.match(/\$(\d+)-(\d+)/);
   if (match) {
     return {
@@ -51,8 +52,8 @@ const getOrCreateVehicle = async (vehicle) => {
 
     // Try to find vehicle by make, model, year, and trim
     const existingBySpecs = await db.oneOrNone(
-      'SELECT vehicle_id FROM "Vehicles" WHERE make = $1 AND model = $2 AND year = $3 AND trim = $4',
-      [vehicle.make, vehicle.model, parseInt(vehicle.year, 10), vehicle.trim || null]
+      'SELECT vehicle_id FROM "Vehicles" WHERE make = $1 AND model = $2 AND year = $3 AND (trim = $4 OR ($4 = \'\' AND trim IS NULL))',
+      [vehicle.make, vehicle.model, parseInt(vehicle.year, 10), vehicle.trim || '']
     );
 
     if (existingBySpecs) {
@@ -62,7 +63,7 @@ const getOrCreateVehicle = async (vehicle) => {
     // Create new vehicle (user_id is NULL for now, can be linked later when user logs in)
     const newVehicle = await db.one(
       'INSERT INTO "Vehicles" (vin_number, make, model, year, trim, created_at) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP) RETURNING vehicle_id',
-      [vehicle.vin || null, vehicle.make, vehicle.model, parseInt(vehicle.year, 10), vehicle.trim || null]
+      [vehicle.vin || null, vehicle.make, vehicle.model, parseInt(vehicle.year, 10), vehicle.trim || '']
     );
 
     console.log('New vehicle created with ID:', newVehicle.vehicle_id);
@@ -101,7 +102,7 @@ const serviceNameMap = {
   'Seat Conditioning': 'Seat Conditioning',
 };
 
-// POST /api/services/estimate - Get price estimate using Groq
+// POST /api/services/estimate - Get price estimate (Bulk filling enabled)
 router.post('/estimate', async (req, res) => {
   const { vehicle, serviceTitle } = req.body;
 
@@ -110,79 +111,172 @@ router.post('/estimate', async (req, res) => {
   }
 
   try {
-    // Get or create vehicle and get vehicle_id
     const vehicleId = await getOrCreateVehicle(vehicle);
-
-    // Map frontend service name to database service name
     const dbServiceName = serviceNameMap[serviceTitle] || serviceTitle;
 
-    console.log(`Getting estimate for ${vehicle.year} ${vehicle.make} ${vehicle.model} - ${dbServiceName}`);
+    // 1. Fetch all existing estimates for this car to return to frontend
+    const existingEstimates = await db.any(`
+      SELECT s.name, se.price_min, se.price_max
+      FROM "ServiceEstimates" se
+      JOIN "Services" s ON se.service_id = s.service_id
+      WHERE se.vehicle_id = $1 AND se.region = 'Ontario, Canada'
+    `, [vehicleId]);
 
-    // Look up service_id by service name
-    const service = await db.oneOrNone(
-      'SELECT service_id FROM "Services" WHERE name = $1',
-      [dbServiceName]
-    );
+    const allEstimates = {};
+    const reversedMap = Object.entries(serviceNameMap).reduce((acc, [fe, db]) => {
+      acc[db] = fe;
+      return acc;
+    }, {});
 
-    if (!service) {
-      return res.status(404).json({ error: `Service "${serviceTitle}" not found in database` });
+    existingEstimates.forEach(e => {
+      const frontendName = reversedMap[e.name] || e.name;
+      allEstimates[frontendName] = `$${Math.round(e.price_min)}-${Math.round(e.price_max)}`;
+    });
+
+    // 2. Identify missing services for proactive bulk fetch
+    console.log(`Checking for missing estimates for ${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicleId})`);
+    
+    const missingServices = await db.any(`
+      SELECT s.service_id, s.name 
+      FROM "Services" s
+      LEFT JOIN "ServiceEstimates" se ON s.service_id = se.service_id 
+        AND se.vehicle_id = $1 
+        AND se.region = 'Ontario, Canada'
+      WHERE s.service_active = true AND se.estimate_id IS NULL
+    `, [vehicleId]);
+
+    // If everything is already estimated, return early with cached data
+    if (missingServices.length === 0) {
+      console.log('✓ All services already estimated for this vehicle.');
+      const requestedEstimate = allEstimates[serviceTitle] || 'Quote';
+      return res.json({ 
+        estimate: requestedEstimate, 
+        allEstimates,
+        source: 'database', 
+        vehicleId 
+      });
     }
 
-    const serviceId = service.service_id;
-    console.log(`✓ Found service ID ${serviceId} for "${serviceTitle}"`);
+    // 3. Single Batch Fetch (Progressive)
+    const serviceNames = missingServices.map(s => s.name);
+    
+    // Process one batch of 25 per request for speed and reliability
+    const BATCH_SIZE = 25;
+    const batchServices = serviceNames.slice(0, BATCH_SIZE);
+    
+    console.log(`📦 AI Batch: Processing 25 of ${serviceNames.length} missing services...`);
 
-    // Check if estimate already exists in database using service_id and vehicle_id
-    const existingEstimate = await db.oneOrNone(
-      'SELECT * FROM "ServiceEstimates" WHERE service_id = $1 AND vehicle_id = $2',
-      [serviceId, vehicleId]
+    const aiResults = await getPerplexityBulkEstimates(
+      vehicle.year, vehicle.make, vehicle.model, vehicle.trim, batchServices
     );
-
-    if (existingEstimate) {
-      const estimate = `$${existingEstimate.price_min}-${existingEstimate.price_max}`;
-      console.log('✓ Estimate found in database:', estimate);
-      return res.json({ estimate, source: 'database', vehicleId });
+      
+    if (!aiResults || !Array.isArray(aiResults)) {
+      return res.status(500).json({ error: 'Failed to get estimates from AI' });
     }
 
-    // Get estimate from Perplexity (performs web search)
-    const estimate = await getPerplexityEstimate(
-      vehicle.year,
-      vehicle.make,
-      vehicle.model,
-      vehicle.trim,
-      serviceTitle
-    );
-
-    if (!estimate) {
-      return res.status(500).json({ error: 'Failed to get estimate from Perplexity' });
-    }
-
-    // Parse and save estimate to database using service_id and vehicle_id
-    const parsedPrice = parsePriceEstimate(estimate);
-    if (parsedPrice) {
-      try {
-        await db.none(
-          'INSERT INTO "ServiceEstimates" (service_id, vehicle_id, price_min, price_max, created_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)',
-          [serviceId, vehicleId, parsedPrice.price_min, parsedPrice.price_max]
-        );
-        console.log('✓ Estimate saved to database:', estimate);
-      } catch (dbError) {
-        console.error('❌ Error saving estimate to database:', dbError);
-        // Continue anyway, still return the estimate
+    // 4. Persist AI results to database
+    for (const result of aiResults) {
+      const svc = missingServices.find(s => s.name.toLowerCase() === result.service_name.toLowerCase());
+      if (svc) {
+        try {
+          await db.none(`
+            INSERT INTO "ServiceEstimates" 
+              (service_id, vehicle_id, region, labor_cost, parts_cost, price_min, price_max, total_price, created_at, updated_at)
+            VALUES ($1, $2, 'Ontario, Canada', $3, $4, $5, $6, $7, NOW(), NOW())
+            ON CONFLICT (vehicle_id, service_id, region) DO UPDATE SET
+              labor_cost = EXCLUDED.labor_cost,
+              parts_cost = EXCLUDED.parts_cost,
+              price_min = EXCLUDED.price_min,
+              price_max = EXCLUDED.price_max,
+              total_price = EXCLUDED.total_price,
+              updated_at = NOW()
+            WHERE "ServiceEstimates".manual_checked = false
+          `, [
+            svc.service_id, vehicleId, 
+            result.labor_cost, result.parts_cost, 
+            result.price_min, result.price_max, 
+            (Number(result.labor_cost) + Number(result.parts_cost))
+          ]);
+          
+          const frontendName = reversedMap[svc.name] || svc.name;
+          allEstimates[frontendName] = `$${Math.round(result.price_min)}-${Math.round(result.price_max)}`;
+        } catch (dbErr) {
+          console.error(`Error saving ${svc.name}:`, dbErr.message);
+        }
       }
     }
 
-    res.json({ estimate, source: 'web-search', vehicleId });
+    const requestedEstimate = allEstimates[serviceTitle] || 'Quote';
+    res.json({ 
+      estimate: requestedEstimate, 
+      allEstimates, 
+      source: 'web-search-bulk', 
+      vehicleId 
+    });
+
   } catch (error) {
-    console.error('Error getting estimate:', error);
-    res.status(500).json({ error: 'Failed to get service estimate' });
+    console.error('Error in bulk estimate route:', error);
+    res.status(500).json({ error: 'Failed to process bulk estimates' });
   }
 });
 
-// GET /api/services/list
+// GET /api/services/list - Get all active services with their questions/answers
 router.get('/', async (req, res) => {
-    // res.json({ services: ['Oil Change', 'Tire Rotation', 'Brakes'] });
-    const services = await db.multi('SELECT * FROM "Services"');
-    res.json({ services });
+    try {
+        const servicesData = await db.any(`
+            SELECT 
+                s.service_id, s.category, s.name, s.description, s.service_active,
+                q.question_id, q.question_text, q.question_order,
+                a.answer_id, a.answer_text, a.is_option, a.answer_order
+            FROM "Services" s
+            LEFT JOIN "PopupQuestions" q ON s.service_id = q.service_id
+            LEFT JOIN "PopupAnswers" a ON q.question_id = a.question_id
+            WHERE s.service_active = true
+            ORDER BY s.category, s.name, q.question_order, a.answer_order
+        `);
+
+        // Group services, questions, and answers
+        const servicesMap = {};
+        servicesData.forEach(row => {
+            if (!servicesMap[row.service_id]) {
+                servicesMap[row.service_id] = {
+                    id: row.service_id,
+                    cat: row.category,
+                    name: row.name,
+                    desc: row.description,
+                    questions: []
+                };
+            }
+
+            if (row.question_id) {
+                let q = servicesMap[row.service_id].questions.find(quest => quest.id === row.question_id);
+                if (!q) {
+                    q = {
+                        id: row.question_id,
+                        text: row.question_text,
+                        order: row.question_order,
+                        type: row.is_option ? 'select' : 'text', // Simplistic heuristic
+                        options: []
+                    };
+                    servicesMap[row.service_id].questions.push(q);
+                }
+
+                if (row.answer_id && row.is_option) {
+                    q.type = 'select'; // If it has options, it's a select
+                    if (!q.options.includes(row.answer_text)) {
+                        q.options.push(row.answer_text);
+                    }
+                } else if (row.answer_id) {
+                    q.type = 'text'; // Fallback
+                }
+            }
+        });
+
+        res.json({ services: Object.values(servicesMap) });
+    } catch (err) {
+        console.error('Error fetching services list:', err);
+        res.status(500).json({ error: 'Failed to fetch services' });
+    }
 });
 
 // GET /api/services/:id - get service by ID

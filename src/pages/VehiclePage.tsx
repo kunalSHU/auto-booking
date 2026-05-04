@@ -70,7 +70,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}`);
                 const data = await response.json();
                 setMakes(data);
-                
+
                 if (!isAutoFilling.current) {
                     setModels([]); setTrims([]);
                     setVehicleData((prev) => ({ ...prev, make: "", model: "", trim: "" }));
@@ -93,7 +93,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
                 const data = await response.json();
                 setModels(data);
-                
+
                 if (!isAutoFilling.current) {
                     setTrims([]);
                     setVehicleData((prev) => ({ ...prev, model: "", trim: "" }));
@@ -116,7 +116,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}&model=${vehicleData.model}`);
                 const data = await response.json();
                 setTrims(Array.isArray(data) ? data : [data]);
-                
+
                 if (!isAutoFilling.current) {
                     setVehicleData((prev) => ({ ...prev, trim: "" }));
                 }
@@ -148,7 +148,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 body: JSON.stringify({ vin: vehicleData.vin }),
             });
             const result = await response.json();
-            
+
             if (result.vehicle) {
                 const { make, model, year, trim } = result.vehicle;
                 setVehicleData(prev => ({
@@ -158,7 +158,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     year: year?.toString() || prev.year,
                     trim: trim || prev.trim,
                 }));
-                
+
                 if (make && model && year && trim) {
                     setDecodeResult('success');
                 } else if (make || year) {
@@ -186,14 +186,14 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                 body: JSON.stringify(vehicleData),
             });
             const result = await response.json();
-            
+
             // Save location to session storage as per template logic
             sessionStorage.setItem('autovivo_vehicle', JSON.stringify({
                 ...vehicleData,
                 location: vehicleData.location
             }));
 
-            navigate('/', {
+            navigate('/select-services', {
                 state: {
                     vehicle: result.vehicle,
                     imageBase64: result.imageBase64,
@@ -205,7 +205,12 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
         }
     };
 
-    const isVehicleComplete = vehicleData.year && vehicleData.make && vehicleData.model && vehicleData.trim;
+    const isVehicleComplete = vehicleData.year &&
+                              vehicleData.make &&
+                              vehicleData.model &&
+                              !loadingTrims &&
+                              (trims.length === 0 || vehicleData.trim);
+
     const isFormComplete = isVehicleComplete && vehicleData.location;
 
     const totalCartItems = items.length;
@@ -282,7 +287,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                         <div className="field">
                             <label className="field-label" htmlFor="sel-year">Year</label>
                             <div className="select-wrap">
-                                <select 
+                                <select
                                     className={`field-select ${vehicleData.year ? 'has-value' : ''}`}
                                     id="sel-year"
                                     value={vehicleData.year}
@@ -298,7 +303,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                         <div className="field">
                             <label className="field-label" htmlFor="sel-make">Make</label>
                             <div className="select-wrap">
-                                <select 
+                                <select
                                     className={`field-select ${vehicleData.make ? 'has-value' : ''}`}
                                     id="sel-make"
                                     value={vehicleData.make}
@@ -315,7 +320,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                         <div className={`field ${!vehicleData.make ? 'field-locked' : ''}`}>
                             <label className="field-label" htmlFor="sel-model">Model</label>
                             <div className="select-wrap">
-                                <select 
+                                <select
                                     className={`field-select ${vehicleData.model ? 'has-value' : ''}`}
                                     id="sel-model"
                                     value={vehicleData.model}
@@ -332,7 +337,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                         <div className="field">
                             <label className="field-label" htmlFor="input-trim">Trim</label>
                             <div className="select-wrap">
-                                <select 
+                                <select
                                     className={`field-select ${vehicleData.trim ? 'has-value' : ''}`}
                                     id="input-trim"
                                     value={vehicleData.trim}
@@ -349,7 +354,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     {/* VIN Toggle */}
                     <div className="vin-toggle-row">
                         <span className="vin-toggle-label">Know your VIN? Enter it to auto-fill the fields above.</span>
-                        <button 
+                        <button
                             className={`btn-vin-toggle ${isVinOpen ? 'open' : ''}`}
                             onClick={() => setIsVinOpen(!isVinOpen)}
                             type="button"
@@ -383,7 +388,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                                     <button className="vin-clear show" onClick={() => handleInputChange('vin', '')} type="button">✕</button>
                                 )}
                             </div>
-                            <button 
+                            <button
                                 className={`btn-decode ${vehicleData.vin.length === 17 ? 'ready' : ''} ${isDecoding ? 'loading' : ''}`}
                                 onClick={handleDecodeVin}
                                 disabled={vehicleData.vin.length !== 17 || isDecoding}
@@ -449,13 +454,13 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
 
                     <div className="location-grid" role="radiogroup">
                         {LOCATIONS.map(loc => (
-                            <label 
+                            <label
                                 key={loc.id}
                                 className={`location-card ${vehicleData.location === loc.name ? 'selected' : ''}`}
                             >
-                                <input 
-                                    type="radio" 
-                                    name="location" 
+                                <input
+                                    type="radio"
+                                    name="location"
                                     value={loc.name}
                                     checked={vehicleData.location === loc.name}
                                     onChange={() => handleInputChange('location', loc.name)}
@@ -483,10 +488,10 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     <div className="continue-detail">
                         {isFormComplete ? (
                             <>
-                                {vehicleData.year} {vehicleData.make} {vehicleData.model} 
-                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span> 
-                                {vehicleData.trim} 
-                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span> 
+                                {vehicleData.year} {vehicleData.make} {vehicleData.model}
+                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span>
+                                {vehicleData.trim}
+                                <span style={{color:'var(--color-neutral-400)',fontWeight:400}}> · </span>
                                 {vehicleData.location}
                             </>
                         ) : (
@@ -494,7 +499,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                         )}
                     </div>
                 </div>
-                <button 
+                <button
                     className={`btn-continue ${isFormComplete ? 'active' : ''}`}
                     disabled={!isFormComplete || isLoading}
                     onClick={handleContinue}

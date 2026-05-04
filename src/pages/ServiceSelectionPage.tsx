@@ -36,35 +36,9 @@ const PACKAGES = [
 
 const HEALTH_CHECK = ['Inspect & adjust all fluid levels under hood', '4-wheel tire rotation', 'Brake inspection', 'Battery test', 'Steering & suspension inspection', 'Inspect CV axle boot condition', 'Inspect lights, wipers & washers', 'Inspect air & cabin air filter', 'Weatherstrip lubrication', 'Check underbody for damage or leaks'];
 
-const SERVICES: ServiceData[] = [
-  { id: 0, cat: 'Popular', name: 'Oil Change', time: '30 min', desc: 'Drain the old engine oil, replace it with fresh oil, and install a new oil filter to keep the engine properly lubricated and running smoothly.', questions: [{ "text": "Synthetic (recommended) or conventional? Not sure", "type": "yesno" }, { "text": "Is there an oil leak?", "type": "yesno" }] },
-  { id: 1, cat: 'Popular', name: 'Tires (Repair, Replacement & Flat Fix)', time: '30–60 min', desc: 'We safely remove and install your tires at your location, ensuring they are properly mounted and ready for the road.', questions: [{ "text": "What type of tire service do you need?", "type": "select", "options": ["Seasonal swap (winter ↔ summer on rims)", "Tire replacement (new tires)", "Flat tire change (install spare)", "Not sure"] }, { "text": "Do you have the tires ready at the location?", "type": "select", "options": ["Yes", "No"] }, { "text": "Do you have a wheel lock key (if applicable)?", "type": "select", "options": ["Yes", "No", "Not sure"] }] },
-  { id: 2, cat: 'Popular', name: 'Brake Pad Replacement', time: '45–60 min', desc: 'Remove worn brake pads and install new ones to restore safe stopping power and prevent damage to the brake rotors', questions: [{ "text": "Are you replacing front, rear, or both?", "type": "text" }, { "text": "Any squeaking or grinding noises?", "type": "text" }, { "text": "Want the rotors inspected/replaced too?", "type": "text" }] },
-  { id: 3, cat: 'Popular', name: 'Battery Replacement', time: '30–45 min', desc: 'Remove the old battery and install a new one to ensure the vehicle starts reliably and the electrical system functions properly.', questions: [{ "text": "What’s happening with the car?", "type": "select", "options": ["Won’t start", "Slow crank", "Battery light on", "Dead"] }, { "text": "Do you have jumper cables or need a boost?", "type": "yesno" }, { "text": "About how old is your battery? (<2 yrs / 2–4 yrs / 4+ yrs / Not sure)", "type": "text" }] },
-  { id: 4, cat: 'Popular', name: 'Tire Rotation', time: '20–30 min', desc: 'Move tires between the front and rear positions to promote even tire wear and extend the life of the tires.', questions: [{ "text": "Do you have a wheel lock key?", "type": "yesno" }, { "text": "Any vibrations or pulling while driving?", "type": "text" }] },
-  { id: 5, cat: 'Popular', name: 'Engine Air Filter Replacement', time: '15–20 min', desc: 'Install a new engine air filter to ensure the engine receives clean air for efficient combustion.', questions: [{ "text": "Any noticeable loss of power or unusual engine sounds?", "type": "text" }] },
-  { id: 6, cat: 'Popular', name: 'Cabin Air Filter Replacement', time: '15–20 min', desc: 'Replace the cabin air filter to improve the quality of air entering the vehicle’s interior through the ventilation system.', questions: [] },
-  { id: 7, cat: 'Popular', name: 'Spark Plug Replacement', time: '30–45 min', desc: 'Install new spark plugs to improve engine ignition, fuel efficiency, and overall engine performance.', questions: [] },
-  { id: 8, cat: 'Popular', name: 'Coolant Flush', time: '45–60 min', desc: 'Drain old coolant from the cooling system and refill with fresh coolant to help prevent engine overheating and corrosion.', questions: [] },
-  { id: 9, cat: 'Popular', name: 'Transmission Fluid Change', time: '45–60 min', desc: 'Replace old transmission fluid with new fluid to help maintain smooth gear shifting and protect the transmission.', questions: [{ "text": "Are you currently experiencing any transmission issues?", "type": "select", "options": ["No issues", "Vibrating or shaking", "Jerking during acceleration", "Unusual noises", "Other (please describe)"] }, { "text": "How is your vehicle shifting?", "type": "select", "options": ["Shifting normally", "Hard or rough shifting", "Slipping between gears", "Delayed engagement (slow to move after shifting)"] }, { "text": "When was your last transmission service?", "type": "select", "options": ["Within the last 30,000 km", "30,000 – 60,000 km ago", "Over 60,000 km ago", "Not sure"] }] },
-  { id: 10, cat: 'Popular', name: 'Brake Fluid Flush', time: '30–45 min', desc: 'Remove contaminated brake fluid and refill with fresh fluid to maintain proper braking performance and safety.', questions: [{ "text": "Any soft brakes or warning lights?", "type": "yesno" }] },
-  { id: 11, cat: 'Popular', name: 'Serpentine Belt Replacement', time: '30–60 min', desc: 'Install a new serpentine belt to restore proper operation of engine-driven components like the alternator and AC.', questions: [{ "text": "Any squealing noise from the engine?", "type": "yesno" }, { "text": "Has the belt ever been replaced before?", "type": "yesno" }] },
-  { id: 12, cat: 'Popular', name: 'Power Steering Fluid Replacement', time: '15–20 min', desc: 'Check the power steering system and add fluid if necessary to ensure smooth and easy steering.', questions: [{ "text": "Any difficulty turning the wheel?", "type": "yesno" }] },
-  { id: 13, cat: 'Popular', name: 'Light Bulb Replacement', time: '20–30 min', desc: 'Replace faulty or burnt-out headlight or taillight bulbs to restore proper vehicle visibility and road safety.', questions: [{ "text": "Which light?", "type": "select", "options": ["Headlight", "Taillight", "Brake", "Turn signal", "Fog", "Interior"] }, { "text": "Which side?", "type": "select", "options": ["Driver", "Passenger", "Both"] }, { "text": "Bulb type preference?", "type": "select", "options": ["LED", "Halogen", "HID", "Xenon", "Not sure"] }] },
-  { id: 14, cat: 'Popular', name: 'Windshield Wiper Replacement', time: '10–15 min', desc: 'Install new windshield wiper blades to improve visibility during rain, snow, or windshield cleaning.', questions: [{ "text": "Wipers for front, rear, or both?", "type": "text" }, { "text": "Wiper type preference?", "type": "select", "options": ["Standard", "Winter", "Premium"] }] },
-  { id: 15, cat: 'Popular', name: 'Alternator Replacement', time: '60–90 min', desc: 'Remove a faulty alternator and install a new one to restore proper battery charging and electrical system performance.', questions: [{ "text": "Symptoms?", "type": "select", "options": ["Dim lights", "Battery keeps dying", "Car won’t start"] }, { "text": "Check engine light on?", "type": "yesno" }, { "text": "is the battery light on", "type": "yesno" }] },
-  { id: 16, cat: 'Popular', name: 'Check Engine Light Inspection', time: '15–30 min', desc: 'Scan your vehicle’s computer for engine codes, identify potential issues, and reset the check engine light if appropriate.', questions: [{ "text": "Is the car running normally?", "type": "yesno" }, { "text": "Any sounds, smells, or issues when the light is on?", "type": "text" }, { "text": "Additional Comments", "type": "comment" }] },
-  // ... Adding more categories simplified
-  { id: 78, cat: 'Diagnosis & Testing', name: 'Check Engine Light On', time: '30–60 min', desc: 'Perform a diagnostic scan and inspection to identify the cause of the check engine light and recommend next steps.', questions: [{ "text": "Is the light flashing or solid?", "type": "text" }, { "text": "Is the vehicle drivable?", "type": "yesno" }, { "text": "Any loss of power?", "type": "yesno" }, { "text": "Is the car vibrating", "type": "yesno" }, { "text": "Is there any noise", "type": "yesno" }, { "text": "Additional Comments", "type": "comment" }] },
-  { id: 79, cat: 'Diagnosis & Testing', name: 'Car Won’t Start (No Sound or Clicking)', time: '30–60 minutes', desc: 'Diagnose starting system issues including battery, starter, and electrical faults preventing the engine from turning over.', questions: [{ "text": "Does the dashboard/ignition turn on?", "type": "yesno" }, { "text": "Do you hear any clicking or cranking?", "type": "yesno" }, { "text": "Any fluid leaks", "type": "yesno" }, { "text": "Additional Comments", "type": "comment" }] },
-  { id: 94, cat: 'Brakes', name: 'Brake Service - Brake Pads & Rotors Replacement (Combined)', time: '60–120 min', desc: 'Replace both pads and rotors together for complete brake system restoration and optimal performance.', questions: [{ "text": "Which axle?", "type": "select", "options": ["Front", "Rear", "Both"] }, { "text": "Any noise or vibration?", "type": "yesno" }] },
-];
-
 interface ServiceSelectionPageProps {
   onCartClick?: () => void;
 }
-
-const CATEGORIES = ['All', 'Promo', ...Array.from(new Set(SERVICES.map(s => s.cat)))];
 
 const LARGE_MODELS = ['F-150', 'Silverado', 'Sierra', 'Tundra', 'Tacoma', '1500', '2500', '3500', 'Colorado', 'Canyon', 'Ranger', 'Frontier', 'Titan', 'Ridgeline', 'Maverick', 'Gladiator', 'Tahoe', 'Suburban', 'Expedition', 'Yukon', 'Sequoia', 'Armada', 'Wagoneer', '4Runner', 'Highlander', 'Pilot', 'Palisade', 'Telluride', 'Ascent', 'Atlas', 'Traverse', 'Explorer', 'Pathfinder', 'CX-90', 'GLS', 'X7', 'QX80', 'XC90', 'GX', 'LX', 'Durango', 'Grand Cherokee', 'Cybertruck'];
 
@@ -84,6 +58,10 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
 
   const isLarge = useMemo(() => vehicle && LARGE_MODELS.includes(vehicle.model), [vehicle]);
 
+  // Data State
+  const [services, setServices] = useState<ServiceData[]>([]);
+  const [categories, setCategories] = useState<string[]>(['Promo']);
+  
   // UI State
   const [activeCat, setActiveCat] = useState('Promo');
   const [searchTerm, setSearchTerm] = useState('');
@@ -98,8 +76,113 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
   const [isHcOpen, setIsHcOpen] = useState(false);
 
   // Estimates state
-  const [estimatingIds, setEstimatingIds] = useState<Set<number>>(new Set());
-  const [estimates, setEstimates] = useState<Record<number, string>>({});
+  const [estimatingIndex, setEstimatingIndex] = useState<number | null>(null);
+  const [vehicleId, setVehicleId] = useState<number | null>(null);
+  const [estimates, setEstimates] = useState<Record<string, string>>({});
+  const hasAutoFetched = React.useRef(0); // Use 0,1,2,3 for batch tracking
+
+  // 1. Fetch all services on load
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/services');
+        const data = await response.json();
+        if (data.services) {
+          setServices(data.services);
+          const dynamicCats = ['All', 'Promo', ...Array.from(new Set(data.services.map((s: any) => s.cat)))];
+          setCategories(dynamicCats as string[]);
+        }
+      } catch (error) {
+        console.error('Error loading services:', error);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  const handleGetEstimate = async (serviceName: string, index: number, isAuto = false) => {
+    if (!vehicle) return;
+
+    if (!isAuto) setEstimatingIndex(index);
+    
+    // Proactively set 'Gathering data...' for all missing services 
+    // to match the backend's bulk behavior
+    const missingServiceNames = services
+      .filter(s => !estimates[s.name])
+      .map(s => s.name);
+
+    setEstimates(prev => {
+      const newEstimates = { ...prev };
+      missingServiceNames.forEach(name => {
+        newEstimates[name] = 'Gathering data...';
+      });
+      return newEstimates;
+    });
+
+    try {
+      const response = await fetch('/api/services/estimate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vehicle: {
+            vin: vehicle.vin,
+            make: vehicle.make,
+            model: vehicle.model,
+            year: vehicle.year,
+            trim: vehicle.trim || '',
+          },
+          serviceTitle: serviceName,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to get estimate');
+
+      const data = await response.json();
+      
+      if (data.allEstimates) {
+        setEstimates(prev => ({ ...prev, ...data.allEstimates }));
+      } else if (data.estimate) {
+        setEstimates(prev => ({ ...prev, [serviceName]: data.estimate }));
+      }
+
+      if (data.vehicleId) setVehicleId(data.vehicleId);
+
+    } catch (error) {
+      console.error('Error getting estimate:', error);
+      setEstimates(prev => {
+        const resetEstimates = { ...prev };
+        missingServiceNames.forEach(name => {
+          if (resetEstimates[name] === 'Gathering data...') {
+            resetEstimates[name] = '';
+          }
+        });
+        resetEstimates[serviceName] = 'Quote at service';
+        return resetEstimates;
+      });
+    } finally {
+      if (!isAuto) setEstimatingIndex(null);
+    }
+  };
+
+  // 2. Continuous Multi-Batch Auto-trigger
+  useEffect(() => {
+    if (vehicle && services.length > 0) {
+      const runNextBatch = async () => {
+        // Find services that TRULY need estimates (not already estimated and not already loading)
+        const missingInBatch = services.filter(s => {
+          const status = estimates[s.name];
+          return !status || (status !== 'Gathering data...' && !status.startsWith('$') && status !== 'Quote at service');
+        });
+
+        if (missingInBatch.length > 0) {
+          // Trigger the estimate endpoint which will grab 25 at a time
+          await handleGetEstimate(missingInBatch[0].name, missingInBatch[0].id, true);
+        }
+      };
+      
+      const timer = setTimeout(runNextBatch, 1000); // 1s stagger between checks
+      return () => clearTimeout(timer);
+    }
+  }, [vehicle, services, estimates]);
 
   // Get current cart status for each service
   const currentVehicleKey = vehicle ? (vehicle.vin || `${vehicle.make}-${vehicle.model}-${vehicle.year}`) : '';
@@ -291,8 +374,8 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
   };
 
   const handleEditService = (title: string) => {
-    const svc = SERVICES.find(s => s.name === title);
-    const cartSvc = cartServices.find(s => s.title === title);
+    const svc = services.find((s: ServiceData) => s.name === title);
+    const cartSvc = cartServices.find((s: any) => s.title === title);
     if (svc && cartSvc) {
       handleOpenSvcModal(svc, cartSvc.answers);
     }
@@ -300,14 +383,13 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
 
   const filteredServices = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
-    const showPromo = (activeCat === 'All' || activeCat === 'Promo') && !q;
     
-    let list = SERVICES;
+    let list = services;
     if (activeCat !== 'Promo' && activeCat !== 'All') {
-      list = list.filter(s => s.cat === activeCat);
+      list = list.filter((s: ServiceData) => s.cat === activeCat);
     }
     if (q) {
-      list = SERVICES.filter(s => 
+      list = services.filter((s: ServiceData) => 
         s.name.toLowerCase().includes(q) || 
         s.cat.toLowerCase().includes(q) || 
         s.desc.toLowerCase().includes(q)
@@ -315,7 +397,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
     }
 
     return activeCat === 'Promo' && !q ? [] : list;
-  }, [activeCat, searchTerm]);
+  }, [services, activeCat, searchTerm]);
 
   const showPromo = (activeCat === 'All' || activeCat === 'Promo') && !searchTerm;
 
@@ -337,7 +419,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
         <a href="/" className="nav-logo" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
           AUTO <span>VIVO.</span>
         </a>
-        <button className="nav-back" onClick={() => navigate('/select-vehicle')}>
+        <button className="nav-back" onClick={() => navigate('/')}>
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M10 3L5 8l5 5"/></svg>
           Back
         </button>
@@ -392,7 +474,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
         </div>
 
         <div className="filter-bar anim d2">
-          {CATEGORIES.map(cat => (
+          {categories.map(cat => (
             <button 
               key={cat}
               className={`filter-pill ${cat === 'Promo' ? 'promo-pill' : ''} ${activeCat === cat ? 'active' : ''}`}
@@ -438,15 +520,31 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
                     <span className="svc-cat">{svc.cat}</span>
                     {svc.time && <span className="svc-time">{svc.time}</span>}
                     {hasQs && <span className="svc-has-qs">Intake form</span>}
+                    {estimates[svc.name] && (
+                      <span className="svc-cat" style={{ background: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                        {estimates[svc.name]}
+                      </span>
+                    )}
                   </div>
                   {svc.desc && <div className="svc-desc">{svc.desc}</div>}
                 </div>
-                <button 
-                  className={`svc-add ${inCart ? 'added' : ''}`} 
-                  onClick={() => handleToggleService(svc)}
-                >
-                  {inCart ? '✓' : '+'}
-                </button>
+                <div className="flex flex-col items-end gap-2">
+                  <button 
+                    className={`svc-add ${inCart ? 'added' : ''}`} 
+                    onClick={() => handleToggleService(svc)}
+                  >
+                    {inCart ? '✓' : '+'}
+                  </button>
+                  {!estimates[svc.name] && !inCart && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); handleGetEstimate(svc.name, svc.id); }}
+                      disabled={estimatingIndex !== null}
+                      style={{ fontSize: '10px', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-neutral-400)' }}
+                    >
+                      {estimatingIndex === svc.id ? 'Loading...' : 'Get Estimate'}
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
