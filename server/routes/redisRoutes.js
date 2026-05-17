@@ -3,7 +3,13 @@ const router = express.Router();
 const Redis = require('ioredis');
 const dayjs = require('dayjs');
 
-const client = new Redis("rediss://default:123@tight-feline-40242.upstash.io:6379");
+const REDIS_KEY = process.env.REDIS_ACCESS_KEY;
+
+if (!REDIS_KEY) {
+    console.error("Redis access key is not available")
+}
+
+const client = new Redis(`rediss://default:${REDIS_KEY}@tight-feline-40242.upstash.io:6379`);
 
 router.post('/appointment', async (req, res) => {
     console.log('Storing appointment in cache: ', req.body)
@@ -21,11 +27,10 @@ router.post('/appointment', async (req, res) => {
         // Await the result of the get call to check if key exists
         const existingRecord = await client.get(key);
         if (existingRecord) {
-            res.status(409).json({ message: "Appointment already exists" });
+            res.status(409).json({ message: "Appointment already exists", data: JSON.parse(existingRecord) });
             return;
         }
 
-        await client.set(key, req.body);
         await client.set(key, JSON.stringify(req.body));
         await client.expireat(key, expiryUnix);
         console.log(`Setting cache data for key ${key}`)
@@ -34,7 +39,6 @@ router.post('/appointment', async (req, res) => {
         console.log("Error storing in cache: ", err)
         res.status(500).json({ error: "Internal server error" });
     }
-    client.close();
 });
 
 module.exports = router;

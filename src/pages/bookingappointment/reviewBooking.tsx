@@ -16,6 +16,7 @@ interface IProps {
         additionalNotes: string;
         address: string;
     }
+    isResheduleOrCancel?: boolean;
     nextToBookingConfirmed: () => void;
 }
 

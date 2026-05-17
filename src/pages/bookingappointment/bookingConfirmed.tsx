@@ -1,6 +1,7 @@
 import { Box, Button, Typography, Stack, Divider, CircularProgress } from '@mui/material';
 import React, { useEffect, useState, useRef } from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { publishEmailNotifcation, publishSmsNotifcation, setAppointmentInRedisCache } from '../../apiServer/api';
 
 interface IProps {
@@ -62,8 +63,28 @@ export interface IEmailNotification {
     estimatedPrice?: string | null | { string: string };
 }
 
+    // Helper for the Section Cards
+    const ReviewSection = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
+        <Box sx={{ 
+            p: 2, 
+            mb: 2, 
+            borderRadius: '12px', 
+            border: '1px solid #eee', 
+            bgcolor: '#fff' 
+        }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                <Box sx={{ display: 'flex', color: '#4a7c2c' }}>{icon}</Box>
+                <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', letterSpacing: '1px' }}>
+                    {title}
+                </Typography>
+            </Stack>
+            {children}
+        </Box>
+    );
+
 const BookingConfirmed: React.FC<IProps> = (props) => {
     const [isLoading, setIsLoading] = useState(true);
+    const [existingAppointment, setExistingAppointment] = useState<any>({});
     const notificationSent = useRef(false);
     const [bookingExist, setBookingExist] = useState(false)
 
@@ -133,11 +154,10 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             // {"phone": "123-456-7890", "time": "10:30 AM", "status": "pending"}
             prepareRedisCacheData()
             .then(res => {
-                console.log("This is the response ", res)
-                if (res == "409") {
+                if (res.status == "409") {
                     setBookingExist(true)
                     setIsLoading(false);
-                    console.log("Apppointment already booked")
+                    setExistingAppointment(res.response.data.data)
                     return;
                 }
                 setBookingExist(false)
@@ -220,7 +240,14 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             ) : (
                 <Box sx={{ py: 6 }}>
                     <Typography variant="h5" sx={{ fontWeight: 800, color: '#d32f2f', mb: 2 }}>Booking Conflict</Typography>
-                    <Typography sx={{ color: '#666' }}>An appointment is already active for <b>{props.email}</b>. Please wait for the current lock to expire or contact support.</Typography>
+                    <Typography sx={{ color: '#666' }}>An appointment is already active for <b>{props.email}</b>. Please reschedule or cancel the existing appointment below.</Typography>
+
+                    {/* Appointment Card */}
+                    <ReviewSection title="APPOINTMENT" icon={<EventAvailableIcon fontSize="small" />}>
+                        <Typography sx={{ fontWeight: 800 }}>{existingAppointment.date}</Typography>
+                        <Typography sx={{ fontWeight: 700, color: '#4a7c2c' }}>at {existingAppointment.time}</Typography>
+                    </ReviewSection>
+
                 </Box>
             )}
 

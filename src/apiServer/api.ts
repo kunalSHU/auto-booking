@@ -31,7 +31,7 @@ export const setAppointmentInRedisCache = async (data: IRedisCache) => {
         return await axios.post(storeDataInRedisCacheUrl, data)
     } catch (error: any) {
         console.log("Error in setAppointmentInRedisCache: ", error)
-        return error.status
+        return error
     }
 }
 
