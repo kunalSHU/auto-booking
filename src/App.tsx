@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<VehiclePage onCartClick={() => setIsCartOpen(true)} />} />
         <Route path="/select-services" element={<ServiceSelection onCartClick={() => setIsCartOpen(true)} />} />
         {/* <Route path="/" element={<LandingPage />} /> */}
-        {/* <Route path="/booking-appointment" element={<BookingAppointment />} /> */}
+        <Route path="/booking-appointment" element={<BookingAppointment />} />
       </Routes>
     </>
   )
