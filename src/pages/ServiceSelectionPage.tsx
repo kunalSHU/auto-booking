@@ -79,7 +79,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
   const [estimatingIndex, setEstimatingIndex] = useState<number | null>(null);
   const [vehicleId, setVehicleId] = useState<number | null>(null);
   const [estimates, setEstimates] = useState<Record<string, string>>({});
-  const hasAutoFetched = React.useRef(0); // Use 0,1,2,3 for batch tracking
+  const hasTriggeredInitial = React.useRef(false);
 
   // 1. Fetch all services on load
   useEffect(() => {
@@ -99,90 +99,95 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
     fetchServices();
   }, []);
 
-  const handleGetEstimate = async (serviceName: string, index: number, isAuto = false) => {
-    if (!vehicle) return;
+  // 2. Initial Trigger & Progressive Polling
+  // The backend now handles the entire bulk research in the background.
+  // We just poll the DB to see new results as they arrive.
+  useEffect(() => {
+    if (!vehicle || services.length === 0) return;
 
-    if (!isAuto) setEstimatingIndex(index);
+    const syncEstimates = async () => {
+      try {
+        const response = await fetch('/api/services/estimate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vehicle: {
+              vin: vehicle.vin,
+              make: vehicle.make,
+              model: vehicle.model,
+              year: vehicle.year,
+              trim: vehicle.trim || '',
+            },
+            serviceTitle: services[0].name, // Trigger for the vehicle
+          }),
+        });
+
+        if (!response.ok) throw new Error('Sync failed');
+        const data = await response.json();
+
+        if (data.estimates) {
+          setEstimates(prev => ({ ...prev, ...data.estimates }));
+        }
+        if (data.vehicleId) setVehicleId(data.vehicleId);
+
+      } catch (err) {
+        console.error('Polling error:', err);
+      }
+    };
+
+    // Initial trigger
+    if (!hasTriggeredInitial.current) {
+      hasTriggeredInitial.current = true;
+      syncEstimates();
+    }
+
+    // Progressive Polling every 3 seconds to get background results
+    const pollInterval = setInterval(() => {
+      const missingCount = services.filter(s => {
+        const status = estimates[s.name];
+        return !status || (!status.startsWith('$') && status !== 'Quote at service');
+      }).length;
+
+      if (missingCount > 0) {
+        syncEstimates();
+      } else {
+        clearInterval(pollInterval);
+      }
+    }, 3000);
+
+    return () => clearInterval(pollInterval);
+  }, [vehicle, services, estimates]);
+
+  const handleGetEstimate = async (serviceName: string, index: number) => {
+    // Manual re-trigger for a single service if needed
+    setEstimatingIndex(index);
+    setEstimates(prev => ({ ...prev, [serviceName]: 'Gathering data...' }));
     
-    // Proactively set 'Gathering data...' for all missing services 
-    // to match the backend's bulk behavior
-    const missingServiceNames = services
-      .filter(s => !estimates[s.name])
-      .map(s => s.name);
-
-    setEstimates(prev => {
-      const newEstimates = { ...prev };
-      missingServiceNames.forEach(name => {
-        newEstimates[name] = 'Gathering data...';
-      });
-      return newEstimates;
-    });
-
     try {
       const response = await fetch('/api/services/estimate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vehicle: {
-            vin: vehicle.vin,
-            make: vehicle.make,
-            model: vehicle.model,
-            year: vehicle.year,
-            trim: vehicle.trim || '',
+            vin: vehicle!.vin,
+            make: vehicle!.make,
+            model: vehicle!.model,
+            year: vehicle!.year,
+            trim: vehicle!.trim || '',
           },
           serviceTitle: serviceName,
         }),
       });
-
-      if (!response.ok) throw new Error('Failed to get estimate');
-
       const data = await response.json();
-      
-      if (data.allEstimates) {
-        setEstimates(prev => ({ ...prev, ...data.allEstimates }));
-      } else if (data.estimate) {
+      if (data.estimate) {
         setEstimates(prev => ({ ...prev, [serviceName]: data.estimate }));
       }
-
-      if (data.vehicleId) setVehicleId(data.vehicleId);
-
-    } catch (error) {
-      console.error('Error getting estimate:', error);
-      setEstimates(prev => {
-        const resetEstimates = { ...prev };
-        missingServiceNames.forEach(name => {
-          if (resetEstimates[name] === 'Gathering data...') {
-            resetEstimates[name] = '';
-          }
-        });
-        resetEstimates[serviceName] = 'Quote at service';
-        return resetEstimates;
-      });
+    } catch (e) {
+      setEstimates(prev => ({ ...prev, [serviceName]: 'Quote at service' }));
     } finally {
-      if (!isAuto) setEstimatingIndex(null);
+      setEstimatingIndex(null);
     }
   };
-
-  // 2. Continuous Multi-Batch Auto-trigger
-  useEffect(() => {
-    if (vehicle && services.length > 0) {
-      const runNextBatch = async () => {
-        // Find services that TRULY need estimates (not already estimated and not already loading)
-        const missingInBatch = services.filter(s => {
-          const status = estimates[s.name];
-          return !status || (status !== 'Gathering data...' && !status.startsWith('$') && status !== 'Quote at service');
-        });
-
-        if (missingInBatch.length > 0) {
-          // Trigger the estimate endpoint which will grab 25 at a time
-          await handleGetEstimate(missingInBatch[0].name, missingInBatch[0].id, true);
-        }
-      };
-      
-      const timer = setTimeout(runNextBatch, 1000); // 1s stagger between checks
-      return () => clearTimeout(timer);
-    }
-  }, [vehicle, services, estimates]);
 
   // Get current cart status for each service
   const currentVehicleKey = vehicle ? (vehicle.vin || `${vehicle.make}-${vehicle.model}-${vehicle.year}`) : '';

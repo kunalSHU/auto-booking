@@ -68,6 +68,11 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             setLoadingMakes(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}`);
+                if (!response.ok) {
+                    console.error(`Error fetching makes: ${response.status} ${response.statusText}`);
+                    setMakes([]);
+                    return;
+                }
                 const data = await response.json();
                 setMakes(data);
 
@@ -75,7 +80,10 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     setModels([]); setTrims([]);
                     setVehicleData((prev) => ({ ...prev, make: "", model: "", trim: "" }));
                 }
-            } catch (error) { console.error("Error fetching makes:", error); }
+            } catch (error) {
+                console.error("Error fetching makes:", error);
+                setMakes([]);
+            }
             finally { setLoadingMakes(false); }
         };
         fetchMakes();
@@ -91,6 +99,11 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             setLoadingModels(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
+                if (!response.ok) {
+                    console.error(`Error fetching models: ${response.status} ${response.statusText}`);
+                    setModels([]);
+                    return;
+                }
                 const data = await response.json();
                 setModels(data);
 
@@ -98,7 +111,10 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     setTrims([]);
                     setVehicleData((prev) => ({ ...prev, model: "", trim: "" }));
                 }
-            } catch (error) { console.error("Error fetching models:", error); }
+            } catch (error) {
+                console.error("Error fetching models:", error);
+                setModels([]);
+            }
             finally { setLoadingModels(false); }
         };
         fetchModels();
@@ -114,13 +130,21 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
             setLoadingTrims(true);
             try {
                 const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}&model=${vehicleData.model}`);
+                if (!response.ok) {
+                    console.error(`Error fetching trims: ${response.status} ${response.statusText}`);
+                    setTrims([]);
+                    return;
+                }
                 const data = await response.json();
                 setTrims(Array.isArray(data) ? data : [data]);
 
                 if (!isAutoFilling.current) {
                     setVehicleData((prev) => ({ ...prev, trim: "" }));
                 }
-            } catch (error) { console.error("Error fetching trims:", error); }
+            } catch (error) {
+                console.error("Error fetching trims:", error);
+                setTrims([]);
+            }
             finally { setLoadingTrims(false); }
         };
         fetchTrims();

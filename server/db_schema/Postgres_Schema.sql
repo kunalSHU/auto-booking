@@ -4,6 +4,8 @@ CREATE TYPE location_type_enum AS ENUM ('drop-off', 'customer-location');
 CREATE TYPE booking_status_enum AS ENUM ('pending', 'confirmed', 'completed', 'canceled');
 CREATE TYPE payment_method_enum AS ENUM ('credit_card', 'debit_card', 'paypal', 'stripe');
 CREATE TYPE payment_status_enum AS ENUM ('pending', 'successful', 'failed');
+CREATE TYPE estimation_status_enum AS ENUM ('pending', 'completed', 'failed');
+CREATE TYPE estimation_method_enum AS ENUM ('realtime', 'overnight');
 
 -- Create Tables
 CREATE TABLE "Users" (
@@ -67,6 +69,8 @@ CREATE TABLE "ServiceEstimates" (
   "service_id" int NOT NULL,
   "vehicle_id" int NOT NULL,
   "region" varchar DEFAULT 'Ontario, Canada',
+  "estimation_status" estimation_status_enum DEFAULT 'pending',
+  "estimation_method" estimation_method_enum,
   "manual_checked" boolean DEFAULT false,
   "labor_cost" decimal,
   "parts_cost" decimal,
@@ -78,7 +82,18 @@ CREATE TABLE "ServiceEstimates" (
   CONSTRAINT unique_service_estimate UNIQUE (vehicle_id, service_id, region)
 );
 
-CREATE TABLE "Bookings" (
+CREATE TABLE "EstimationLogs" (
+  "log_id" SERIAL PRIMARY KEY,
+  "vehicle_id" int NOT NULL,
+  "service_id" int,
+  "estimation_method" estimation_method_enum NOT NULL,
+  "batch_number" int,
+  "total_batches" int,
+  "status" estimation_status_enum,
+  "error_message" text,
+  "retry_count" int DEFAULT 0,
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
+);
   "booking_id" SERIAL PRIMARY KEY,
   "user_id" int,
   "vehicle_id" int,
@@ -116,10 +131,15 @@ ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("service_id") REFERENCES "Servic
 ALTER TABLE "ServiceEstimates" ADD FOREIGN KEY ("vehicle_id") REFERENCES "Vehicles" ("vehicle_id");
 ALTER TABLE "PopupQuestions" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
 ALTER TABLE "PopupAnswers" ADD FOREIGN KEY ("question_id") REFERENCES "PopupQuestions" ("question_id");
+ALTER TABLE "EstimationLogs" ADD FOREIGN KEY ("vehicle_id") REFERENCES "Vehicles" ("vehicle_id");
+ALTER TABLE "EstimationLogs" ADD FOREIGN KEY ("service_id") REFERENCES "Services" ("service_id");
 
 -- Indexes
 CREATE INDEX idx_services_category ON "Services" ("category");
 CREATE INDEX idx_service_estimates_lookup ON "ServiceEstimates" ("service_id", "vehicle_id");
 CREATE INDEX idx_service_estimates_region ON "ServiceEstimates" ("region");
+CREATE INDEX idx_service_estimates_status ON "ServiceEstimates" ("estimation_status", "manual_checked");
 CREATE INDEX idx_popup_questions_service ON "PopupQuestions" ("service_id");
 CREATE INDEX idx_popup_answers_question ON "PopupAnswers" ("question_id");
+CREATE INDEX idx_estimation_logs_vehicle ON "EstimationLogs" ("vehicle_id");
+CREATE INDEX idx_estimation_logs_method ON "EstimationLogs" ("estimation_method", "created_at");

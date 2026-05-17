@@ -1,40 +1,7 @@
 const db = require('../db');
 const express = require('express');
 const router = express.Router();
-const { getPerplexityEstimate, getPerplexityBulkEstimates } = require('../utils/perplexityEstimator');
-
-// Import fetch (works with both old and new node-fetch versions)
-let fetch;
-try {
-  const nodeFetch = require('node-fetch');
-  fetch = nodeFetch.default || nodeFetch;
-} catch (error) {
-  // Fallback to global fetch if available (Node 18+)
-  fetch = global.fetch;
-}
-
-// Helper function for API calls with timeout
-const fetchWithTimeout = (url, options = {}, timeoutMs = 10000) => {
-  return Promise.race([
-    fetch(url, options),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
-    ),
-  ]);
-};
-
-// Helper function to parse price estimate from string like "$45-65"
-const parsePriceEstimate = (estimateString) => {
-  if (!estimateString) return null;
-  const match = estimateString.match(/\$(\d+)-(\d+)/);
-  if (match) {
-    return {
-      price_min: parseInt(match[1], 10),
-      price_max: parseInt(match[2], 10),
-    };
-  }
-  return null;
-};
+const { estimateForVehicleRealtime } = require('../utils/estimationService');
 
 // Helper function to get or create a vehicle and return vehicle_id
 const getOrCreateVehicle = async (vehicle) => {
@@ -66,7 +33,7 @@ const getOrCreateVehicle = async (vehicle) => {
       [vehicle.vin || null, vehicle.make, vehicle.model, parseInt(vehicle.year, 10), vehicle.trim || '']
     );
 
-    console.log('New vehicle created with ID:', newVehicle.vehicle_id);
+    console.log('✅ New vehicle created with ID:', newVehicle.vehicle_id);
     return newVehicle.vehicle_id;
   } catch (error) {
     console.error('Error in getOrCreateVehicle:', error);
@@ -102,121 +69,44 @@ const serviceNameMap = {
   'Seat Conditioning': 'Seat Conditioning',
 };
 
-// POST /api/services/estimate - Get price estimate (Bulk filling enabled)
+// POST /api/services/estimate - Get price estimates (real-time estimation)
+// Checks for missing estimates and triggers AI estimation for only those services
 router.post('/estimate', async (req, res) => {
-  const { vehicle, serviceTitle } = req.body;
+  const { vehicle } = req.body;
 
-  if (!vehicle || !serviceTitle) {
-    return res.status(400).json({ error: 'Vehicle and service title are required' });
+  if (!vehicle) {
+    return res.status(400).json({ error: 'Vehicle information is required' });
   }
 
   try {
+    // Step 1: Get or create vehicle
+    console.log(`🔍 Looking up vehicle: ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`);
     const vehicleId = await getOrCreateVehicle(vehicle);
-    const dbServiceName = serviceNameMap[serviceTitle] || serviceTitle;
+    console.log(`✅ Vehicle ID: ${vehicleId}`);
 
-    // 1. Fetch all existing estimates for this car to return to frontend
-    const existingEstimates = await db.any(`
-      SELECT s.name, se.price_min, se.price_max
-      FROM "ServiceEstimates" se
-      JOIN "Services" s ON se.service_id = s.service_id
-      WHERE se.vehicle_id = $1 AND se.region = 'Ontario, Canada'
-    `, [vehicleId]);
-
-    const allEstimates = {};
-    const reversedMap = Object.entries(serviceNameMap).reduce((acc, [fe, db]) => {
-      acc[db] = fe;
-      return acc;
-    }, {});
-
-    existingEstimates.forEach(e => {
-      const frontendName = reversedMap[e.name] || e.name;
-      allEstimates[frontendName] = `$${Math.round(e.price_min)}-${Math.round(e.price_max)}`;
-    });
-
-    // 2. Identify missing services for proactive bulk fetch
-    console.log(`Checking for missing estimates for ${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicleId})`);
-    
-    const missingServices = await db.any(`
-      SELECT s.service_id, s.name 
-      FROM "Services" s
-      LEFT JOIN "ServiceEstimates" se ON s.service_id = se.service_id 
-        AND se.vehicle_id = $1 
-        AND se.region = 'Ontario, Canada'
-      WHERE s.service_active = true AND se.estimate_id IS NULL
-    `, [vehicleId]);
-
-    // If everything is already estimated, return early with cached data
-    if (missingServices.length === 0) {
-      console.log('✓ All services already estimated for this vehicle.');
-      const requestedEstimate = allEstimates[serviceTitle] || 'Quote';
-      return res.json({ 
-        estimate: requestedEstimate, 
-        allEstimates,
-        source: 'database', 
-        vehicleId 
-      });
-    }
-
-    // 3. Single Batch Fetch (Progressive)
-    const serviceNames = missingServices.map(s => s.name);
-    
-    // Process one batch of 25 per request for speed and reliability
-    const BATCH_SIZE = 25;
-    const batchServices = serviceNames.slice(0, BATCH_SIZE);
-    
-    console.log(`📦 AI Batch: Processing 25 of ${serviceNames.length} missing services...`);
-
-    const aiResults = await getPerplexityBulkEstimates(
-      vehicle.year, vehicle.make, vehicle.model, vehicle.trim, batchServices
+    // Step 2: Start estimation (runs in background for missing services)
+    const { estimates } = await estimateForVehicleRealtime(
+      vehicleId,
+      vehicle.year,
+      vehicle.make,
+      vehicle.model,
+      vehicle.trim || ''
     );
-      
-    if (!aiResults || !Array.isArray(aiResults)) {
-      return res.status(500).json({ error: 'Failed to get estimates from AI' });
+
+    // Step 3: Format response
+    const formattedEstimates = {};
+    for (const [serviceName, data] of Object.entries(estimates)) {
+      formattedEstimates[serviceName] = `$${Math.round(data.min)}-${Math.round(data.max)}`;
     }
 
-    // 4. Persist AI results to database
-    for (const result of aiResults) {
-      const svc = missingServices.find(s => s.name.toLowerCase() === result.service_name.toLowerCase());
-      if (svc) {
-        try {
-          await db.none(`
-            INSERT INTO "ServiceEstimates" 
-              (service_id, vehicle_id, region, labor_cost, parts_cost, price_min, price_max, total_price, created_at, updated_at)
-            VALUES ($1, $2, 'Ontario, Canada', $3, $4, $5, $6, $7, NOW(), NOW())
-            ON CONFLICT (vehicle_id, service_id, region) DO UPDATE SET
-              labor_cost = EXCLUDED.labor_cost,
-              parts_cost = EXCLUDED.parts_cost,
-              price_min = EXCLUDED.price_min,
-              price_max = EXCLUDED.price_max,
-              total_price = EXCLUDED.total_price,
-              updated_at = NOW()
-            WHERE "ServiceEstimates".manual_checked = false
-          `, [
-            svc.service_id, vehicleId, 
-            result.labor_cost, result.parts_cost, 
-            result.price_min, result.price_max, 
-            (Number(result.labor_cost) + Number(result.parts_cost))
-          ]);
-          
-          const frontendName = reversedMap[svc.name] || svc.name;
-          allEstimates[frontendName] = `$${Math.round(result.price_min)}-${Math.round(result.price_max)}`;
-        } catch (dbErr) {
-          console.error(`Error saving ${svc.name}:`, dbErr.message);
-        }
-      }
-    }
-
-    const requestedEstimate = allEstimates[serviceTitle] || 'Quote';
-    res.json({ 
-      estimate: requestedEstimate, 
-      allEstimates, 
-      source: 'web-search-bulk', 
-      vehicleId 
+    res.json({
+      vehicleId,
+      estimates: formattedEstimates,
+      source: 'real-time-estimation',
     });
-
   } catch (error) {
-    console.error('Error in bulk estimate route:', error);
-    res.status(500).json({ error: 'Failed to process bulk estimates' });
+    console.error('❌ Error in estimate endpoint:', error);
+    res.status(500).json({ error: 'Failed to process estimates' });
   }
 });
 
@@ -224,7 +114,7 @@ router.post('/estimate', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const servicesData = await db.any(`
-            SELECT 
+            SELECT
                 s.service_id, s.category, s.name, s.description, s.service_active,
                 q.question_id, q.question_text, q.question_order,
                 a.answer_id, a.answer_text, a.is_option, a.answer_order

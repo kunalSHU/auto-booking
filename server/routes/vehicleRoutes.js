@@ -38,33 +38,57 @@ router.get("/", async (req, res) => {
 
     // STEP 3: YEAR + MAKE + MODELS -> TRIMS
     if (make && model) {
-    const r = await fetch(
-      `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`
-    );
-    const data = await r.json();
+      const r = await fetch(
+        `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`
+      );
 
-    if (!data || !data.trims || data.trims.length === 0) {
-      console.warn(`No trims found for year ${year}, make ${make}, model ${model}`);
-      console.log('API Response:', JSON.stringify(data, null, 2));
-      return res.json([]);
+      if (!r.ok) {
+        console.error(`External API error: ${r.status} ${r.statusText}`);
+        return res.status(502).json({ error: `External API error: ${r.status}` });
+      }
+
+      let data;
+      try {
+        data = await r.json();
+      } catch (parseError) {
+        console.error(`Failed to parse API response:`, parseError);
+        return res.status(502).json({ error: "Invalid response from external API" });
+      }
+
+      if (!data || !data.trims || data.trims.length === 0) {
+        console.warn(`No trims found for year ${year}, make ${make}, model ${model}`);
+        console.log('API Response:', JSON.stringify(data, null, 2));
+        return res.json([]);
+      }
+
+      const result = data.trims.map(t => ({
+        make: t.make,
+        model: t.model,
+        model_trim: t,
+        model_year: Number(t.model_year),
+      }));
+
+      return res.json(result);
     }
-
-    const result = data.trims.map(t => ({
-      make: t.make,
-      model: t.model,
-      model_trim: t,
-      model_year: Number(t.model_year),
-    }));
-
-    return res.json(result);
-  }
 
   // STEP 2: YEAR + MAKE -> MODELS
   if (make) {
     const r = await fetch(
       `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${encodeURIComponent(make)}`
     );
-    const data = await r.json();
+
+    if (!r.ok) {
+      console.error(`External API error: ${r.status} ${r.statusText}`);
+      return res.status(502).json({ error: `External API error: ${r.status}` });
+    }
+
+    let data;
+    try {
+      data = await r.json();
+    } catch (parseError) {
+      console.error(`Failed to parse API response:`, parseError);
+      return res.status(502).json({ error: "Invalid response from external API" });
+    }
 
     if (!data || !data.models || data.models.length === 0) {
       console.warn(`No models found for year ${year}, make ${make}`);
@@ -88,7 +112,18 @@ router.get("/", async (req, res) => {
       `https://carsapi-7lpja5voja-uc.a.run.app/cars/makes?year=${year}`
     );
 
-    const data = await r.json();
+    if (!r.ok) {
+      console.error(`External API error: ${r.status} ${r.statusText}`);
+      return res.status(502).json({ error: `External API error: ${r.status}` });
+    }
+
+    let data;
+    try {
+      data = await r.json();
+    } catch (parseError) {
+      console.error(`Failed to parse API response:`, parseError);
+      return res.status(502).json({ error: "Invalid response from external API" });
+    }
 
     console.log("API Response:", JSON.stringify(data, null, 2));
 
