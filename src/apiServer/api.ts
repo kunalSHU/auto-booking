@@ -17,6 +17,16 @@ export const callNodeHelloWorld = async () => {
     }
 }
 
+export const cancelAppointmentInRedisCache = async (search: any) => {
+    try {
+        console.log("Cancelling appointment in redis cache")
+        return await axios.delete(getAppointmentInRedisCacheUrl, { data: search })
+    } catch (error: any) {
+        console.log("Error in cancelAppointmentInRedisCache: ", error)
+        return error
+    }
+}
+
 export const publishEmailNotifcation = async (data: IEmailNotification) => {
     try {
         console.log("This is the data in publishEmailNotification method: ", data)

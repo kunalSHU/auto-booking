@@ -1,7 +1,7 @@
 import { Box, Typography, TextField, Button, InputAdornment, CircularProgress, Alert } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useState } from 'react'
-import { getAppointmentInRedisCache } from '../../apiServer/api';
+import { getAppointmentInRedisCache, cancelAppointmentInRedisCache } from '../../apiServer/api';
 
 interface IProps {
     onBack?: () => void;
@@ -12,12 +12,14 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
     const [appointment, setAppointment] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
     const viewAppointment = async () => {
         if (!searchEmail) return;
         
         setLoading(true);
         setError(null);
+        setSuccess(null);
         try {
             const res = await getAppointmentInRedisCache({ email: searchEmail });
             // Assuming the API returns data in res.data based on your other components
@@ -27,6 +29,22 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
             console.error("Error fetching appointment:", err);
             setError("No active appointment found for this email.");
             setAppointment(null);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleCancel = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(null);
+        try {
+            await cancelAppointmentInRedisCache({ email: searchEmail });
+            setAppointment(null);
+            setSuccess("Your appointment has been cancelled successfully.");
+        } catch (err: any) {
+            console.error("Error cancelling appointment:", err);
+            setError("Failed to cancel appointment. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -79,6 +97,7 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
             </Box>
 
             {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '12px' }}>{error}</Alert>}
+            {success && <Alert severity="success" sx={{ mb: 4, borderRadius: '12px' }}>{success}</Alert>}
 
             {appointment && (
                 <Box sx={{ p: 3, bgcolor: '#f1f8e9', borderRadius: '16px', border: '1px solid #c8e6c9', mb: 4 }}>
@@ -93,6 +112,41 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 1, color: '#666' }}>
                         Status: <b>{appointment.status?.toUpperCase()}</b>
+                    </Typography>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        color="error"
+                        onClick={handleCancel}
+                        disabled={loading}
+                        sx={{ 
+                            mt: 3, 
+                            borderRadius: '12px', 
+                            fontWeight: 800,
+                            borderColor: '#ffcdd2',
+                            color: '#d32f2f',
+                            '&:hover': {
+                                borderColor: '#d32f2f',
+                                bgcolor: '#ffebee'
+                            }
+                        }}
+                    >
+                        {loading ? <CircularProgress size={24} color="inherit" /> : 'CANCEL APPOINTMENT'}
+                    </Button>
+                </Box>
+            )}
+
+            {!appointment && !loading && !error && !success && (
+                <Box sx={{ 
+                    p: 6, 
+                    textAlign: 'center', 
+                    borderRadius: '20px', 
+                    border: '1px dashed #e0e0e0',
+                    bgcolor: '#fcfcfc',
+                    mb: 4 
+                }}>
+                    <Typography variant="body2" sx={{ color: '#aaa', fontWeight: 600 }}>
+                        Enter your email above to retrieve and manage your booking.
                     </Typography>
                 </Box>
             )}

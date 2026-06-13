@@ -54,4 +54,17 @@ router.post("/user/appointment", async (req, res) => {
     }
 })
 
+router.delete("/user/appointment", async (req, res) => {
+    // Fetch the appointment by email from the cache
+    const key = `appointment:lock:${req.body.email}`;
+    try {
+        // Delete the record from Redis
+        await client.del(key);
+        res.status(200).json({ success: true, message: "Appointment deleted successfully" });
+    } catch (err) {
+        console.log("Error deleting appointment in cache: ", err)
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
 module.exports = router;
