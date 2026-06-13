@@ -65,7 +65,7 @@ Booking Details
 • Location: ${serviceAddress}
 • Technician: {{TechnicianName}}
 Pricing
-• Estimated Total: ${{EstimatedTotal}}
+• Estimated Total: {{EstimatedTotal}}
 Customer Notes
 ${notes || 'None provided'}
 Booking ID:

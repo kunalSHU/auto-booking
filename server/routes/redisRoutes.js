@@ -41,4 +41,17 @@ router.post('/appointment', async (req, res) => {
     }
 });
 
+router.post("/user/appointment", async (req, res) => {
+    // Fetch the appointment by email from the cache
+    const key = `appointment:lock:${req.body.email}`;
+    try {
+        // Await the result of the get call to check if key exists
+        const existingRecord = await client.get(key);
+        res.status(200).json({ success: true, appointment: JSON.parse(existingRecord) });
+    } catch (err) {
+        console.log("Error getting appointment in cache: ", err)
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
 module.exports = router;

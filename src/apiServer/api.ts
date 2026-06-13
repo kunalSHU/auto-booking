@@ -4,6 +4,7 @@ import { IEmailNotification, IRedisCache, ISMSNotification } from "../pages/book
 const publishEmailNotifcationUrl = "/api/pubsub/email-notification";
 const publishSmsNotificationUrl = "/api/pubsub/sms-notification";
 const storeDataInRedisCacheUrl = "/api/redis/appointment";
+const getAppointmentInRedisCacheUrl = "/api/redis/user/appointment";
 
 export const callNodeHelloWorld = async () => {
     try {
@@ -29,6 +30,16 @@ export const setAppointmentInRedisCache = async (data: IRedisCache) => {
     try {
         console.log("This appointment data is being stored in the redis cache: ", data)
         return await axios.post(storeDataInRedisCacheUrl, data)
+    } catch (error: any) {
+        console.log("Error in setAppointmentInRedisCache: ", error)
+        return error
+    }
+}
+
+export const getAppointmentInRedisCache = async (search: any) => {
+    try {
+        console.log("Fetching appointment in redis cache")
+        return await axios.post(getAppointmentInRedisCacheUrl, search)
     } catch (error: any) {
         console.log("Error in setAppointmentInRedisCache: ", error)
         return error

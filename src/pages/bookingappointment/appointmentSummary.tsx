@@ -1,6 +1,7 @@
-import { Box, Typography, TextField, Button, InputAdornment } from '@mui/material'
+import { Box, Typography, TextField, Button, InputAdornment, CircularProgress, Alert } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useState } from 'react'
+import { getAppointmentInRedisCache } from '../../apiServer/api';
 
 interface IProps {
     onBack?: () => void;
@@ -8,6 +9,29 @@ interface IProps {
 
 const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
     const [searchEmail, setSearchEmail] = useState('');
+    const [appointment, setAppointment] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const viewAppointment = async () => {
+        if (!searchEmail) return;
+        
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await getAppointmentInRedisCache({ email: searchEmail });
+            // Assuming the API returns data in res.data based on your other components
+            setAppointment(res.data.appointment);
+            console.log("Appointment found:", res.data.appointment);
+        } catch (err: any) {
+            console.error("Error fetching appointment:", err);
+            setError("No active appointment found for this email.");
+            setAppointment(null);
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     return (
         <Box sx={{ minHeight: '400px', display: 'flex', flexDirection: 'column' }}>
@@ -43,14 +67,35 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 <Button 
                     fullWidth 
                     variant="contained" 
+                    disabled={loading || !searchEmail}
                     sx={{ 
                         mt: 2, py: 1.5, borderRadius: '12px', bgcolor: '#4a7c2c', color: '#fff', 
                         boxShadow: 'none', fontWeight: 800, '&:hover': { bgcolor: '#3d6624' }
                     }}
+                    onClick={viewAppointment}
                 >
-                    SEARCH APPOINTMENT
+                    {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SEARCH APPOINTMENT'}
                 </Button>
             </Box>
+
+            {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '12px' }}>{error}</Alert>}
+
+            {appointment && (
+                <Box sx={{ p: 3, bgcolor: '#f1f8e9', borderRadius: '16px', border: '1px solid #c8e6c9', mb: 4 }}>
+                    <Typography variant="caption" sx={{ fontWeight: 800, color: '#4a7c2c', display: 'block', mb: 1 }}>
+                        APPOINTMENT FOUND
+                    </Typography>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.1rem' }}>
+                        {appointment.date}
+                    </Typography>
+                    <Typography sx={{ color: '#4a7c2c', fontWeight: 700 }}>
+                        at {appointment.time}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 1, color: '#666' }}>
+                        Status: <b>{appointment.status?.toUpperCase()}</b>
+                    </Typography>
+                </Box>
+            )}
 
             {onBack && (
                 <Button 
