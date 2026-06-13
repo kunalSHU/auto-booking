@@ -3,14 +3,15 @@ const SmsTemplates = {
     adminSms: 'adminSms'
 };
 
-const BUSINESS_NAME = "Apex Auto Hub";
+const BUSINESS_NAME = "AutoVivo";
 
 const smsTemplate = {
     customerConfirmationSms: {
-        body: (serviceDate, timeWindow) => `${BUSINESS_NAME}: Your booking is confirmed for ${serviceDate} at ${timeWindow}.
-Service: {{ServiceName}}
-Location: {{ServiceAddress}}
-Manage: {{ShortLink}}
+        body: (customerName, serviceDate, timeWindow) => `${BUSINESS_NAME}: Hi ${customerName}, your {{ServiceName}} is confirmed for ${serviceDate} during ${timeWindow}.
+Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}
+Technician: {{TechnicianName}}
+Manage booking:
+{{ManageBookingLink}}
 `
     },
     adminSms: {

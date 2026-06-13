@@ -100,7 +100,7 @@ const sendSmsLogic = async (payload) => {
 
     console.log("Here is the payload: ", payload)
     if (payload.templateType === SmsTemplates.customerConfirmationSms) {
-        payload.message = smsTemplate.customerConfirmationSms.body(payload.date, payload.time);
+        payload.message = smsTemplate.customerConfirmationSms.body(payload.customerName, payload.date, payload.time);
     }
 
     // Perform placeholder replacement on the generated message body
@@ -149,7 +149,7 @@ const sendEmailLogic = async (payload) => {
     if (payload.templateType === EmailTemplates.adminEmail) {
         console.log("admin email")
         payload.subject = emailTemplate.adminEmail.subject(payload.pii.customerName);
-        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.date, payload.time, address);
+        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
         payload.pii.toEmail = "janarthkulenthiranrealtor@gmail.com";
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
         console.log("technician email")
@@ -159,7 +159,7 @@ const sendEmailLogic = async (payload) => {
     } else if (payload.templateType === EmailTemplates.customerEmail) {
         console.log("booking email")
         payload.subject = emailTemplate.customerEmail.subject;
-        payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address);
+        payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
     }
 
     const input = { // SendEmailRequest
