@@ -166,7 +166,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
                                             }
                                         }}
                                     >
-                                        {time.time.replace(':00', '').replace(' ', '')} 
+                                        {time.time.replace(' ', '')} 
                                         {/* Shortening 10:00 AM to 10AM for better grid fit if needed */}
                                     </Button>
                                 );

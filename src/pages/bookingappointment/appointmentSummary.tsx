@@ -22,12 +22,19 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
         setSuccess(null);
         try {
             const res = await getAppointmentInRedisCache({ email: searchEmail });
+
+            // Handle 404 error here
+            if (res.status === 404) {
+                setError("No active appointment found for this email.");    
+                return;
+            }
+
             // Assuming the API returns data in res.data based on your other components
             setAppointment(res.data.appointment);
             console.log("Appointment found:", res.data.appointment);
         } catch (err: any) {
             console.error("Error fetching appointment:", err);
-            setError("No active appointment found for this email.");
+            setError("Eror fetching appointment. Please try again.");
             setAppointment(null);
         } finally {
             setLoading(false);
@@ -96,8 +103,8 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 </Button>
             </Box>
 
-            {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '12px' }}>{error}</Alert>}
-            {success && <Alert severity="success" sx={{ mb: 4, borderRadius: '12px' }}>{success}</Alert>}
+            {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '20px' }}>{error}</Alert>}
+            {success && <Alert severity="success" sx={{ mb: 4, borderRadius: '20px' }}>{success}</Alert>}
 
             {appointment && (
                 <Box sx={{ p: 3, bgcolor: '#f1f8e9', borderRadius: '16px', border: '1px solid #c8e6c9', mb: 4 }}>

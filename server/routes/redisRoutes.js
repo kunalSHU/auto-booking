@@ -47,7 +47,11 @@ router.post("/user/appointment", async (req, res) => {
     try {
         // Await the result of the get call to check if key exists
         const existingRecord = await client.get(key);
-        res.status(200).json({ success: true, appointment: JSON.parse(existingRecord) });
+        if (existingRecord) {
+            res.status(200).json({ success: true, appointment: JSON.parse(existingRecord) });
+        } else {
+            res.status(404).json({ success: false, message: "Appointment not found" });
+        }
     } catch (err) {
         console.log("Error getting appointment in cache: ", err)
         res.status(500).json({ error: "Internal server error" });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -6,17 +6,18 @@ import {
   Button,
   Stack,
   InputAdornment,
+  Paper,
+  List,
   RadioGroup,
   FormControlLabel,
   Radio,
 } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import MapIcon from '@mui/icons-material/Map';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import ServiceLocationIcon from '../../icons/ServiceLocationIcon';
 import DropOffInformationBanner from '../../banners/dropOffInformationBanner';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IProps {
   handleBack: () => void;
@@ -32,10 +33,40 @@ interface IProps {
   setUserInformation: (values: any) => void;
 }
 
+interface IAutocompleteSuggestion {
+  name: string;       // e.g., "123 Main St"
+  place_formatted?: string;      // e.g., "Toronto"
+}
+
+
 const UserAddress: React.FC<IProps> = (props) => {
+  const REACT_APP_API_MAPS_TOKEN = process.env.REACT_APP_API_MAPS_TOKEN;
   const [addressType, setAddressType] = useState('Home');
+  const [suggesstions, setSuggestions] = useState([]);
   const [fullAddress, setFullAddress] = useState('');
   const [fullAddressDisabled, setFullAddressDisabled] = useState(false);
+  const [sessionToken] = useState<string>(() => uuidv4());
+
+  useEffect(() => {
+
+    const debounceFn = setTimeout(async () => {
+      const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(fullAddress)}&session_token=${sessionToken}&access_token=${REACT_APP_API_MAPS_TOKEN}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
+
+      const formattedSuggestions = data.suggestions?.map((suggestion: IAutocompleteSuggestion) => {
+        const name = suggestion.name;
+        const place = suggestion.place_formatted;
+        return {name: name, place: place}
+      })
+      console.log(formattedSuggestions);
+      setSuggestions(formattedSuggestions);
+    }, 300); // setting debounce of 300ms so we don't hit rate limiter if the user spams the keyboard
+
+    return () => clearTimeout(debounceFn);
+
+  }, [fullAddress])
 
   const radioButtonClicked = (value: string) => {
     setAddressType(value);
@@ -46,6 +77,10 @@ const UserAddress: React.FC<IProps> = (props) => {
       setFullAddressDisabled(false);
     }
   };
+
+  const addressSelection = (e: any) => {
+    setFullAddress(e.target.value);
+  }
 
   return (
     <Box sx={{ 
@@ -120,29 +155,63 @@ const UserAddress: React.FC<IProps> = (props) => {
       <Typography variant="caption" sx={{ fontWeight: 900, color: '#bdbdbd', mb: 1, display: 'block', letterSpacing: '1px' }}>
         FULL ADDRESS
       </Typography>
-      <TextField
-        fullWidth
-        disabled={fullAddressDisabled}
-        placeholder={fullAddressDisabled ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : "Enter your street address..."}
-        value={!fullAddress && addressType === 'Other'? 'Car Drop-Off - AutoHub Shop, 123 Road Dr.' : fullAddress}
-        onChange={(e) => setFullAddress(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LocationOnIcon sx={{ color: '#4a7c2c' }} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{
-          mb: 2,
-          '& .MuiOutlinedInput-root': {
-            borderRadius: '12px', bgcolor: '#fafafa',
-            '& fieldset': { borderColor: '#eee' },
-            '&:hover fieldset': { borderColor: '#4a7c2c' },
-            '&.Mui-focused fieldset': { borderColor: '#4a7c2c' },
-          }
-        }}
-      />
+      <Box sx={{ position: 'relative', mb: 2 }}>
+        <TextField
+          fullWidth
+          disabled={fullAddressDisabled}
+          placeholder={fullAddressDisabled ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : "Enter your street address..."}
+          value={!fullAddress && addressType === 'Other'? 'Car Drop-Off - AutoHub Shop, 123 Road Dr.' : fullAddress}
+          onChange={(e) => addressSelection(e)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LocationOnIcon sx={{ color: '#4a7c2c' }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '12px', bgcolor: '#fafafa',
+              '& fieldset': { borderColor: '#eee' },
+              '&:hover fieldset': { borderColor: '#4a7c2c' },
+              '&.Mui-focused fieldset': { borderColor: '#4a7c2c' },
+            }
+          }}
+        />
+        {suggesstions && suggesstions.length > 0 && (
+          <Paper elevation={3} sx={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            zIndex: 10,
+            mt: 0.5,
+            borderRadius: '12px',
+            overflow: 'hidden'
+          }}>
+            <List disablePadding>
+              {suggesstions.map((suggestion: any, index: number) => (
+                <Box
+                  key={index}
+                  onClick={() => {
+                    const newAddress = `${suggestion.name}, ${suggestion.place}`;
+                    setFullAddress(newAddress);
+                    setSuggestions([]); // Hide suggestions on click
+                  }}
+                  sx={{
+                    p: 2,
+                    cursor: 'pointer',
+                    '&:hover': { bgcolor: '#f5f5f5' }
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 700 }}>{suggestion.name}</Typography>
+                  <Typography variant="body2" sx={{ color: '#888' }}>{suggestion.place}</Typography>
+                </Box>
+              ))}
+            </List>
+          </Paper>
+        )}
+      </Box>
 
       {/* BANNER FIX: By using absolute positioning, the banner sits ON TOP 
           of the space instead of pushing the box bigger. */}
