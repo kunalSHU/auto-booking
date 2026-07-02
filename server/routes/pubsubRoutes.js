@@ -8,8 +8,7 @@ const emailTopicName = 'email-notification-dev';
 const smsTopicName = 'sms-notification-dev';
 
 // Define your static list of internal emails here
-// In a real production app, you might load this from process.env.ADMIN_EMAILS
-const INTERNAL_CC_LIST = ['admin@apexautohub.com', 'support@apexautohub.com'];
+const INTERNAL_CC_LIST = process.env.ADMIN_EMAIL_CC ? process.env.ADMIN_EMAIL_CC.split(',') : [];
 
 router.post('/email-notification', async (req, res) => {
     console.log('in email notifcation endpoint')

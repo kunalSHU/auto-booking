@@ -37,19 +37,13 @@ const listenForMessages = () => {
         try {
             const dataString = message.data.toString();
             const payload = JSON.parse(dataString);
-
             console.log(`\tProcessing email for: ${payload.toEmail}`);
             if (payload.ccEmail && payload.ccEmail.length > 0) {
                 console.log(`\tCCing: ${payload.ccEmail.join(', ')}`);
             }
             console.log(`\tSubject: ${payload.subject}`);
-
-            try {
-                const response = await sendEmailLogic(payload);
-                console.log(`\tEmail sent successfully to ${payload.pii.toEmail}! Message ID:`, response.MessageId);
-            } catch (emailError) {
-                console.error("\tError sending email:", emailError.message);
-            }
+            const response = await sendEmailLogic(payload);
+            console.log(`\tEmail sent successfully to ${payload.pii.toEmail}! Message ID:`, response.MessageId);
 
         } catch (e) {
             console.error('\tFailed to parse email message data:', e.message);
@@ -141,33 +135,29 @@ const sendSmsLogic = async (payload) => {
 
 const sendEmailLogic = async (payload) => {
 
-    console.log("Here is the payload: ", payload)
     // Get the details based on the template type in the payload
     const address = payload.serviceAddress ? payload.serviceAddress.string : '';
     const notes = payload.notes ? payload.notes.string : '';
 
     if (payload.templateType === EmailTemplates.adminEmail) {
-        console.log("admin email")
         payload.subject = emailTemplate.adminEmail.subject(payload.pii.customerName);
         payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
         payload.pii.toEmail = "janarthkulenthiranrealtor@gmail.com";
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
-        console.log("technician email")
         payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
         payload.message = emailTemplate.technicianEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.date, payload.time, address, notes);
         payload.pii.toEmail = "autotechnicianx@gmail.com";
     } else if (payload.templateType === EmailTemplates.customerEmail) {
-        console.log("booking email")
         payload.subject = emailTemplate.customerEmail.subject;
         payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
     }
 
     const input = { // SendEmailRequest
-        Source: "kunalshukla@hotmail.com", // required TODO: Ensure this email is verified in AWS SES
+        Source: "janarthkulenthiranrealtor@gmail.com", // required TODO: Ensure this email is verified in AWS SES
         Destination: { // Destination
             ToAddresses: [ // AddressList
                 payload.pii.toEmail,
-            ]
+            ],
         },
         Message: { // Message
             Subject: { // Content
@@ -180,7 +170,8 @@ const sendEmailLogic = async (payload) => {
                     Charset: "UTF-8",
                 }
             },
-        }
+        },
+        ConfigurationSetName: "booking-notifications" // Replace with your actual configuration set name
     };
 
     try {

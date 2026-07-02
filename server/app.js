@@ -15,7 +15,7 @@ const listenForMessages = require('./subscribers/notificationSubscriber');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
-const port = process.env.PORT || 4201;
+const port = process.env.SERVER_PORT || 4201;
 const router = express.Router();
 
 app.use(cors());
