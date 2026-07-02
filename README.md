@@ -5,6 +5,18 @@ This project consists of a React frontend and a Node.js (Express) backend, conta
 ## TO Run both Front-end and Back-end:
 ** `npm run dev` **
 
+## First-Time Local Setup
+
+This project uses environment variables for configuration (e.g., database credentials). These are stored in a `.env` file, which is not committed to source control for security reasons.
+
+To set up your local environment, create a copy of the example file:
+
+```bash
+cp .env.example .env
+```
+
+Next, open the new `.env` file and fill in the correct values for your local machine (especially `DB_PASSWORD`).
+
 ## Setup Database in your local machine
 RUN `server/db_schema/schema_override.sh` from project directory
 * This will drop and recreate the database schema, then load all services with their popup questions and answers
