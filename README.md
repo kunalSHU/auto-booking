@@ -10,6 +10,49 @@ RUN `server/db_schema/schema_override.sh` from project directory
 * This will drop and recreate the database schema, then load all services with their popup questions and answers
 * Make sure to update `.env` credentials if needed (default: `localhost`, user: `postgres`, password: `postgres`)
 
+## GitHub Secrets for CI/CD
+
+For deployment and continuous integration (CI/CD) workflows, this project uses environment variables that should not be committed to source control (e.g., API keys, database credentials). For automated workflows on GitHub, we use **GitHub Secrets**.
+
+### Adding Secrets to Your Repository
+
+You will need to add the variables from your local `.env` file as secrets in your GitHub repository settings. For each variable, follow these steps:
+
+1.  Navigate to your GitHub repository and go to **Settings** > **Secrets and variables** > **Actions**.
+2.  Click the **New repository secret** button.
+3.  For the **Name**, enter the name of the environment variable (e.g., `DATABASE_URL`).
+4.  For the **Value**, copy the corresponding value from your `.env` file.
+5.  Click **Add secret**.
+
+Repeat this for all the necessary environment variables.
+
+### Example: Using Secrets in GitHub Actions
+
+Once the secrets are added, you can use them in your GitHub Actions workflows (e.g., in `.github/workflows/deploy.yml`). The secrets are securely injected as environment variables during the workflow run.
+
+Here is an example of how to use the secrets in a workflow step:
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          secrets: |
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+            "API_KEY=${{ secrets.API_KEY }}"
+```
+
 
 # EXTRA INFO:
 ## Project Structure
