@@ -43,6 +43,7 @@ const UserAddress: React.FC<IProps> = (props) => {
   const REACT_APP_API_MAPS_TOKEN = process.env.REACT_APP_API_MAPS_TOKEN;
   const [addressType, setAddressType] = useState('Home');
   const [suggesstions, setSuggestions] = useState([]);
+  const [queryAddress, setQueryAddress] = useState('');
   const [fullAddress, setFullAddress] = useState('');
   const [fullAddressDisabled, setFullAddressDisabled] = useState(false);
   const [sessionToken] = useState<string>(() => uuidv4());
@@ -50,7 +51,13 @@ const UserAddress: React.FC<IProps> = (props) => {
   useEffect(() => {
 
     const debounceFn = setTimeout(async () => {
-      const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(fullAddress)}&session_token=${sessionToken}&access_token=${REACT_APP_API_MAPS_TOKEN}`;
+      // If the query is empty, don't fetch. This also prevents a fetch
+      // when we clear the query after selecting an address.
+      if (!queryAddress.trim()) {
+        setSuggestions([]);
+        return;
+      }
+      const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(queryAddress)}&session_token=${sessionToken}&access_token=${REACT_APP_API_MAPS_TOKEN}`;
       const response = await fetch(url);
       const data = await response.json();
       console.log(data);
@@ -66,7 +73,7 @@ const UserAddress: React.FC<IProps> = (props) => {
 
     return () => clearTimeout(debounceFn);
 
-  }, [fullAddress])
+  }, [queryAddress])
 
   const radioButtonClicked = (value: string) => {
     setAddressType(value);
@@ -79,7 +86,8 @@ const UserAddress: React.FC<IProps> = (props) => {
   };
 
   const addressSelection = (e: any) => {
-    setFullAddress(e.target.value);
+    setQueryAddress(e.target.value);
+    setFullAddress(e.target.value); // Keep fullAddress in sync while typing
   }
 
   return (
@@ -160,7 +168,7 @@ const UserAddress: React.FC<IProps> = (props) => {
           fullWidth
           disabled={fullAddressDisabled}
           placeholder={fullAddressDisabled ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : "Enter your street address..."}
-          value={!fullAddress && addressType === 'Other'? 'Car Drop-Off - AutoHub Shop, 123 Road Dr.' : fullAddress}
+          value={fullAddress || queryAddress}
           onChange={(e) => addressSelection(e)}
           InputProps={{
             startAdornment: (
@@ -189,14 +197,19 @@ const UserAddress: React.FC<IProps> = (props) => {
             borderRadius: '12px',
             overflow: 'hidden'
           }}>
-            <List disablePadding>
+            <List disablePadding sx={{ 
+              pb: 0.5,
+              maxHeight: '240px', // Set a max height for the list
+              overflowY: 'auto'   // Make it scrollable when content overflows
+            }}>
               {suggesstions.map((suggestion: any, index: number) => (
                 <Box
                   key={index}
                   onClick={() => {
                     const newAddress = `${suggestion.name}, ${suggestion.place}`;
-                    setFullAddress(newAddress);
-                    setSuggestions([]); // Hide suggestions on click
+                    setFullAddress(newAddress); // Set the final address for display and submission
+                    setQueryAddress('');      // Clear the search query to prevent re-fetching
+                    setSuggestions([]);       // Hide suggestions dropdown
                   }}
                   sx={{
                     p: 2,
@@ -242,7 +255,7 @@ const UserAddress: React.FC<IProps> = (props) => {
           </Button>
           <Button 
             fullWidth 
-            disabled={(addressType !== 'Other' && fullAddress.trim() === '')}
+            disabled={(addressType !== 'Other' && !fullAddress.trim())}
             onClick={() => {
               const finalAddr = addressType === 'Other' ? "Car Drop-Off - AutoHub Shop, 123 Road Dr." : fullAddress;
               props.setUserInformation({ ...props.userInformation, address: finalAddr }); 
