@@ -60,14 +60,12 @@ const UserAddress: React.FC<IProps> = (props) => {
       const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(queryAddress)}&session_token=${sessionToken}&access_token=${REACT_APP_API_MAPS_TOKEN}`;
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
 
       const formattedSuggestions = data.suggestions?.map((suggestion: IAutocompleteSuggestion) => {
         const name = suggestion.name;
         const place = suggestion.place_formatted;
         return {name: name, place: place}
       })
-      console.log(formattedSuggestions);
       setSuggestions(formattedSuggestions);
     }, 300); // setting debounce of 300ms so we don't hit rate limiter if the user spams the keyboard
 
