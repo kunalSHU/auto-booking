@@ -10,6 +10,7 @@ const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const pubsubRoutes = require('./routes/pubsubRoutes');
 const redisRoutes = require('./routes/redisRoutes');
+const authRoutes = require('./routes/authRoutes');
 const listenForMessages = require('./subscribers/notificationSubscriber');
 
 const errorHandler = require('./middleware/errorHandler');
@@ -30,6 +31,7 @@ app.use('/api/payments', paymentsRoutes);         // Handles GET /api/payments/
 app.use('/api/users', userRoutes);                // Handles GET /api/users/
 app.use('/api/pubsub', pubsubRoutes)
 app.use('/api/redis', redisRoutes)
+app.use('/api/auth', authRoutes);
 app.use('/api', router)
 
 // For testing, temporary

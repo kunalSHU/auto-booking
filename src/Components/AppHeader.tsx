@@ -1,13 +1,8 @@
-import React from 'react';
 import {
   AppBar,
-  Toolbar,
-  Typography,
   Box,
-  Link
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const AppHeader = () => {
   const navigate = useNavigate();

@@ -17,6 +17,55 @@ export const callNodeHelloWorld = async () => {
     }
 }
 
+/**
+ * Axios request interceptor.
+ * This function is called before every request is sent.
+ *
+ * 1. It checks for a session token in the browser's localStorage.
+ * 2. If no token exists, it calls the backend to get a new session token.
+ * 3. It stores the new token in localStorage.
+ * 4. It adds the token to the 'Authorization' header for all outgoing requests.
+ *
+ * This ensures that requests originate from a valid application session.
+ */
+axios.interceptors.request.use(async (config) => {
+    // Define an endpoint that should not have the auth token attached.
+    const tokenEndpoint = '/api/auth/session';
+
+    // If the current request is for a new token, don't try to attach a token to it.
+    if (config.url === tokenEndpoint) {
+        return config;
+    }
+
+    let token = localStorage.getItem('sessionToken');
+
+    // If there's no token, request one from the backend.
+    if (!token) {
+        try {
+            const response = await axios.get(tokenEndpoint);
+            token = response.data.token; // Assuming the backend returns { token: "..." }
+
+            if (token === null) {
+                throw new Error('Received null token from backend');
+            }
+
+            localStorage.setItem('sessionToken', token);
+        } catch (error) {
+            console.error('Could not fetch session token:', error);
+            return Promise.reject(error);
+        }
+    }
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+
 export const cancelAppointmentInRedisCache = async (search: any) => {
     try {
         console.log("Cancelling appointment in redis cache")
