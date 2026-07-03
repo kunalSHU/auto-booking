@@ -33,6 +33,7 @@ const BookingAppointment: React.FC = () => {
     const resetStepper = () => {
         setActiveStep(0);
         setSelectedDate(null);
+        setUserInformation({ fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: '' });
         setSelectedTime(null);
     };
 

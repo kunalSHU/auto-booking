@@ -51,12 +51,12 @@ ${BUSINESS_NAME}`
     },
     adminEmail: {
         subject: (customerName) => `New Booking Received – ${customerName}`,
-        body: (customerName, serviceDate, timeWindow, serviceAddress, notes) => `Hi Admin,
+        body: (customerName, customerPhone, customerEmail, serviceDate, timeWindow, serviceAddress, notes) => `Hi Admin,
 A new booking has been created.
 Customer Information
 • Customer: ${customerName}
-• Phone: {{CustomerPhoneNumber}}
-• Email: {{CustomerEmail}}
+• Phone: ${customerPhone}
+• Email: ${customerEmail}
 Booking Details
 • Service: {{ServiceName}}
 • Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}

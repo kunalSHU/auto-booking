@@ -261,7 +261,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                         boxShadow: 'none', fontWeight: 800, '&:hover': { bgcolor: '#3d6624' }
                     }}
                 >
-                    BOOK ANOTHER APPOINTMENT
+                    BACK TO MAIN PAGE
                 </Button>
             </Box>
         </Box>

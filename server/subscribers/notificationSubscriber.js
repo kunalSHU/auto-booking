@@ -141,7 +141,7 @@ const sendEmailLogic = async (payload) => {
 
     if (payload.templateType === EmailTemplates.adminEmail) {
         payload.subject = emailTemplate.adminEmail.subject(payload.pii.customerName);
-        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
+        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.pii.toEmail, payload.date, payload.time, address, notes);
         payload.pii.toEmail = "janarthkulenthiranrealtor@gmail.com";
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
         payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
