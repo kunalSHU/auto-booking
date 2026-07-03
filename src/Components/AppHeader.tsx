@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
   Box,
   Link
 } from '@mui/material';
@@ -14,45 +14,22 @@ const AppHeader = () => {
 
   return (
     <Box sx={{ width: '100%', bgcolor: 'white' }}>
-      <AppBar 
-        position="static" 
-        color="transparent" 
-        elevation={0} 
-        sx={{ borderBottom: '1px solid #f0f0f0', py: { xs: 1, md: 1.5 } }}
+      <AppBar
+        position="static"
+        color="transparent"
+        elevation={0}
       >
-        <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 4 } }}>
-          <Typography 
-            onClick={() => navigate('/')}
-            variant="h6" 
-            sx={{ 
-                fontWeight: 900, 
-                letterSpacing: '-0.5px', 
-                color: '#000', 
-                fontSize: { xs: '1.1rem', md: '1.25rem' },
-                cursor: 'pointer'
-            }}
-          >
-            AUTO<span style={{ color: '#4a7c2c' }}>VIVO.</span>
-          </Typography>
-
-          <Link
-            component="button"
-            variant="body2"
-            onClick={() => navigate('/')}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              color: '#666',
-              textDecoration: 'none',
-              fontWeight: 600,
-              '&:hover': { color: '#000' }
-            }}
-          >
-            <ChevronLeftIcon fontSize="small" />
+        <nav className="nav" role="navigation" aria-label="Booking navigation">
+          <a href="/" className="nav-logo" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+            AUTO <span>VIVO.</span>
+          </a>
+          <a href="/" className="nav-back" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M10 3L5 8l5 5" />
+            </svg>
             Back to Home
-          </Link>
-        </Toolbar>
+          </a>
+        </nav>
       </AppBar>
     </Box>
   );
