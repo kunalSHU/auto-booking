@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.." || exit 1
 
 # Load environment variables from .env
 set -o allexport
-source .env
+source ../.env
 set +o allexport
 
 # Define the schema file path (relative to server/)

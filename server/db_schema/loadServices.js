@@ -5,7 +5,8 @@ const path = require('path');
 const { Client } = require('pg');
 
 // Load .env file with explicit error checking
-const envPath = path.join(__dirname, '../.env');
+// The .env file is at the project root, which is two levels up from db_schema/
+const envPath = path.join(__dirname, '../../.env');
 const result = require('dotenv').config({ path: envPath });
 
 if (result.error && result.error.code !== 'ENOENT') {
