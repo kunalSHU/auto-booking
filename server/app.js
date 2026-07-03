@@ -12,6 +12,7 @@ const pubsubRoutes = require('./routes/pubsubRoutes');
 const redisRoutes = require('./routes/redisRoutes');
 const authRoutes = require('./routes/authRoutes');
 const listenForMessages = require('./subscribers/notificationSubscriber');
+const { protect } = require('./middleware/authMiddleware');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -22,17 +23,21 @@ const router = express.Router();
 app.use(cors());
 app.use(express.json()); // Allows for POST/PUT parsing
 
-/* API routes */
-app.use('/api/services', servicesRoutes);         // Handles GET /api/services/
-app.use('/api/vehicle', vehicleRoutes);           // Handles GET /api/vehicle/
-app.use('/api/detailing', detailingRoutes);       // Handles GET /api/detailing/
-app.use('/api/bookings', bookingsRoutes);         // Handles GET /api/bookings/
-app.use('/api/payments', paymentsRoutes);         // Handles GET /api/payments/
-app.use('/api/users', userRoutes);                // Handles GET /api/users/
-app.use('/api/pubsub', pubsubRoutes)
-app.use('/api/redis', redisRoutes)
+/* Public API routes */
+// The auth route must be public so the frontend can get a session token.
 app.use('/api/auth', authRoutes);
-app.use('/api', router)
+
+/* Protected API routes */
+// The 'protect' middleware will now run for all routes defined after this line.
+app.use('/api', protect, router);
+app.use('/api/services', protect, servicesRoutes);
+app.use('/api/vehicle', protect, vehicleRoutes);
+app.use('/api/detailing', protect, detailingRoutes);
+app.use('/api/bookings', protect, bookingsRoutes);
+app.use('/api/payments', protect, paymentsRoutes);
+app.use('/api/users', protect, userRoutes);
+app.use('/api/pubsub', protect, pubsubRoutes);
+app.use('/api/redis', protect, redisRoutes);
 
 // For testing, temporary
 router.get('/test', (req, res) => {

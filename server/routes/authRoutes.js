@@ -23,8 +23,8 @@ router.get('/session', async (req, res) => {
             sid: uuidv4(), // Session ID
         };
 
-        // Sign the token with a 24-hour expiration.
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
+        // Sign the token with a 1-hour expiration.
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token });
     } catch (error) {
