@@ -39,62 +39,6 @@ app.use('/api/users', protect, userRoutes);
 app.use('/api/pubsub', protect, pubsubRoutes);
 app.use('/api/redis', protect, redisRoutes);
 
-// For testing, temporary
-router.get('/test', (req, res) => {
-    res.json({message: "Hello World"});
-});
-
-
-const createCounter = () => {
-  let x = 0;
-  return {
-    increment: () => {
-      x++;
-    },
-    getValue: () => {
-      return x;
-    }
-  }
-}
-
-const mergeSort = (arr) => {
-
-  let a = [];
-  if (arr.length <= 1) {
-    return arr;
-  }
-
-  const middle = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, middle));
-  const right = mergeSort(arr.slice(middle, arr.length));
-  return merge(left, right);
-}
-
-const merge = (a, b) => {
-
-  let result = []
-  
-  let leftIndex = 0
-  let rightIndex = 0
-
-  while (leftIndex < a.length && rightIndex < b.length) {
-    if (a[leftIndex] < b[rightIndex] && rightIndex < b.length && leftIndex < a.length) {
-      result.push(a[leftIndex])
-      leftIndex++;
-    } else {
-      result.push(b[rightIndex])
-      rightIndex++;
-    }
-  }
-  if (rightIndex == b.length) {
-    return result.concat(a)
-  }
-  if (leftIndex == a.length) {
-    return result.concat(b)
-  }
-  // sort b (right side)
-}
-
 // 404 handler (runs if no route above matches)
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
