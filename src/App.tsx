@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { callNodeHelloWorld } from './apiServer/api';
-import LandingPage from './pages/LandingPage';
 import BookingAppointment from './pages/BookingAppointment';
 import VehiclePage from './pages/VehiclePage';
 import ServiceSelection from './pages/ServiceSelectionPage';
@@ -9,17 +7,7 @@ import { CartProvider } from './context/CartContext';
 import CartSidebar from './Components/CartSidebar';
 
 const AppContent: React.FC = () => {
-  const [nodeResponse, setNodeResponse] = useState<string>();
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  useEffect(() => {
-    testApiCall();
-  },[]);
-
-  const testApiCall = async () => {
-    let response = await callNodeHelloWorld();
-    setNodeResponse(response?.data.message);
-  }
 
   return (
     <>

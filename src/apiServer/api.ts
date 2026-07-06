@@ -6,17 +6,6 @@ const publishSmsNotificationUrl = "/api/pubsub/sms-notification";
 const storeDataInRedisCacheUrl = "/api/redis/appointment";
 const getAppointmentInRedisCacheUrl = "/api/redis/user/appointment";
 
-export const callNodeHelloWorld = async () => {
-    try {
-        // const url = backendTarget + "/api/test"
-        const url = "/api/test";
-        console.log("This is the test url: ", url)
-        return await axios.get(url)
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 const parseJwt = (token: any) => {
   try {
     return JSON.parse(atob(token.split('.')[1]));
