@@ -17,6 +17,14 @@ export const callNodeHelloWorld = async () => {
     }
 }
 
+const parseJwt = (token: any) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
+
 /**
  * Axios request interceptor.
  * This function is called before every request is sent.
@@ -39,8 +47,12 @@ axios.interceptors.request.use(async (config) => {
 
     let token = localStorage.getItem('sessionToken');
 
+    // Check if the token is expired of not
+    const decodedToken = token ? parseJwt(token) : null;
+    const isExpired = decodedToken ? Date.now() >= decodedToken.exp * 1000 : false;
+
     // If there's no token, request one from the backend.
-    if (!token) {
+    if (!token || isExpired) {
         try {
             const response = await axios.get(tokenEndpoint);
             token = response.data.token; // Assuming the backend returns { token: "..." }
