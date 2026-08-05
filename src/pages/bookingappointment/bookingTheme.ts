@@ -1,0 +1,40 @@
+export const bookingColors = {
+    primary: '#4A7C10',
+    primaryDark: '#426b29',
+    primaryBg: '#E8F7D2',
+    primaryBorder: '#c8e6c9',
+    warning: '#A05C00',
+    warningBg: '#FEF3E2',
+    textPrimary: '#1a1a1a',
+    textMuted: '#888',
+    textPlaceholder: '#bdbdbd',
+    border: '#eeeeee',
+    surface: '#f7f7f5',
+};
+
+export const bookingButtonStyles = {
+    back: {
+        py: 1.75,
+        borderRadius: '12px',
+        color: '#666',
+        fontWeight: 700,
+        bgcolor: '#fff',
+        border: '1px solid #e0e0da',
+        boxShadow: 'none',
+        textTransform: 'none' as const,
+        fontSize: '0.85rem',
+        '&:hover': { bgcolor: '#fafafa', borderColor: '#ccc' },
+    },
+    continue: {
+        py: 1.75,
+        borderRadius: '12px',
+        bgcolor: bookingColors.primaryDark,
+        color: '#fff',
+        boxShadow: 'none',
+        fontWeight: 700,
+        textTransform: 'none' as const,
+        fontSize: '0.85rem',
+        '&:hover': { bgcolor: '#355621', boxShadow: 'none' },
+        '&:disabled': { bgcolor: '#e0e0da', color: '#aaa' },
+    },
+};
