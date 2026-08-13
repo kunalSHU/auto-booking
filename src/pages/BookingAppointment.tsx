@@ -13,7 +13,7 @@ import UserInformation from './bookingappointment/userInformation';
 import AppointmentSummary from './bookingappointment/appointmentSummary';
 import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
-import ScheduleBanner from './bookingappointment/ScheduleBanner'; // Adjust path as needed
+import ScheduleBanner from './bookingappointment/scheduleBanner'; // Adjust path as needed
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
@@ -61,15 +61,16 @@ const BookingAppointment: React.FC = () => {
     return (
         <>
             <AppHeader />
-            
+
             {/* New Schedule Service Banner Header */}
             {!isViewingSummary && (
-                <ScheduleBanner 
-                    serviceName="Oil Change" 
-                    vehicleName="2022 Dodge Durango Sport" 
-                />
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                    <ScheduleBanner
+                        serviceName="Oil Change"
+                        vehicleName="2022 Dodge Durango Sport"
+                    />
+                </Box>
             )}
-
             <Box sx={{
                 bgcolor: '#fcfbfb',
                 minHeight: '100vh',
@@ -114,18 +115,18 @@ const BookingAppointment: React.FC = () => {
                                         {isViewingSummary ? 'Manage Appointment' : steps[activeStep]}
                                     </Typography>
                                     {!isViewingSummary && (
-                                        <Button 
-                                            size="small" 
+                                        <Button
+                                            size="small"
                                             onClick={() => setIsViewingSummary(true)}
-                                            sx={{ 
-                                                color: '#4a7c2c', 
-                                                fontWeight: 700, 
-                                                p: 0, 
-                                                minWidth: 0, 
-                                                mt: 0.5, 
-                                                textTransform: 'none', 
+                                            sx={{
+                                                color: '#4a7c2c',
+                                                fontWeight: 700,
+                                                p: 0,
+                                                minWidth: 0,
+                                                mt: 0.5,
+                                                textTransform: 'none',
                                                 fontSize: '0.8rem',
-                                                '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } 
+                                                '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' }
                                             }}
                                         >
                                             View or Cancel existing appointments
@@ -138,51 +139,51 @@ const BookingAppointment: React.FC = () => {
                         {/* Content Body */}
                         <Box sx={{ p: { xs: 2, sm: 4, md: 6 } }}>
                             {!isViewingSummary && (
-                            <Stepper 
-                                activeStep={activeStep} 
-                                alternativeLabel 
-                                connector={<CustomStepConnector />}
-                                sx={{ mb: { xs: 3, sm: 6 }, px: 0 }}
-                            >
-                                {steps.map((label, index) => (
-                                    <Step key={label}>
-                                        <StepLabel
-                                            StepIconComponent={() => (
-                                                <Box sx={{
-                                                    width: { xs: 10, sm: 14 }, 
-                                                    height: { xs: 10, sm: 14 }, 
-                                                    borderRadius: '50%',
-                                                    display: 'flex', 
-                                                    alignItems: 'center', 
-                                                    justifyContent: 'center',
-                                                    border: '2px solid',
-                                                    borderColor: index <= activeStep ? '#4a7c2c' : '#e0e0e0',
-                                                    bgcolor: index <= activeStep ? '#4a7c2c' : 'white',
-                                                    color: 'white',
-                                                    fontSize: '0.65rem',
-                                                    position: 'relative',
-                                                    zIndex: 2,
-                                                    transition: 'all 0.3s ease'
+                                <Stepper
+                                    activeStep={activeStep}
+                                    alternativeLabel
+                                    connector={<CustomStepConnector />}
+                                    sx={{ mb: { xs: 3, sm: 6 }, px: 0 }}
+                                >
+                                    {steps.map((label, index) => (
+                                        <Step key={label}>
+                                            <StepLabel
+                                                StepIconComponent={() => (
+                                                    <Box sx={{
+                                                        width: { xs: 10, sm: 14 },
+                                                        height: { xs: 10, sm: 14 },
+                                                        borderRadius: '50%',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        border: '2px solid',
+                                                        borderColor: index <= activeStep ? '#4a7c2c' : '#e0e0e0',
+                                                        bgcolor: index <= activeStep ? '#4a7c2c' : 'white',
+                                                        color: 'white',
+                                                        fontSize: '0.65rem',
+                                                        position: 'relative',
+                                                        zIndex: 2,
+                                                        transition: 'all 0.3s ease'
+                                                    }}>
+                                                        {index < activeStep ? '✓' : ''}
+                                                    </Box>
+                                                )}
+                                            >
+                                                <Typography sx={{
+                                                    fontSize: { xs: '0.6rem', sm: '0.65rem' },
+                                                    fontWeight: 900,
+                                                    color: index <= activeStep ? '#1a1a1a' : '#bbb',
+                                                    mt: 1,
+                                                    textTransform: 'uppercase',
+                                                    letterSpacing: '0.5px',
+                                                    textAlign: 'center'
                                                 }}>
-                                                    {index < activeStep ? '✓' : ''}
-                                                </Box>
-                                            )}
-                                        >
-                                            <Typography sx={{
-                                                fontSize: { xs: '0.6rem', sm: '0.65rem' }, 
-                                                fontWeight: 900,
-                                                color: index <= activeStep ? '#1a1a1a' : '#bbb', 
-                                                mt: 1,
-                                                textTransform: 'uppercase', 
-                                                letterSpacing: '0.5px',
-                                                textAlign: 'center'
-                                            }}>
-                                                {label}
-                                            </Typography>
-                                        </StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
+                                                    {label}
+                                                </Typography>
+                                            </StepLabel>
+                                        </Step>
+                                    ))}
+                                </Stepper>
                             )}
 
                             <Box sx={{ mt: 0 }}>
@@ -196,47 +197,47 @@ const BookingAppointment: React.FC = () => {
                                                 <Box sx={{ width: '100%' }}>
                                                     <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} hideContinueButton />
                                                 </Box>
-                                                
+
                                                 {/* Time Selection Section */}
                                                 {selectedDate && (
-                                                    <Box sx={{ 
-                                                        width: '100%', 
-                                                        mt: 3, 
-                                                        pt: 3, 
+                                                    <Box sx={{
+                                                        width: '100%',
+                                                        mt: 3,
+                                                        pt: 3,
                                                         borderTop: '1px solid #eee',
-                                                        display: 'block' 
+                                                        display: 'block'
                                                     }}>
-                                                        <TimeSelection 
-                                                            onBack={handleBack} 
-                                                            nextToYourInformation={handleNext} 
-                                                            selectedTime={selectedTime} 
-                                                            setSelectedTime={setSelectedTime} 
-                                                            selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} 
-                                                            hideNavigation 
+                                                        <TimeSelection
+                                                            onBack={handleBack}
+                                                            nextToYourInformation={handleNext}
+                                                            selectedTime={selectedTime}
+                                                            setSelectedTime={setSelectedTime}
+                                                            selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')}
+                                                            hideNavigation
                                                         />
                                                     </Box>
                                                 )}
 
                                                 {/* Continue Action Button */}
                                                 <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5', display: 'flex', justifyContent: 'flex-end' }}>
-                                                    <Button 
-                                                        disabled={!selectedDate || !selectedTime} 
-                                                        onClick={handleNext} 
-                                                        variant="contained" 
-                                                        sx={{ 
-                                                            width: { xs: '100%', sm: 'auto' }, 
-                                                            px: 4, 
-                                                            py: 2, 
-                                                            borderRadius: '12px', 
-                                                            backgroundColor: '#c5e1a5', 
-                                                            color: '#1b5e20', 
-                                                            boxShadow: 'none', 
-                                                            fontSize: '0.9rem', 
-                                                            fontWeight: 800, 
-                                                            letterSpacing: '1px', 
-                                                            textTransform: 'uppercase', 
-                                                            '&:hover': { backgroundColor: '#aed581' }, 
-                                                            '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' } 
+                                                    <Button
+                                                        disabled={!selectedDate || !selectedTime}
+                                                        onClick={handleNext}
+                                                        variant="contained"
+                                                        sx={{
+                                                            width: { xs: '100%', sm: 'auto' },
+                                                            px: 4,
+                                                            py: 2,
+                                                            borderRadius: '12px',
+                                                            backgroundColor: '#c5e1a5',
+                                                            color: '#1b5e20',
+                                                            boxShadow: 'none',
+                                                            fontSize: '0.9rem',
+                                                            fontWeight: 800,
+                                                            letterSpacing: '1px',
+                                                            textTransform: 'uppercase',
+                                                            '&:hover': { backgroundColor: '#aed581' },
+                                                            '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' }
                                                         }}
                                                     >
                                                         CONTINUE →

@@ -17,12 +17,13 @@ interface IProps {
 }
 
 export interface IRedisCache {
-    //{"phone": "123-456-7890", "time": "10:30 AM", "status": "pending"}
+    //{"phone": "123-456-7890", "time": "10:30 AM", "status": "pending", name: "kunal"}
     email: string;
     phone: string;
     time: string;
     status: string;
     date: string;
+    name: string;
 }
 
 const EmailTemplates = {
@@ -175,6 +176,7 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             phone: props.phoneNumber,
             date: props.selectedDate || '',
             time: props.selectedTime || '',
+            name: props.customerName,
             status: 'pending'
         };
         return await setAppointmentInRedisCache(appointment);   

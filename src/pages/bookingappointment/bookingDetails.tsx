@@ -41,6 +41,7 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
 
   // Automatically keep expanded on desktop
   useEffect(() => {
+    console.log('isDesktop:', isDesktop);
     if (isDesktop) {
       setExpanded(true);
     }

@@ -2,12 +2,19 @@ const express = require('express');
 const router = express.Router();
 const Redis = require('ioredis');
 const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+const { v4: uuidv4 } = require('uuid');
+const createSchedule = require('../amazon/amazonEventBridgeScheduler');
 
 const REDIS_KEY = process.env.REDIS_ACCESS_KEY;
 
 if (!REDIS_KEY) {
     console.error("Redis access key is not available")
 }
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const client = new Redis(`rediss://default:${REDIS_KEY}@tight-feline-40242.upstash.io:6379`);
 
@@ -16,9 +23,11 @@ router.post('/appointment', async (req, res) => {
     
     // Calculate the expiration date and time
     const appointmentDateTime = dayjs(`${req.body.date} ${req.body.time}`);
-    
+    console.log(`Appointment date and time: ${appointmentDateTime.format()}`);
+
     // Add 5400 seconds (90 minutes)
     const expiryDateTime = appointmentDateTime.add(5400, 'second');
+    console.log(`Appointment date and time AFTER: ${appointmentDateTime.format()}`);
     
     // Get Unix timestamp in seconds for Redis EXPIREAT
     const expiryUnix = expiryDateTime.unix();
@@ -35,6 +44,12 @@ router.post('/appointment', async (req, res) => {
         await client.expireat(key, expiryUnix);
         console.log(`Setting cache data for key ${key}`)
         res.status(200).json({ success: true, expiresAt: expiryDateTime.format() });
+
+
+        // Call the amazon scheduler to create a task 
+        console.log(`Calling amazon scheduler to create a task for appointment reminder: ${appointmentDateTime.format()}`)
+        await createSchedule(uuidv4(), req.body.email, appointmentDateTime.format(), req.body.phone, req.body.name);
+
     } catch (err) {
         console.log("Error storing in cache: ", err)
         res.status(500).json({ error: "Internal server error" });
