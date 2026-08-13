@@ -1,10 +1,8 @@
 import { Box, Button, Typography, Stack } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import React, { useEffect } from 'react';
+import React from 'react';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import dayjs, { Dayjs } from 'dayjs';
-import DateInformation from './dateInformation';
 
 dayjs.extend(customParseFormat);
 
@@ -19,92 +17,90 @@ interface ITimeSelectionProps {
 
 const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
 
-    const formatDate = () => {
-        if (!props.selectedDate) return;
+    const formatDate = (): Dayjs | undefined => {
+        if (!props.selectedDate) return undefined;
 
-        // 1. The format matching your string
         const format = "dddd, MMMM D, YYYY";
-
-        // 2. Clean the string
         const cleanString = props.selectedDate.replace(/\u00a0/g, ' ').trim();
-        
-        // This makes it "Lax" instead of "Strict".
         const dateAsDayjs = dayjs(cleanString, format);
 
         if (dateAsDayjs.isValid()) {
-            console.log("✅ Success! Parsed Date:", dateAsDayjs.format('YYYY-MM-DD'));
+            return dateAsDayjs; // FIX 1: Added missing return statement!
         } else {
-            // (Splitting by the first comma)
             const parts = cleanString.split(', ');
             if (parts.length > 1) {
-                const dateWithoutDay = parts.slice(1).join(', '); // "March 26, 2026"
+                const dateWithoutDay = parts.slice(1).join(', ');
                 const fallbackDate = dayjs(dateWithoutDay, "MMMM D, YYYY");
                 
                 if (fallbackDate.isValid()) {
-                    console.log("✅ Parsed via Fallback:", fallbackDate.format('YYYY-MM-DD'));
-                } else {
-                    console.error("❌ Total Parse Failure");
+                    return fallbackDate;
                 }
-                return fallbackDate;
             }
         }
-    }
+        return undefined;
+    };
 
     // Helper to determine if a slot should be disabled
     const isSlotDisabled = (timeStr: string) => {
+        const parsedDate = formatDate();
+        if (!parsedDate) return false;
+
         const now = dayjs();
         const format = "h:mm A";
-        const slotTime = dayjs(`${timeStr}`, format);
-        const slotDateTime = formatDate()?.hour(slotTime.hour()).minute(slotTime.minute());
-        // Returns true if the slot is in the past
-        return slotDateTime?.isBefore(now) || slotDateTime?.diff(now, 'hour')! < 2;
+        const slotTime = dayjs(timeStr, format);
+        
+        if (!slotTime.isValid()) return false;
+
+        const slotDateTime = parsedDate.hour(slotTime.hour()).minute(slotTime.minute());
+        
+        // Disable if time slot is in the past or less than 2 hours from now
+        return slotDateTime.isBefore(now) || slotDateTime.diff(now, 'hour') < 2;
     };
 
     const sections = [
-    {
-        label: 'MORNING',
-        times: [
-            { time: '10:00 AM', disabled: isSlotDisabled('10:00 AM') },
-            { time: '10:30 AM', disabled: isSlotDisabled('10:30 AM') },
-            { time: '11:00 AM', disabled: isSlotDisabled('11:00 AM') },
-            { time: '11:30 AM', disabled: isSlotDisabled('11:30 AM') },
-            { time: '12:00 PM', disabled: isSlotDisabled('12:00 PM') },
-            { time: '12:30 PM', disabled: isSlotDisabled('12:30 PM') },
-        ]
-    },
-    {
-        label: 'AFTERNOON',
-        times: [
-            { time: '1:00 PM', disabled: isSlotDisabled('1:00 PM') },
-            { time: '1:30 PM', disabled: isSlotDisabled('1:30 PM') },
-            { time: '2:00 PM', disabled: isSlotDisabled('2:00 PM') },
-            { time: '2:30 PM', disabled: isSlotDisabled('2:30 PM') },
-            { time: '3:00 PM', disabled: isSlotDisabled('3:00 PM') },
-            { time: '3:30 PM', disabled: isSlotDisabled('3:30 PM') },
-            { time: '4:00 PM', disabled: isSlotDisabled('4:00 PM') },
-            { time: '4:30 PM', disabled: isSlotDisabled('4:30 PM') },
-        ]
-    },
-    {
-        label: 'EVENING',
-        times: [
-            { time: '5:00 PM', disabled: isSlotDisabled('5:00 PM') },
-            { time: '5:30 PM', disabled: isSlotDisabled('5:30 PM') },
-            { time: '6:00 PM', disabled: isSlotDisabled('6:00 PM') },
-            { time: '6:30 PM', disabled: isSlotDisabled('6:30 PM') },
-            { time: '7:00 PM', disabled: isSlotDisabled('7:00 PM') },
-            { time: '7:30 PM', disabled: isSlotDisabled('7:30 PM') },
-            { time: '8:00 PM', disabled: isSlotDisabled('8:00 PM') },
-            { time: '8:30 PM', disabled: isSlotDisabled('8:30 PM') },
-            { time: '9:00 PM', disabled: isSlotDisabled('9:00 PM') },
-        ]
-    }
-];
+        {
+            label: 'MORNING',
+            times: [
+                { time: '10:00 AM', disabled: isSlotDisabled('10:00 AM') },
+                { time: '10:30 AM', disabled: isSlotDisabled('10:30 AM') },
+                { time: '11:00 AM', disabled: isSlotDisabled('11:00 AM') },
+                { time: '11:30 AM', disabled: isSlotDisabled('11:30 AM') },
+                { time: '12:00 PM', disabled: isSlotDisabled('12:00 PM') },
+                { time: '12:30 PM', disabled: isSlotDisabled('12:30 PM') },
+            ]
+        },
+        {
+            label: 'AFTERNOON',
+            times: [
+                { time: '1:00 PM', disabled: isSlotDisabled('1:00 PM') },
+                { time: '1:30 PM', disabled: isSlotDisabled('1:30 PM') },
+                { time: '2:00 PM', disabled: isSlotDisabled('2:00 PM') },
+                { time: '2:30 PM', disabled: isSlotDisabled('2:30 PM') },
+                { time: '3:00 PM', disabled: isSlotDisabled('3:00 PM') },
+                { time: '3:30 PM', disabled: isSlotDisabled('3:30 PM') },
+                { time: '4:00 PM', disabled: isSlotDisabled('4:00 PM') },
+                { time: '4:30 PM', disabled: isSlotDisabled('4:30 PM') },
+            ]
+        },
+        {
+            label: 'EVENING',
+            times: [
+                { time: '5:00 PM', disabled: isSlotDisabled('5:00 PM') },
+                { time: '5:30 PM', disabled: isSlotDisabled('5:30 PM') },
+                { time: '6:00 PM', disabled: isSlotDisabled('6:00 PM') },
+                { time: '6:30 PM', disabled: isSlotDisabled('6:30 PM') },
+                { time: '7:00 PM', disabled: isSlotDisabled('7:00 PM') },
+                { time: '7:30 PM', disabled: isSlotDisabled('7:30 PM') },
+                { time: '8:00 PM', disabled: isSlotDisabled('8:00 PM') },
+                { time: '8:30 PM', disabled: isSlotDisabled('8:30 PM') },
+                { time: '9:00 PM', disabled: isSlotDisabled('9:00 PM') },
+            ]
+        }
+    ];
 
     return (
         <Box sx={{ 
-            minHeight: '540px', 
-            display: 'flex', 
+            display: 'flex',
             flexDirection: 'column',
             width: '100%' 
         }}>
@@ -126,8 +122,8 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
                 </Box>
             </Stack>
 
-            {/* 3. Time Sections */}
-            <Box sx={{ flexGrow: 1, overflowY: 'auto', pr: 1, maxHeight: '380px' }}>
+            {/* 2. Time Sections (FIX 2: Removed maxHeight/overflowY to prevent nested scroll clipping) */}
+            <Box sx={{ flexGrow: 1, pr: 1 }}>
                 {sections.map((section) => (
                     <Box key={section.label} sx={{ mb: 3 }}>
                         <Typography variant="caption" sx={{ 
@@ -141,7 +137,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
                         </Typography>
                         <Box sx={{ 
                             display: 'grid', 
-                            gridTemplateColumns: 'repeat(4, 1fr)', 
+                            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }, 
                             gap: 1 
                         }}>
                             {section.times.map((time) => {
@@ -167,8 +163,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
                                             }
                                         }}
                                     >
-                                        {time.time.replace(' ', '')} 
-                                        {/* Shortening 10:00 AM to 10AM for better grid fit if needed */}
+                                        {time.time.replace(' ', '')}
                                     </Button>
                                 );
                             })}
@@ -177,7 +172,7 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
                 ))}
             </Box>
 
-            {/* 4. Footer Buttons */}
+            {/* 3. Footer Buttons */}
             {!props.hideNavigation && (
                 <Box sx={{ pt: 3, borderTop: '1px solid #f5f5f5' }}>
                     <Stack direction="row" spacing={2}>

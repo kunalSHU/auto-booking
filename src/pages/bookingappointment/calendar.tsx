@@ -17,11 +17,11 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContinueButton }) => {
-    const [isDateSelected, setIsDateSelected] = React.useState(false);
+    const isDateSelected = !!value;
 
     return (
-        <Box sx={{ width: '100%' }}>
-            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
+        <Box sx={{ width: '100%', overflowX: 'hidden' }}>
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: { xs: 2, sm: 4 } }}>
                 <Box sx={{
                     bgcolor: '#e8f5e9', p: 1.5, borderRadius: '12px',
                     display: 'flex', border: '1px solid #c8e6c9'
@@ -29,7 +29,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                     <CalendarMonthIcon sx={{ color: '#4a7c2c' }} />
                 </Box>
                 <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 900, fontSize: '1.25rem', fontFamily: 'serif' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 900, fontSize: { xs: '1.1rem', sm: '1.25rem' }, fontFamily: 'serif' }}>
                         Select a Date
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#888' }}>
@@ -42,11 +42,10 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateCalendar
                         disablePast
-                        fixedWeekNumber={6} // Ensures 6 rows are always rendered
+                        fixedWeekNumber={6}
                         value={value}
                         onChange={(newValue) => {
                             setValue(newValue);
-                            setIsDateSelected(true);
                         }}
                         slots={{
                             calendarHeader: (props) => (
@@ -54,7 +53,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                                     direction="row"
                                     alignItems="center"
                                     justifyContent="space-between"
-                                    sx={{ px: 2, mb: 2 }}
+                                    sx={{ px: 1, mb: 1 }}
                                 >
                                     <IconButton onClick={() => props.onMonthChange(props.currentMonth.subtract(1, 'month'))} sx={{ bgcolor: '#f5f5f5', borderRadius: '8px' }}>
                                         <ChevronLeft fontSize="small" />
@@ -74,17 +73,18 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                         sx={{
                             width: '100%',
                             maxWidth: 'none',
-                            // Override MUI's hardcoded 320px height constraint
+                            // FIX: Prevent MUI from enforcing fixed 320px height
                             height: 'auto !important',
-                            minHeight: '380px',
+                            minHeight: { xs: '340px', sm: '380px' },
 
                             '& .MuiDayCalendar-root': {
                                 width: '100%',
                                 maxWidth: 'none',
                             },
+                            // FIX: Force slide transition container to fit all 6 weeks on mobile
                             '& .MuiDayCalendar-slideTransition': {
                                 width: '100%',
-                                minHeight: '320px',
+                                minHeight: { xs: '290px', sm: '330px' },
                                 height: 'auto !important',
                                 overflow: 'visible',
                             },
@@ -98,16 +98,16 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                             '& .MuiDayCalendar-weekContainer': {
                                 width: '100%',
                                 justifyContent: 'space-around',
-                                margin: '2px 0',
+                                margin: '1px 0',
                             },
 
                             '& .MuiPickersDay-root': {
                                 flex: 1,
-                                maxWidth: '48px',
-                                height: '44px',
-                                fontSize: '1rem',
+                                maxWidth: { xs: '38px', sm: '48px' },
+                                height: { xs: '34px', sm: '44px' },
+                                fontSize: { xs: '0.85rem', sm: '1rem' },
                                 fontWeight: 700,
-                                borderRadius: '12px',
+                                borderRadius: '10px',
                                 color: '#1a1a1a',
                                 transition: 'all 0.2s ease',
 
@@ -126,7 +126,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                                     '&::after': {
                                         content: '""',
                                         position: 'absolute',
-                                        bottom: '6px',
+                                        bottom: '3px',
                                         left: '50%',
                                         transform: 'translateX(-50%)',
                                         width: '4px',
@@ -144,7 +144,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
 
                             '& .MuiDayCalendar-weekDayLabel': {
                                 flex: 1,
-                                maxWidth: '48px',
+                                maxWidth: { xs: '38px', sm: '48px' },
                                 fontWeight: 800,
                                 color: '#999',
                                 fontSize: '0.75rem',
@@ -154,11 +154,11 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContin
                     />
                 </LocalizationProvider>
 
-                {isDateSelected && <DateInformation selectedDate={value}/>}
+                {isDateSelected && <DateInformation selectedDate={value} />}
             </Box>
 
             {!hideContinueButton && (
-                <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5' }}>
+                <Box sx={{ mt: { xs: 2, sm: 4 }, pt: { xs: 2, sm: 4 }, borderTop: '1px solid #f5f5f5' }}>
                     <Button
                         fullWidth
                         disabled={!value}

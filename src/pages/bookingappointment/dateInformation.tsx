@@ -1,7 +1,5 @@
 import React from 'react';
-import { Box, Typography, Stack, Chip } from '@mui/material';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Box, Typography } from '@mui/material';
 import { Dayjs } from 'dayjs';
 
 interface DateInformationProps {
@@ -16,92 +14,82 @@ const DateInformation: React.FC<DateInformationProps> = ({ selectedDate }) => {
         return dayOfWeek === 0 || dayOfWeek === 6;
     };
 
+    const isWeekend = checkIsWeekend();
+
     return (
         <Box
             sx={{
                 mt: 4,
-                p: 2,
-                borderRadius: '12px',
-                bgcolor: '#f5f5f5', // Neutral light grey background
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%'
+                p: { xs: 2.5, sm: 3 },
+                borderRadius: '16px',
+                bgcolor: '#f2f1ed', // Light grey/cream background from design
+                border: '1px solid #e2e0d8',
+                width: '100%',
+                boxSizing: 'border-box'
             }}
         >
-            <Stack direction="row" spacing={2} alignItems="center">
-                {/* Icon Box */}
-                <Box sx={{
-                    bgcolor: 'white',
-                    p: 1,
-                    borderRadius: '8px',
-                    display: 'flex',
-                    boxShadow: '0px 2px 4px rgba(0,0,0,0.02)'
-                }}>
-                </Box>
-
-                <Box>
-                    <Typography
-                        variant="caption"
-                        sx={{
-                            color: '#888',
-                            fontWeight: 700,
-                            display: 'block',
-                            lineHeight: 1.2,
-                            fontSize: '0.65rem',
-                            letterSpacing: '0.5px'
-                        }}
-                    >
-                        SELECTED DATE
-                    </Typography>
-                    <Typography
-                        sx={{
-                            color: '#1a1a1a',
-                            fontWeight: 800,
-                            fontSize: '0.95rem'
-                        }}
-                    >
-                        {selectedDate.format('dddd, MMMM D, YYYY')}
-                    </Typography>
-                </Box>
-            </Stack>
-
-            {/* Operating Hours Badge */}
+            {/* Top row: Label + Hours Pill */}
             <Box
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 1,
-                    bgcolor: '#e8f5e9', // Very light green
-                    px: 1.5,
-                    py: 0.75,
-                    borderRadius: '20px',
-                    border: '1px solid #c8e6c9'
+                    justifyContent: 'space-between',
+                    gap: 1.5,
+                    mb: 1.5,
+                    flexWrap: 'wrap'
                 }}
             >
-                <CheckCircleIcon sx={{ color: '#4a7c2c', fontSize: '1rem' }} />
-                {!checkIsWeekend() ? <Typography
+                <Typography
+                    variant="caption"
                     sx={{
-                        color: '#2e7d32',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                        whiteSpace: 'nowrap'
+                        color: '#8c8c88',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        lineHeight: 1.2
                     }}
                 >
-                    Weekday: 10:00 AM - 9:30 PM
-                </Typography> :
+                    Selected Date
+                </Typography>
+
+                {/* Operating Hours Pill Badge */}
+                <Box
+                    sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        bgcolor: '#eaf4d3', // Soft green pill background
+                        px: 2,
+                        py: 0.75,
+                        borderRadius: '24px',
+                        border: '1px solid #c5e1a5'
+                    }}
+                >
                     <Typography
                         sx={{
-                            color: '#2e7d32',
+                            color: '#33691e',
                             fontWeight: 700,
-                            fontSize: '0.75rem',
+                            fontSize: '0.8rem',
                             whiteSpace: 'nowrap'
                         }}
                     >
-                        Weekend: 11:00 AM - 9:00 PM
+                        {!isWeekend
+                            ? 'Weekday: 10:00 AM – 9:30 PM'
+                            : 'Weekend: 11:00 AM – 9:00 PM'}
                     </Typography>
-                }
+                </Box>
             </Box>
+
+            {/* Bottom row: Formatted Selected Date */}
+            <Typography
+                sx={{
+                    color: '#000000',
+                    fontWeight: 800,
+                    fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                    lineHeight: 1.3,
+                    fontFamily: 'serif'
+                }}
+            >
+                {selectedDate.format('dddd, MMMM D, YYYY')}
+            </Typography>
         </Box>
     );
 };
