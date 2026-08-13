@@ -1,5 +1,6 @@
 const SchedulerClient = require("@aws-sdk/client-scheduler").SchedulerClient;
 const CreateScheduleCommand = require("@aws-sdk/client-scheduler").CreateScheduleCommand;
+const DeleteScheduleCommand = require("@aws-sdk/client-scheduler").DeleteScheduleGroupCommand;
 const dayjs = require('dayjs'); 
 const scheduler = new SchedulerClient({ region: "us-east-1" });
 const utc = require('dayjs/plugin/utc');
@@ -40,4 +41,20 @@ async function createSchedule(appointmentId, userEmail, appointmentTime, phoneNu
     return await scheduler.send(createScheduleCommand);
 }
 
-module.exports = createSchedule;
+async function deleteSchedule(appointmentId) {
+    const scheduleName = `appointment-${appointmentId}`;
+
+    try {
+        const deleteScheduleCommand = new DeleteScheduleCommand({
+            Name: scheduleName
+        });
+        console.log(`Sending DeleteScheduleCommand for scheduleName: ${scheduleName}`);
+        const res = await scheduler.send(deleteScheduleCommand);
+        return res;
+    } catch (error) {
+        console.error(`Error deleting schedule ${scheduleName}:`, error);
+        throw error;
+    }
+}
+
+module.exports = { createSchedule, deleteSchedule };

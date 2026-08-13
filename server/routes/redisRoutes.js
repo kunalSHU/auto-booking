@@ -6,6 +6,7 @@ const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 const { v4: uuidv4 } = require('uuid');
 const createSchedule = require('../amazon/amazonEventBridgeScheduler');
+const deleteSchedule = require('../amazon/amazonEventBridgeScheduler');
 
 const REDIS_KEY = process.env.REDIS_ACCESS_KEY;
 
@@ -20,6 +21,9 @@ const client = new Redis(`rediss://default:${REDIS_KEY}@tight-feline-40242.upsta
 
 router.post('/appointment', async (req, res) => {
     console.log('Storing appointment in cache: ', req.body)
+
+    const appointmentId = uuidv4();
+    const dataToPersist = {...req.body, "appointmentId": appointmentId}; // Add a unique appointmentId to the data
     
     // Calculate the expiration date and time
     const appointmentDateTime = dayjs(`${req.body.date} ${req.body.time}`);
@@ -40,7 +44,7 @@ router.post('/appointment', async (req, res) => {
             return;
         }
 
-        await client.set(key, JSON.stringify(req.body));
+        await client.set(key, JSON.stringify(dataToPersist));
         await client.expireat(key, expiryUnix);
         console.log(`Setting cache data for key ${key}`)
         res.status(200).json({ success: true, expiresAt: expiryDateTime.format() });
@@ -48,7 +52,7 @@ router.post('/appointment', async (req, res) => {
 
         // Call the amazon scheduler to create a task 
         console.log(`Calling amazon scheduler to create a task for appointment reminder: ${appointmentDateTime.format()}`)
-        await createSchedule(uuidv4(), req.body.email, appointmentDateTime.format(), req.body.phone, req.body.name);
+        await createSchedule(appointmentId, req.body.email, appointmentDateTime.format(), req.body.phone, req.body.name);
 
     } catch (err) {
         console.log("Error storing in cache: ", err)
@@ -77,6 +81,15 @@ router.delete("/user/appointment", async (req, res) => {
     // Fetch the appointment by email from the cache
     const key = `appointment:lock:${req.body.email}`;
     try {
+
+        const existingRecord = await client.get(key);
+
+        if (!existingRecord) {
+            res.status(404).json({ success: false, message: "Appointment not found" });
+            return;
+        }
+        await deleteSchedule(JSON.parse(existingRecord).appointmentId);
+
         // Delete the record from Redis
         await client.del(key);
         res.status(200).json({ success: true, message: "Appointment deleted successfully" });
