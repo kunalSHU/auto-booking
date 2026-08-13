@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Typography, Stack, Divider, IconButton } from '@mui/material';
+import { Box, Button, Typography, Stack, IconButton } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,14 +13,14 @@ interface CalendarProps {
     onNext: () => void;
     value: Dayjs | null;
     setValue: (value: Dayjs | null) => void;
+    hideContinueButton?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
-
+const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue, hideContinueButton }) => {
     const [isDateSelected, setIsDateSelected] = React.useState(false);
 
     return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
             <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
                 <Box sx={{
                     bgcolor: '#e8f5e9', p: 1.5, borderRadius: '12px',
@@ -38,26 +38,16 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                 </Box>
             </Stack>
 
-            <Box sx={{
-                width: '100%',
-                '& .MuiDateCalendar-root': { width: '100%', maxHeight: 'none' },
-                '& .MuiPickersCalendarHeader-label': { fontWeight: 900, fontSize: '1.1rem' },
-                '& .MuiDayCalendar-weekDayLabel': { fontWeight: 700, color: '#333' },
-                '& .MuiPickersDay-root': {
-                    fontSize: '0.95rem',
-                    borderRadius: '10px',
-                    '&.Mui-selected': { bgcolor: '#4a7c2c !important' }
-                }
-            }}>
+            <Box sx={{ width: '100%' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateCalendar
                         disablePast
+                        fixedWeekNumber={6} // Ensures 6 rows are always rendered
                         value={value}
                         onChange={(newValue) => {
-                            setValue(newValue)
+                            setValue(newValue);
                             setIsDateSelected(true);
                         }}
-                        // 1. This centers the Month/Year and customizes the arrows
                         slots={{
                             calendarHeader: (props) => (
                                 <Stack
@@ -79,41 +69,66 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                             ),
                         }}
                         slotProps={{
-                            calendarHeader: { sx: { display: 'none' } } // Hide default header to use ours
+                            calendarHeader: { sx: { display: 'none' } }
                         }}
                         sx={{
                             width: '100%',
-                            // 1. Selection Block Styling
+                            maxWidth: 'none',
+                            // Override MUI's hardcoded 320px height constraint
+                            height: 'auto !important',
+                            minHeight: '380px',
+
+                            '& .MuiDayCalendar-root': {
+                                width: '100%',
+                                maxWidth: 'none',
+                            },
+                            '& .MuiDayCalendar-slideTransition': {
+                                width: '100%',
+                                minHeight: '320px',
+                                height: 'auto !important',
+                                overflow: 'visible',
+                            },
+                            '& .MuiDayCalendar-monthContainer': {
+                                width: '100%',
+                            },
+                            '& .MuiDayCalendar-headerContainer': {
+                                width: '100%',
+                                justifyContent: 'space-around',
+                            },
+                            '& .MuiDayCalendar-weekContainer': {
+                                width: '100%',
+                                justifyContent: 'space-around',
+                                margin: '2px 0',
+                            },
+
                             '& .MuiPickersDay-root': {
-                                width: { xs: '42px', sm: '50px' },
-                                height: { xs: '42px', sm: '50px' },
+                                flex: 1,
+                                maxWidth: '48px',
+                                height: '44px',
                                 fontSize: '1rem',
-                                fontWeight: 600,
-                                borderRadius: '12px', // The square shape
-                                margin: '2px',
-                                color: '#1a1a1a', // Default text color
+                                fontWeight: 700,
+                                borderRadius: '12px',
+                                color: '#1a1a1a',
                                 transition: 'all 0.2s ease',
 
-                                // Fix: Ensure text is visible when selected
                                 '&.Mui-selected': {
                                     bgcolor: '#426b29 !important',
-                                    color: '#ffffff !important', // Forces text to white
+                                    color: '#ffffff !important',
                                     '&:hover': { bgcolor: '#355621 !important' },
-                                    // This removes the "Today" circle/border when the date is also selected
                                     border: 'none !important',
                                 },
 
-                                // 2. Today's Date Styling (when NOT selected)
                                 '&.MuiPickersDay-today': {
                                     borderColor: 'transparent',
                                     color: '#426b29',
                                     fontWeight: 800,
                                     position: 'relative',
-                                    // The small dot under the number
                                     '&::after': {
                                         content: '""',
                                         position: 'absolute',
                                         bottom: '6px',
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
                                         width: '4px',
                                         height: '4px',
                                         borderRadius: '50%',
@@ -121,22 +136,20 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                                     }
                                 },
 
-                                // Fix: Remove the blue focus ring that MUI adds
                                 '&:focus': {
                                     bgcolor: 'transparent',
                                     '&.Mui-selected': { bgcolor: '#426b29 !important' }
                                 }
                             },
 
-                            // 3. Header and Weekday cleanup
                             '& .MuiDayCalendar-weekDayLabel': {
+                                flex: 1,
+                                maxWidth: '48px',
                                 fontWeight: 800,
                                 color: '#999',
                                 fontSize: '0.75rem',
-                                width: { xs: '42px', sm: '50px' },
                             },
                             '& .MuiPickersCalendarHeader-root': { display: 'none' },
-
                         }}
                     />
                 </LocalizationProvider>
@@ -144,29 +157,31 @@ const Calendar: React.FC<CalendarProps> = ({ onNext, value, setValue }) => {
                 {isDateSelected && <DateInformation selectedDate={value}/>}
             </Box>
 
-            <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5' }}>
-                <Button
-                    fullWidth
-                    disabled={!value}
-                    onClick={onNext}
-                    variant="contained"
-                    sx={{
-                        py: 2,
-                        borderRadius: '12px',
-                        backgroundColor: '#c5e1a5',
-                        color: '#1b5e20',
-                        boxShadow: 'none',
-                        fontSize: '0.9rem',
-                        fontWeight: 800,
-                        letterSpacing: '1px',
-                        textTransform: 'uppercase',
-                        '&:hover': { backgroundColor: '#aed581', boxShadow: 'none' },
-                        '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' }
-                    }}
-                >
-                    CONTINUE →
-                </Button>
-            </Box>
+            {!hideContinueButton && (
+                <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5' }}>
+                    <Button
+                        fullWidth
+                        disabled={!value}
+                        onClick={onNext}
+                        variant="contained"
+                        sx={{
+                            py: 2,
+                            borderRadius: '12px',
+                            backgroundColor: '#c5e1a5',
+                            color: '#1b5e20',
+                            boxShadow: 'none',
+                            fontSize: '0.9rem',
+                            fontWeight: 800,
+                            letterSpacing: '1px',
+                            textTransform: 'uppercase',
+                            '&:hover': { backgroundColor: '#aed581', boxShadow: 'none' },
+                            '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' }
+                        }}
+                    >
+                        CONTINUE →
+                    </Button>
+                </Box>
+            )}
         </Box>
     );
 };

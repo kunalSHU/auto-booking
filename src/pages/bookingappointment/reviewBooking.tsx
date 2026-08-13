@@ -110,9 +110,14 @@ const ReviewBooking: React.FC<IProps> = (props) => {
                     <Button 
                         fullWidth 
                         onClick={props.onBack}
-                        sx={{ py: 2, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
+                        variant="outlined"
+                        sx={{ 
+                            py: 2, borderRadius: '12px', color: '#666', fontWeight: 800, 
+                            borderColor: '#e0e0e0', bgcolor: 'white',
+                            '&:hover': { borderColor: '#bdbdbd', bgcolor: '#fafafa' }
+                        }}
                     >
-                        BACK
+                        ← BACK
                     </Button>
                     <Button 
                         fullWidth 

@@ -14,6 +14,7 @@ interface ITimeSelectionProps {
     nextToYourInformation: () => void;
     setSelectedTime: (time: string | null) => void;
     selectedTime: string | null;
+    hideNavigation?: boolean;
 }
 
 const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
@@ -177,29 +178,31 @@ const TimeSelection: React.FC<ITimeSelectionProps> = (props) => {
             </Box>
 
             {/* 4. Footer Buttons */}
-            <Box sx={{ pt: 3, borderTop: '1px solid #f5f5f5' }}>
-                <Stack direction="row" spacing={2}>
-                    <Button 
-                        fullWidth 
-                        onClick={props.onBack}
-                        sx={{ py: 1.5, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
-                    >
-                        BACK
-                    </Button>
-                    <Button 
-                        fullWidth 
-                        disabled={!props.selectedTime}
-                        onClick={props.nextToYourInformation}
-                        variant="contained" 
-                        sx={{ 
-                            py: 1.5, borderRadius: '12px', bgcolor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none',
-                            fontWeight: 800, '&:hover': { bgcolor: '#aed581' }
-                        }}
-                    >
-                        CONTINUE →
-                    </Button>
-                </Stack>
-            </Box>
+            {!props.hideNavigation && (
+                <Box sx={{ pt: 3, borderTop: '1px solid #f5f5f5' }}>
+                    <Stack direction="row" spacing={2}>
+                        <Button 
+                            fullWidth 
+                            onClick={props.onBack}
+                            sx={{ py: 1.5, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
+                        >
+                            BACK
+                        </Button>
+                        <Button 
+                            fullWidth 
+                            disabled={!props.selectedTime}
+                            onClick={props.nextToYourInformation}
+                            variant="contained" 
+                            sx={{ 
+                                py: 1.5, borderRadius: '12px', bgcolor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none',
+                                fontWeight: 800, '&:hover': { bgcolor: '#aed581' }
+                            }}
+                        >
+                            CONTINUE →
+                        </Button>
+                    </Stack>
+                </Box>
+            )}
         </Box>
     );
 };

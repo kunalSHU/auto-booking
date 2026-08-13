@@ -20,7 +20,7 @@ const AppFooter: React.FC = () => {
     { label: 'IN', link: '#' },
   ];
 
-  const siteMap = ['Home', 'All Services', 'About', 'Contact'];
+  const siteMap = ['Home', 'Services', 'About', 'Reviews', 'Contact'];
 
   return (
     <Box
@@ -52,8 +52,9 @@ const AppFooter: React.FC = () => {
               variant="body2"
               sx={{ color: '#888', mb: 4, lineHeight: 1.8, maxWidth: '300px' }}
             >
-              Professional mobile auto repair and maintenance — delivered
-              directly to your doorstep.
+              Professional mobile auto repair and maintenance — 
+              delivered directly to your doorstep. Wherever you are, 
+              we've got you covered.
             </Typography>
             <Stack direction="row" spacing={1.5}>
               {socialIcons.map((social) => (
@@ -126,23 +127,17 @@ const AppFooter: React.FC = () => {
             </Typography>
             <Stack spacing={2.5}>
               <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
-                647-878-4425
+                +1 (647) 878-4425
               </Typography>
               <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
-                autohub@autovivo.com
+                autovivohq@gmail.com
               </Typography>
-              <Link
-                href="#"
-                underline="none"
-                sx={{
-                  color: '#4a7c2c',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  '&:hover': { textDecoration: 'underline' },
-                }}
-              >
-                View Service Area
-              </Link>
+              <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
+                50 Upper Rouge Trail, Scarborough, ON M1B 6K4
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
+                Mon – Sat  ·  7am – 7pm
+              </Typography>
             </Stack>
           </Grid>
         </Grid>

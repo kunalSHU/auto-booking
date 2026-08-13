@@ -15,7 +15,7 @@ import AppointmentSummary from './bookingappointment/appointmentSummary';
 import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
 
-const steps = ['DATE', 'LOCATION', 'TIME', 'DETAILS', 'REVIEW', 'DONE'];
+const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
 const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -82,18 +82,18 @@ const BookingAppointment: React.FC = () => {
                     spacing={4} // This creates the "bit of space" (32px) between the components
                     alignItems="flex-start"
                     justifyContent="center"
-                    sx={{ maxWidth: '1300px', mx: 'auto' }} // Keeps the total layout from getting too wide
+                    sx={{ width: '100%', maxWidth: '1400px', mx: 'auto' }} // Made the layout slightly narrower
                 >
                     <Paper
                         elevation={0}
                         sx={{
-                            width: '100%',
-                            maxWidth: '850px',
+                            flex: '2 1 800px', // Adjusted flex-basis for a narrower main panel
+                            minWidth: 320,
                             borderRadius: { xs: 0, sm: '32px' },
                             border: '1px solid #f0f0f0',
                             boxShadow: '0px 20px 50px rgba(0,0,0,0.04)',
-                            overflow: 'hidden',
-                            bgcolor: '#fff'
+                            overflow: 'hidden', // Ensures rounded corners are respected
+                            bgcolor: '#f5f5f5' // Changed from #fff to light grey
                         }}
                     >
                         {/* Header Section */}
@@ -101,10 +101,10 @@ const BookingAppointment: React.FC = () => {
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
                                 <Box>
                                     <Typography variant="caption" sx={{ color: '#4a7c2c', fontWeight: 700, letterSpacing: '0.5px', display: 'block', mb: 0.5 }}>
-                                        {isViewingSummary ? 'Management' : `Step ${activeStep + 1} of 6`}
+                                        {isViewingSummary ? 'Management' : `Step ${activeStep + 1} of 5`}
                                     </Typography>
                                     <Typography sx={{ fontWeight: 900, fontSize: '1.5rem', fontFamily: 'serif', lineHeight: 1.2 }}>
-                                        {isViewingSummary ? 'Manage Appointment' : (activeStep === 0 ? 'Select a Date' : steps[activeStep])}
+                                        {isViewingSummary ? 'Manage Appointment' : steps[activeStep]}
                                     </Typography>
                                     {!isViewingSummary && (
                                         <Button 
@@ -125,9 +125,6 @@ const BookingAppointment: React.FC = () => {
                                         </Button>
                                     )}
                                 </Box>
-                                <IconButton onClick={resetStepper} sx={{ bgcolor: '#f5f5f5', borderRadius: '12px', '&:hover': { bgcolor: '#efefef' } }}>
-                                    <CloseIcon fontSize="small" />
-                                </IconButton>
                             </Stack>
                         </Box>
 
@@ -140,24 +137,24 @@ const BookingAppointment: React.FC = () => {
                                         <StepLabel
                                             StepIconComponent={() => (
                                                 <Box sx={{
-                                                    width: 36, height: 36, borderRadius: '12px',
+                                                    width: { xs: 12, sm: 16 }, height: { xs: 12, sm: 16 }, borderRadius: '50%',
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    border: '1.5px solid',
-                                                    borderColor: index <= activeStep ? '#4a7c2c' : '#eeeeee',
-                                                    bgcolor: index === activeStep ? '#4a7c2c' : index < activeStep ? '#f1f8e9' : 'white',
-                                                    color: index === activeStep ? 'white' : index < activeStep ? '#4a7c2c' : '#aaa',
-                                                    fontWeight: 800,
-                                                    fontSize: '0.9rem',
+                                                    border: '2px solid',
+                                                    borderColor: index <= activeStep ? '#4a7c2c' : '#e0e0e0',
+                                                    bgcolor: index <= activeStep ? '#4a7c2c' : 'white',
+                                                    color: 'white',
+                                                    fontSize: '0.7rem',
                                                     position: 'relative',
                                                     zIndex: 1,
                                                     transition: 'all 0.3s ease'
                                                 }}>
-                                                    {index < activeStep ? '✓' : index + 1}
+                                                    {/* No numbers, just a visual state */}
+                                                    {index < activeStep ? '✓' : ''}
                                                     {/* Manual Connector Line */}
                                                     {index < steps.length - 1 && (
                                                         <Box sx={{
-                                                            position: 'absolute', left: '100%', top: '50%',
-                                                            width: { xs: '30px', sm: '60px', md: '80px' },
+                                                            position: 'absolute', left: 'calc(100% + 2px)', top: '50%',
+                                                            width: { xs: '50px', sm: '100px', md: '150px' }, // Increased width to connect the dots
                                                             height: '2px', bgcolor: index < activeStep ? '#4a7c2c' : '#eee', zIndex: -1
                                                         }} />
                                                     )}
@@ -182,12 +179,29 @@ const BookingAppointment: React.FC = () => {
                                     <AppointmentSummary onBack={() => setIsViewingSummary(false)} />
                                 ) : (
                                     <>
-                                        {activeStep === 0 && <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} />}
+                                        {activeStep === 0 && (
+                                            <>
+                                                <Calendar onNext={handleNext} value={selectedDate} setValue={setSelectedDate} hideContinueButton />
+                                                {selectedDate && (
+                                                    <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #eee' }}>
+                                                        <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} hideNavigation />
+                                                    </Box>
+                                                )}
+                                                {/* Updated Continue button to not be full-width */}
+                                                <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5', display: 'flex', justifyContent: 'flex-end' }}>
+                                                    <Button 
+                                                        disabled={!selectedDate || !selectedTime} 
+                                                        onClick={handleNext} variant="contained" 
+                                                        sx={{ width: { xs: '100%', sm: 'auto' }, px: 4, py: 2, borderRadius: '12px', backgroundColor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none', fontSize: '0.9rem', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', '&:hover': { backgroundColor: '#aed581' }, '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' } }}>
+                                                        CONTINUE →
+                                                    </Button>
+                                                </Box>
+                                            </>
+                                        )}
                                         {activeStep === 1 && <UserAddress handleBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} handleNext={handleNext} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                                        {activeStep === 2 && <TimeSelection onBack={handleBack} nextToYourInformation={handleNext} selectedTime={selectedTime} setSelectedTime={setSelectedTime} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
-                                        {activeStep === 3 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
-                                        {activeStep === 4 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
-                                        {activeStep === 5 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName} />}
+                                        {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
+                                        {activeStep === 3 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
+                                        {activeStep === 4 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName} />}
                                     </>
                                 )}
                             </Box>
@@ -196,8 +210,9 @@ const BookingAppointment: React.FC = () => {
                     {/* The Booking Details Side Card */}
                     {!isViewingSummary && 
                     <Box sx={{
-                        width: { xs: '100%', lg: '60%' }, // Full width on mobile, fixed width on desktop
-                        position: { lg: 'sticky' }, // Optional: keeps it visible while scrolling on desktop
+                        flex: '1 1 360px', // Adjusted flex-basis for a narrower sidebar
+                        minWidth: 320,
+                        position: { lg: 'sticky' },
                         top: 40
                     }}>
                         <BookingDetails
