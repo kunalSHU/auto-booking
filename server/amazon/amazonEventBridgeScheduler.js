@@ -1,6 +1,6 @@
 const SchedulerClient = require("@aws-sdk/client-scheduler").SchedulerClient;
 const CreateScheduleCommand = require("@aws-sdk/client-scheduler").CreateScheduleCommand;
-const DeleteScheduleCommand = require("@aws-sdk/client-scheduler").DeleteScheduleGroupCommand;
+const DeleteScheduleCommand = require("@aws-sdk/client-scheduler").DeleteScheduleCommand;
 const dayjs = require('dayjs'); 
 const scheduler = new SchedulerClient({ region: "us-east-1" });
 const utc = require('dayjs/plugin/utc');

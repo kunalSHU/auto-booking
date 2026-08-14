@@ -4,9 +4,7 @@ const Redis = require('ioredis');
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
-const { v4: uuidv4 } = require('uuid');
-const createSchedule = require('../amazon/amazonEventBridgeScheduler');
-const deleteSchedule = require('../amazon/amazonEventBridgeScheduler');
+const { createSchedule, deleteSchedule } = require('../amazon/amazonEventBridgeScheduler');
 
 const REDIS_KEY = process.env.REDIS_ACCESS_KEY;
 
@@ -20,11 +18,12 @@ dayjs.extend(timezone);
 const client = new Redis(`rediss://default:${REDIS_KEY}@tight-feline-40242.upstash.io:6379`);
 
 router.post('/appointment', async (req, res) => {
+    const { v4: uuidv4 } = await import('uuid');
     console.log('Storing appointment in cache: ', req.body)
 
     const appointmentId = uuidv4();
     const dataToPersist = {...req.body, "appointmentId": appointmentId}; // Add a unique appointmentId to the data
-    
+    console.log(`Generated appointmentId: ${appointmentId} for email: ${req.body.email}`);
     // Calculate the expiration date and time
     const appointmentDateTime = dayjs(`${req.body.date} ${req.body.time}`);
     console.log(`Appointment date and time: ${appointmentDateTime.format()}`);
@@ -88,6 +87,7 @@ router.delete("/user/appointment", async (req, res) => {
             res.status(404).json({ success: false, message: "Appointment not found" });
             return;
         }
+        console.log(`Deleting appointment with ID: ${JSON.parse(existingRecord).appointmentId}`);
         await deleteSchedule(JSON.parse(existingRecord).appointmentId);
 
         // Delete the record from Redis

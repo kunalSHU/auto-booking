@@ -188,7 +188,7 @@ const BookingAppointment: React.FC = () => {
 
                             <Box sx={{ mt: 0 }}>
                                 {isViewingSummary ? (
-                                    <AppointmentSummary onBack={() => setIsViewingSummary(false)} />
+                                    <AppointmentSummary onBack={() => {setIsViewingSummary(false); resetStepper();}} />
                                 ) : (
                                     <>
                                         {activeStep === 0 && (
