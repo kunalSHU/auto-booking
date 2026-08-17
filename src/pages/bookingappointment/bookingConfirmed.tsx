@@ -259,8 +259,15 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
                     variant="contained" 
                     onClick={props.resetStepper}
                     sx={{
-                        py: 2, borderRadius: '12px', bgcolor: '#4a7c2c', color: '#fff', 
-                        boxShadow: 'none', fontWeight: 800, '&:hover': { bgcolor: '#3d6624' }
+                        textTransform: 'uppercase',
+                        bgcolor: '#4a6b36', 
+                        fontWeight: 700, 
+                        fontSize: '0.85rem',
+                        letterSpacing: '0.5px',
+                        py: 1.5,
+                        borderRadius: '6px',
+                        boxShadow: 'none',
+                        '&:hover': { bgcolor: '#3b542b', boxShadow: 'none' }
                     }}
                 >
                     BACK TO MAIN PAGE

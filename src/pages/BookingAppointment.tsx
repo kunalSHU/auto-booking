@@ -17,6 +17,16 @@ import ScheduleBanner from './bookingappointment/scheduleBanner'; // Adjust path
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
+const colors = {
+    primaryGreen: '#4a6b36',
+    darkText: '#111111',
+    labelGray: '#444444',
+    subtextGray: '#888888',
+    borderGray: '#e0e0e0',
+    bgLight: '#fafafa',
+    errorRed: '#d32f2f'
+};
+
 const CustomStepConnector = () => (
     <StepConnector
         sx={{
@@ -188,7 +198,7 @@ const BookingAppointment: React.FC = () => {
 
                             <Box sx={{ mt: 0 }}>
                                 {isViewingSummary ? (
-                                    <AppointmentSummary onBack={() => {setIsViewingSummary(false); resetStepper();}} />
+                                    <AppointmentSummary onBack={() => { setIsViewingSummary(false); resetStepper(); }} />
                                 ) : (
                                     <>
                                         {activeStep === 0 && (
@@ -220,24 +230,22 @@ const BookingAppointment: React.FC = () => {
 
                                                 {/* Continue Action Button */}
                                                 <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid #f5f5f5', display: 'flex', justifyContent: 'flex-end' }}>
+
                                                     <Button
                                                         disabled={!selectedDate || !selectedTime}
                                                         onClick={handleNext}
                                                         variant="contained"
                                                         sx={{
-                                                            width: { xs: '100%', sm: 'auto' },
-                                                            px: 4,
-                                                            py: 2,
-                                                            borderRadius: '12px',
-                                                            backgroundColor: '#c5e1a5',
-                                                            color: '#1b5e20',
-                                                            boxShadow: 'none',
-                                                            fontSize: '0.9rem',
-                                                            fontWeight: 800,
-                                                            letterSpacing: '1px',
                                                             textTransform: 'uppercase',
-                                                            '&:hover': { backgroundColor: '#aed581' },
-                                                            '&:disabled': { backgroundColor: '#f5f5f5', color: '#ccc' }
+                                                            bgcolor: colors.primaryGreen,
+                                                            fontWeight: 700,
+                                                            fontSize: '0.85rem',
+                                                            letterSpacing: '0.5px',
+                                                            px: 3,
+                                                            py: 1.5,
+                                                            borderRadius: '6px',
+                                                            boxShadow: 'none',
+                                                            '&:hover': { bgcolor: '#3b542b', boxShadow: 'none' }
                                                         }}
                                                     >
                                                         CONTINUE →

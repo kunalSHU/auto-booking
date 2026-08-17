@@ -247,11 +247,19 @@ const UserAddress: React.FC<IProps> = (props) => {
           <Button 
             fullWidth 
             onClick={props.handleBack}
-            variant="outlined"
+            variant="text"
             sx={{ 
-                py: 2, borderRadius: '12px', color: '#666', fontWeight: 800, 
-                borderColor: '#e0e0e0', bgcolor: 'white',
-                '&:hover': { borderColor: '#bdbdbd', bgcolor: '#fafafa' }
+              textTransform: 'uppercase',
+              color: '#444',
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              letterSpacing: '0.5px',
+              px: 3,
+              py: 1.5,
+              borderRadius: '6px',
+              border: '1px solid #e0e0e0',
+              bgcolor: 'white',
+              '&:hover': { bgcolor: '#f5f5f5', borderColor: '#cccccc' },
             }}
           >
             ← BACK
@@ -266,8 +274,16 @@ const UserAddress: React.FC<IProps> = (props) => {
             }}
             variant="contained" 
             sx={{ 
-                py: 2, borderRadius: '12px', bgcolor: '#c5e1a5', color: '#1b5e20', boxShadow: 'none',
-                fontWeight: 800, '&:hover': { bgcolor: '#aed581' }
+              textTransform: 'uppercase',
+              bgcolor: '#4a6b36',
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              letterSpacing: '0.5px',
+              px: 3,
+              py: 1.5,
+              borderRadius: '6px',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#3b542b', boxShadow: 'none' },
             }}
           >
             CONTINUE →

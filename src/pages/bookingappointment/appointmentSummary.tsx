@@ -94,8 +94,16 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                     variant="contained" 
                     disabled={loading || !searchEmail}
                     sx={{ 
-                        mt: 2, py: 1.5, borderRadius: '12px', bgcolor: '#4a7c2c', color: '#fff', 
-                        boxShadow: 'none', fontWeight: 800, '&:hover': { bgcolor: '#3d6624' }
+                        mt: 2,
+                        textTransform: 'uppercase',
+                        bgcolor: '#4a6b36', 
+                        fontWeight: 700, 
+                        fontSize: '0.85rem',
+                        letterSpacing: '0.5px',
+                        py: 1.5,
+                        borderRadius: '6px',
+                        boxShadow: 'none',
+                        '&:hover': { bgcolor: '#3b542b', boxShadow: 'none' }
                     }}
                     onClick={viewAppointment}
                 >
@@ -162,7 +170,19 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 <Button 
                     fullWidth 
                     onClick={onBack}
-                    sx={{ mt: 'auto', py: 1.5, borderRadius: '12px', color: '#666', fontWeight: 800, bgcolor: '#f5f5f5' }}
+                    sx={{ 
+                        mt: 'auto',
+                        textTransform: 'uppercase',
+                        color: '#444', 
+                        fontWeight: 700,
+                        fontSize: '0.85rem',
+                        letterSpacing: '0.5px',
+                        py: 1.5,
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '6px',
+                        bgcolor: 'white',
+                        '&:hover': { bgcolor: '#f5f5f5', borderColor: '#cccccc' }
+                    }}
                 >
                     BACK TO BOOKING
                 </Button>
