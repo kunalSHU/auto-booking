@@ -43,13 +43,12 @@
     "yup": "^1.7.1"
   },
   "scripts": {
-    "dev": "concurrently \"npm:server\" \"npm:start\"",
-    "server": "nodemon server/app.js",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+  "dev": "concurrently \"npm:server\" \"npm:client\"",
+  "server": "nodemon server/app.js",
+  "client": "react-scripts start",
+  "build": "react-scripts build",
+  "start": "node server/app.js"
+},
   "eslintConfig": {
     "extends": [
       "react-app",

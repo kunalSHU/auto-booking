@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
 const servicesRoutes = require('./routes/servicesRoutes');
@@ -46,6 +47,13 @@ app.use((req, res) => {
 
 // Centralized error-handling middleware (last)
 app.use(errorHandler);
+
+// 1. Serve the static files from the React build directory
+app.use(express.static(path.join(__dirname, '../build')));
+
+app.get('*any', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
