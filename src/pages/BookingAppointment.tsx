@@ -13,7 +13,7 @@ import UserInformation from './bookingappointment/userInformation';
 import AppointmentSummary from './bookingappointment/appointmentSummary';
 import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
-import ScheduleBanner from './bookingappointment/scheduleBanner'; // Adjust path as needed
+import ScheduleBanner from './bookingappointment/ScheduleBanner'; // Adjust path as needed
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
