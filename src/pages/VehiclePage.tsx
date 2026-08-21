@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from '../context/CartContext';
 import '../styles/VehiclePage.css';
+import AppFooter from "../Components/AppFooter";
 
 interface VehicleOption {
     make: string;
@@ -587,6 +588,7 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
                     <button className="floating-cart-dismiss" onClick={() => setIsCartDismissed(true)}>✕</button>
                 </div>
             )}
+            <AppFooter />
         </div>
     );
 };
