@@ -90,7 +90,6 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                     }}
                 />
                 <Button 
-                    fullWidth 
                     variant="contained" 
                     disabled={loading || !searchEmail}
                     sx={{ 
@@ -107,7 +106,7 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                     }}
                     onClick={viewAppointment}
                 >
-                    {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SEARCH APPOINTMENT'}
+                    {loading ? <CircularProgress size={14} sx={{ color: 'white' }} /> : 'SEARCH APPOINTMENT'}
                 </Button>
             </Box>
 

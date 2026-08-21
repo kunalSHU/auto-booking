@@ -22,6 +22,8 @@ const AppFooter: React.FC = () => {
 
   const siteMap = ['Home', 'Services', 'About', 'Reviews', 'Contact'];
 
+  const phoneNumber = '+16478784425';
+
   return (
     <Box
       component="footer"
@@ -127,7 +129,9 @@ const AppFooter: React.FC = () => {
             </Typography>
             <Stack spacing={2.5}>
               <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
-                +1 (647) 878-4425
+                <a href={`tel:${phoneNumber}`} className="phone-link">
+                  {phoneNumber}
+                </a>
               </Typography>
               <Typography variant="body2" sx={{ color: '#888', fontWeight: 500 }}>
                 autovivohq@gmail.com
