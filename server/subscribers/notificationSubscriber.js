@@ -6,7 +6,17 @@ const { emailTemplate, EmailTemplates } = require('../notificationTemplates/emai
 const { smsTemplate, SmsTemplates } = require('../notificationTemplates/sms');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const pubSubClient = new PubSub();
+let pubsubOptions = {
+  projectId: process.env.GCP_PROJECT_ID || 'auto-booking-461719'
+};
+
+// If running in production on Render, decode the Base64 environment string into a JSON object
+if (process.env.GCP_CREDS_BASE64) {
+  const decryptedJsonString = Buffer.from(process.env.GCP_CREDS_BASE64, 'base64').toString('ascii');
+  pubsubOptions.credentials = JSON.parse(decryptedJsonString);
+}
+
+const pubSubClient = new PubSub(pubsubOptions);
 const emailSubscriptionName = 'email-notification-dev-sub';
 const smsSubscriptionName = 'sms-notification-dev-sub';
 
