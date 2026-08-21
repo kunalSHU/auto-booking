@@ -6,16 +6,20 @@ const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 const { createSchedule, deleteSchedule } = require('../amazon/amazonEventBridgeScheduler');
 
-const REDIS_KEY = process.env.REDIS_ACCESS_KEY;
+// Lazy-load client creation or provide an immediate lookup safely
+const getRedisClient = () => {
+    const key = process.env.REDIS_ACCESS_KEY;
+    if (!key) {
+        console.error("[REDIS ERROR] CRITICAL: Redis access key is missing from environment variables!");
+    }
+    return new Redis(`rediss://default:${key}@tight-feline-40242.upstash.io:6379`);
+};
 
-if (!REDIS_KEY) {
-    console.error("Redis access key is not available")
-}
+// Instantiate the live client 
+const client = getRedisClient();
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-const client = new Redis(`rediss://default:${REDIS_KEY}@tight-feline-40242.upstash.io:6379`);
 
 router.post('/appointment', async (req, res) => {
     const { v4: uuidv4 } = await import('uuid');
