@@ -6,6 +6,7 @@ const publishSmsNotificationUrl = "/api/pubsub/sms-notification";
 const storeDataInRedisCacheUrl = "/api/redis/appointment";
 const getAppointmentInRedisCacheUrl = "/api/redis/user/appointment";
 const generateOtpUrl = "/api/otp/generate";
+const verifyOtpUrl = "/api/otp/verify";
 
 const parseJwt = (token: any) => {
   try {
@@ -121,6 +122,15 @@ export const generateOtp = async (data: any) => {
     try {
         console.log("This is the data in generateOtp method: ", data)
         return await axios.post(generateOtpUrl, data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const verifyOtp = async (data: any) => {
+    try {
+        console.log("This is the data in verifyOtp method: ", data)
+        return await axios.post(verifyOtpUrl, data)
     } catch (error) {
         console.log(error)
     }
