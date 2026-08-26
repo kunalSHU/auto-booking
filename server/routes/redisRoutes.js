@@ -103,4 +103,18 @@ router.delete("/user/appointment", async (req, res) => {
     }
 })
 
+const storeOtpInCache = async (email, otp) => {
+    const key = `otp:lock:${email}`;
+
+    try {
+        // Store the OTP in Redis with a 2-minute expiration
+        await client.set(key, JSON.stringify({ otp: otp }), 'EX', 120);
+        return { success: true, message: "OTP stored successfully" };
+    } catch (err) {
+        console.log("Error storing OTP in cache: ", err)
+        return { success: false, error: "Internal server error" };
+    }
+}
+
 module.exports = router;
+module.exports.storeOtpInCache = storeOtpInCache;

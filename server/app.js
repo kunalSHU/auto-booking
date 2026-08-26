@@ -31,6 +31,7 @@ const paymentsRoutes = require('./routes/paymentsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const pubsubRoutes = require('./routes/pubsubRoutes');
 const redisRoutes = require('./routes/redisRoutes');
+const otpRoutes = require('./routes/otpRoutes');
 const authRoutes = require('./routes/authRoutes');
 const listenForMessages = require('./subscribers/notificationSubscriber');
 const { protect } = require('./middleware/authMiddleware');
@@ -59,7 +60,7 @@ app.use('/api/payments', protect, paymentsRoutes);
 app.use('/api/users', protect, userRoutes);
 app.use('/api/pubsub', protect, pubsubRoutes);
 app.use('/api/redis', protect, redisRoutes);
-
+app.use('/api/otp', protect, otpRoutes);
 // 1. Serve the static files from the React build directory
 app.use(express.static(path.join(__dirname, '../build')));
 

@@ -5,6 +5,7 @@ const publishEmailNotifcationUrl = "/api/pubsub/email-notification";
 const publishSmsNotificationUrl = "/api/pubsub/sms-notification";
 const storeDataInRedisCacheUrl = "/api/redis/appointment";
 const getAppointmentInRedisCacheUrl = "/api/redis/user/appointment";
+const generateOtpUrl = "/api/otp/generate";
 
 const parseJwt = (token: any) => {
   try {
@@ -111,6 +112,15 @@ export const publishSmsNotifcation = async (data: ISMSNotification) => {
     try {
         console.log("This is the data in publishSmsNotification method: ", data)
         return await axios.post(publishSmsNotificationUrl, data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const generateOtp = async (data: any) => {
+    try {
+        console.log("This is the data in generateOtp method: ", data)
+        return await axios.post(generateOtpUrl, data)
     } catch (error) {
         console.log(error)
     }

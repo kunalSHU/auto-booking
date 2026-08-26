@@ -151,8 +151,12 @@ const sendEmailLogic = async (payload) => {
         payload.subject = emailTemplate.customerEmail.subject;
         payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
     }
+    sendEmail(payload);
+}
 
-    const input = { // SendEmailRequest
+const sendEmail = async (payload) => {
+
+        const input = { // SendEmailRequest
         Source: "janarthkulenthiranrealtor@gmail.com", // required TODO: Ensure this email is verified in AWS SES
         Destination: { // Destination
             ToAddresses: [ // AddressList
@@ -182,7 +186,7 @@ const sendEmailLogic = async (payload) => {
         console.error("[Email Worker] SES Error:", error);
         throw error;
     }
-
 }
 
 module.exports = listenForMessages;
+module.exports.sendEmail = sendEmail;

@@ -1,7 +1,7 @@
 import { Box, Typography, TextField, Button, InputAdornment, CircularProgress, Alert } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useState } from 'react'
-import { getAppointmentInRedisCache, cancelAppointmentInRedisCache } from '../../apiServer/api';
+import { getAppointmentInRedisCache, cancelAppointmentInRedisCache, generateOtp } from '../../apiServer/api';
 
 interface IProps {
     onBack?: () => void;
@@ -29,12 +29,20 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 return;
             }
 
+            // Store the appointment data in localStorage and send OTP to user email here
+            // since appointment is found
+            localStorage.setItem('appointment', JSON.stringify(res.data.appointment));
+
             // Assuming the API returns data in res.data based on your other components
-            setAppointment(res.data.appointment);
+            const otpResponse = await generateOtp({ email: searchEmail });
+            console.log("OTP generation response:", otpResponse);
+
+            // Set appointment after verifying otp
+            // setAppointment(res.data.appointment);
             console.log("Appointment found:", res.data.appointment);
         } catch (err: any) {
             console.error("Error fetching appointment:", err);
-            setError("Eror fetching appointment. Please try again.");
+            setError("Error fetching appointment. Please try again.");
             setAppointment(null);
         } finally {
             setLoading(false);
