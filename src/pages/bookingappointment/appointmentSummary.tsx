@@ -82,6 +82,8 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 setOtpCode('');
                 setOtpError(null);
                 setSuccess("OTP verified successfully. You can now view your appointment.");
+            } else {
+                setOtpError("Invalid OTP. Please try again.");
             }
 
             setResendTimer(60);
@@ -140,7 +142,7 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                 />
                 <Button
                     variant="contained"
-                    disabled={loading || !searchEmail}
+                    disabled={loading || !searchEmail || showAppointment}
                     sx={{
                         mt: 2,
                         textTransform: 'uppercase',
