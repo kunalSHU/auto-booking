@@ -151,7 +151,7 @@ const sendEmailLogic = async (payload) => {
         payload.subject = emailTemplate.customerEmail.subject;
         payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
     }
-    sendEmail(payload);
+    return await sendEmail(payload);
 }
 
 const sendEmail = async (payload) => {
