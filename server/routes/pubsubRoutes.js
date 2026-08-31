@@ -3,7 +3,9 @@ const router = express.Router();
 const { PubSub } = require('@google-cloud/pubsub');
 
 // Initialize PubSub client
-const pubSubClient = new PubSub();
+const pubSubClient = new PubSub({
+    projectId: process.env.GCP_PROJECT_ID || 'auto-booking-461719', // Replace with your default project ID if needed
+});
 const emailTopicName = 'email-notification-dev';
 const smsTopicName = 'sms-notification-dev';
 

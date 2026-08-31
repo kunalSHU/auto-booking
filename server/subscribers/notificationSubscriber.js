@@ -6,7 +6,9 @@ const { emailTemplate, EmailTemplates } = require('../notificationTemplates/emai
 const { smsTemplate, SmsTemplates } = require('../notificationTemplates/sms');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const pubSubClient = new PubSub();
+const pubSubClient = new PubSub({
+    projectId: process.env.GCP_PROJECT_ID || 'auto-booking-461719', // Replace with your default project ID if needed
+});
 const emailSubscriptionName = 'email-notification-dev-sub';
 const smsSubscriptionName = 'sms-notification-dev-sub';
 

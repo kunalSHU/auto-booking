@@ -99,6 +99,7 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
         try {
             await cancelAppointmentInRedisCache({ email: searchEmail });
             setAppointment(null);
+            setShowAppointment(false);
             setSuccess("Your appointment has been cancelled successfully.");
         } catch (err: any) {
             console.error("Error cancelling appointment:", err);
@@ -170,13 +171,13 @@ const AppointmentSummary: React.FC<IProps> = ({ onBack }) => {
                         APPOINTMENT FOUND
                     </Typography>
                     <Typography sx={{ fontWeight: 800, fontSize: '1.1rem' }}>
-                        {appointment.date}
+                        {appointment?.date}
                     </Typography>
                     <Typography sx={{ color: '#4a7c2c', fontWeight: 700 }}>
-                        at {appointment.time}
+                        at {appointment?.time}
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 1, color: '#666' }}>
-                        Status: <b>{appointment.status?.toUpperCase()}</b>
+                        Status: <b>{appointment?.status?.toUpperCase()}</b>
                     </Typography>
                     <Button
                         fullWidth
