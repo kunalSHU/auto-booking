@@ -2,19 +2,17 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-let fetch;
+const fetchFn = (...args) => (globalThis.fetch ? globalThis.fetch(...args) : import('node-fetch').then(m => m.default(...args)));
 
-(async () => {
-  const module = await import('node-fetch');
-  fetch = module.default;
-})();
+// In-memory cache for vehicle data (makes, models, trims)
+const vehicleCache = new Map();
 
-// Helper function to fetch with timeout
-const fetchWithTimeout = (url, options = {}, timeoutMs = 10000) => {
+// Helper function to fetch with timeout (20s to allow for Cloud Run cold starts)
+const fetchWithTimeout = (url, options = {}, timeoutMs = 20000) => {
   return Promise.race([
-    fetch(url, options),
+    fetchFn(url, options),
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
+      setTimeout(() => reject(new Error(`External cars API timeout after ${timeoutMs}ms`)), timeoutMs)
     )
   ]);
 };
@@ -23,22 +21,21 @@ router.get("/", async (req, res) => {
   try {
     const { year, make, model } = req.query;
 
-    console.log("--->" + year );
-    console.log("--->" + make );
-    console.log("--->" + model );
-
+    console.log(`---> Vehicle query: year=${year}, make=${make || 'none'}, model=${model || 'none'}`);
 
     if (!year) {
       return res.status(400).json({ error: "year is required" });
     }
 
-    if (year) {
-      console.log("make found: " + year);
+    const cacheKey = `y=${year}&m=${make || ''}&mod=${model || ''}`;
+    if (vehicleCache.has(cacheKey)) {
+      console.log(`[Cache Hit] Serving vehicle data for ${cacheKey}`);
+      return res.json(vehicleCache.get(cacheKey));
     }
 
     // STEP 3: YEAR + MAKE + MODELS -> TRIMS
     if (make && model) {
-      const r = await fetch(
+      const r = await fetchWithTimeout(
         `https://carsapi-7lpja5voja-uc.a.run.app/cars/trims-copy?year=${year}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`
       );
 
@@ -68,79 +65,82 @@ router.get("/", async (req, res) => {
         model_year: Number(t.model_year),
       }));
 
+      vehicleCache.set(cacheKey, result);
       return res.json(result);
     }
 
-  // STEP 2: YEAR + MAKE -> MODELS
-  if (make) {
-    const r = await fetch(
-      `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${encodeURIComponent(make)}`
-    );
+    // STEP 2: YEAR + MAKE -> MODELS
+    if (make) {
+      const r = await fetchWithTimeout(
+        `https://carsapi-7lpja5voja-uc.a.run.app/cars/models?year=${year}&make=${encodeURIComponent(make)}`
+      );
 
-    if (!r.ok) {
-      console.error(`External API error: ${r.status} ${r.statusText}`);
-      return res.status(502).json({ error: `External API error: ${r.status}` });
+      if (!r.ok) {
+        console.error(`External API error: ${r.status} ${r.statusText}`);
+        return res.status(502).json({ error: `External API error: ${r.status}` });
+      }
+
+      let data;
+      try {
+        data = await r.json();
+      } catch (parseError) {
+        console.error(`Failed to parse API response:`, parseError);
+        return res.status(502).json({ error: "Invalid response from external API" });
+      }
+
+      if (!data || !data.models || data.models.length === 0) {
+        console.warn(`No models found for year ${year}, make ${make}`);
+        console.log('API Response:', JSON.stringify(data, null, 2));
+        return res.json([]);
+      }
+
+      const result = data.models.map(t => ({
+        make: t.make,
+        model: t,
+        model_trim: null,
+        model_year: Number(t.model_year),
+      }));
+
+      vehicleCache.set(cacheKey, result);
+      return res.json(result);
     }
 
-    let data;
-    try {
-      data = await r.json();
-    } catch (parseError) {
-      console.error(`Failed to parse API response:`, parseError);
-      return res.status(502).json({ error: "Invalid response from external API" });
+    // STEP 1: YEAR ONLY -> MAKES
+    if (year) {
+      const r = await fetchWithTimeout(
+        `https://carsapi-7lpja5voja-uc.a.run.app/cars/makes?year=${year}`
+      );
+
+      if (!r.ok) {
+        console.error(`External API error: ${r.status} ${r.statusText}`);
+        return res.status(502).json({ error: `External API error: ${r.status}` });
+      }
+
+      let data;
+      try {
+        data = await r.json();
+      } catch (parseError) {
+        console.error(`Failed to parse API response:`, parseError);
+        return res.status(502).json({ error: "Invalid response from external API" });
+      }
+
+      console.log(`API Response for year ${year}: found ${data.makes?.length || 0} makes`);
+
+      if (!data || !data.makes || data.makes.length === 0) {
+        console.warn(`No makes found for year ${year}. API may not support this year yet.`);
+        return res.json([]);
+      }
+
+      const result = data.makes.map(m => ({
+        make: m,
+        model: null,
+        model_trim: null,
+        model_year: Number(year),
+      }));
+
+      vehicleCache.set(cacheKey, result);
+      return res.json(result);
     }
-
-    if (!data || !data.models || data.models.length === 0) {
-      console.warn(`No models found for year ${year}, make ${make}`);
-      console.log('API Response:', JSON.stringify(data, null, 2));
-      return res.json([]);
-    }
-
-    const result = data.models.map(t => ({
-      make: t.make,
-      model: t,
-      model_trim: null,
-      model_year: Number(t.model_year),
-    }));
-
-    return res.json(result);
-  }
-
-  // STEP 1: YEAR ONLY -> MAKES
-  if (year) {
-    const r = await fetch(
-      `https://carsapi-7lpja5voja-uc.a.run.app/cars/makes?year=${year}`
-    );
-
-    if (!r.ok) {
-      console.error(`External API error: ${r.status} ${r.statusText}`);
-      return res.status(502).json({ error: `External API error: ${r.status}` });
-    }
-
-    let data;
-    try {
-      data = await r.json();
-    } catch (parseError) {
-      console.error(`Failed to parse API response:`, parseError);
-      return res.status(502).json({ error: "Invalid response from external API" });
-    }
-
-    console.log("API Response:", JSON.stringify(data, null, 2));
-
-    if (!data || !data.makes || data.makes.length === 0) {
-      console.warn(`No makes found for year ${year}. API may not support this year yet.`);
-      return res.json([]);
-    }
-
-    const result = data.makes.map(m => ({
-      make: m,
-      model: null,
-      model_trim: null,
-      model_year: Number(year),
-    }));
-
-    return res.json(result);
-  }
   } catch (error) {
     console.error("Error in vehicle route:", error);
     return res.status(504).json({ error: error.message || "Request timeout or external API error" });
@@ -189,7 +189,7 @@ router.post("/", async (req, res, next) => {
     let vehicleDetails = { make, model, year, trim };
     if (vin) {
       try {
-        const vinResponse = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
+        const vinResponse = await fetchFn(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
         const vinData = await vinResponse.json();
 
         // console.log(vinData);
