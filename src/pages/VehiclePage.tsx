@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from '../context/CartContext';
 import '../styles/VehiclePage.css';
 import AppFooter from "../Components/AppFooter";
+import apiClient from "../apiServer/api";
 
 interface VehicleOption {
     make: string;
@@ -68,14 +69,8 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
         const fetchMakes = async () => {
             setLoadingMakes(true);
             try {
-                const response = await fetch(`/api/vehicle?year=${vehicleData.year}`);
-                if (!response.ok) {
-                    console.error(`Error fetching makes: ${response.status} ${response.statusText}`);
-                    setMakes([]);
-                    return;
-                }
-                const data = await response.json();
-                setMakes(data);
+                const response = await apiClient.get<VehicleOption[]>(`/api/vehicle?year=${vehicleData.year}`);
+                setMakes(response.data);
 
                 if (!isAutoFilling.current) {
                     setModels([]); setTrims([]);
@@ -99,14 +94,8 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
         const fetchModels = async () => {
             setLoadingModels(true);
             try {
-                const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
-                if (!response.ok) {
-                    console.error(`Error fetching models: ${response.status} ${response.statusText}`);
-                    setModels([]);
-                    return;
-                }
-                const data = await response.json();
-                setModels(data);
+                const response = await apiClient.get<VehicleOption[]>(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}`);
+                setModels(response.data);
 
                 if (!isAutoFilling.current) {
                     setTrims([]);
@@ -130,13 +119,8 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
         const fetchTrims = async () => {
             setLoadingTrims(true);
             try {
-                const response = await fetch(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}&model=${vehicleData.model}`);
-                if (!response.ok) {
-                    console.error(`Error fetching trims: ${response.status} ${response.statusText}`);
-                    setTrims([]);
-                    return;
-                }
-                const data = await response.json();
+                const response = await apiClient.get(`/api/vehicle?year=${vehicleData.year}&make=${vehicleData.make}&model=${vehicleData.model}`);
+                const data = response.data;
                 setTrims(Array.isArray(data) ? data : [data]);
 
                 if (!isAutoFilling.current) {
@@ -167,12 +151,8 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
         isAutoFilling.current = true;
 
         try {
-            const response = await fetch('/api/vehicle', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ vin: vehicleData.vin }),
-            });
-            const result = await response.json();
+            const response = await apiClient.post('/api/vehicle', { vin: vehicleData.vin });
+            const result = response.data;
 
             if (result.vehicle) {
                 const { make, model, year, trim } = result.vehicle;
@@ -203,14 +183,8 @@ const VehiclePage: React.FC<VehiclePageProps> = ({ onCartClick }) => {
     const handleContinue = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch('/api/vehicle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(vehicleData),
-            });
-            const result = await response.json();
+            const response = await apiClient.post('/api/vehicle', vehicleData);
+            const result = response.data;
 
             // Save location to session storage as per template logic
             sessionStorage.setItem('autovivo_vehicle', JSON.stringify({

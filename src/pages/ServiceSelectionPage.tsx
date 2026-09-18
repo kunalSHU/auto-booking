@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart, CartItem, CartService } from '../context/CartContext';
 import '../styles/ServiceSelectionPage.css';
+import apiClient from '../apiServer/api';
 
 interface VehicleData {
   vin: string;
@@ -85,8 +86,8 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('/api/services');
-        const data = await response.json();
+        const response = await apiClient.get('/api/services');
+        const data = response.data;
         if (data.services) {
           setServices(data.services);
           const dynamicCats = ['All', 'Promo', ...Array.from(new Set(data.services.map((s: any) => s.cat)))];
@@ -107,23 +108,18 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
 
     const syncEstimates = async () => {
       try {
-        const response = await fetch('/api/services/estimate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            vehicle: {
-              vin: vehicle.vin,
-              make: vehicle.make,
-              model: vehicle.model,
-              year: vehicle.year,
-              trim: vehicle.trim || '',
-            },
-            serviceTitle: services[0].name, // Trigger for the vehicle
-          }),
+        const response = await apiClient.post('/api/services/estimate', {
+          vehicle: {
+            vin: vehicle.vin,
+            make: vehicle.make,
+            model: vehicle.model,
+            year: vehicle.year,
+            trim: vehicle.trim || '',
+          },
+          serviceTitle: services[0].name, // Trigger for the vehicle
         });
 
-        if (!response.ok) throw new Error('Sync failed');
-        const data = await response.json();
+        const data = response.data;
 
         if (data.estimates) {
           setEstimates(prev => ({ ...prev, ...data.estimates }));
@@ -164,21 +160,17 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ onCartClick
     setEstimates(prev => ({ ...prev, [serviceName]: 'Gathering data...' }));
     
     try {
-      const response = await fetch('/api/services/estimate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          vehicle: {
-            vin: vehicle!.vin,
-            make: vehicle!.make,
-            model: vehicle!.model,
-            year: vehicle!.year,
-            trim: vehicle!.trim || '',
-          },
-          serviceTitle: serviceName,
-        }),
+      const response = await apiClient.post('/api/services/estimate', {
+        vehicle: {
+          vin: vehicle!.vin,
+          make: vehicle!.make,
+          model: vehicle!.model,
+          year: vehicle!.year,
+          trim: vehicle!.trim || '',
+        },
+        serviceTitle: serviceName,
       });
-      const data = await response.json();
+      const data = response.data;
       if (data.estimate) {
         setEstimates(prev => ({ ...prev, [serviceName]: data.estimate }));
       }
