@@ -29,7 +29,7 @@ router.post('/appointment', async (req, res) => {
     const dataToPersist = {...req.body, "appointmentId": appointmentId}; // Add a unique appointmentId to the data
     console.log(`Generated appointmentId: ${appointmentId} for email: ${req.body.email}`);
     // Calculate the expiration date and time
-    const appointmentDateTime = dayjs(`${req.body.date} ${req.body.time}`);
+    const appointmentDateTime = dayjs.tz(`${req.body.date} ${req.body.time}`, 'America/New_York');
     console.log(`Appointment date and time: ${appointmentDateTime.format()}`);
 
     // Add 5400 seconds (90 minutes)
