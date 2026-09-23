@@ -61,8 +61,15 @@ const BookingAppointment: React.FC = () => {
     });
     const [isViewingSummary, setIsViewingSummary] = useState(false);
 
-    const handleNext = () => setActiveStep((prev) => prev + 1);
-    const handleBack = () => setActiveStep((prev) => prev - 1);
+    const handleNext = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveStep((prev) => prev + 1);
+    };
+    const handleBack = () => { 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveStep((prev) => prev - 1);
+    };
+
     const resetStepper = () => {
         setActiveStep(0);
         setSelectedDate(null);
