@@ -82,12 +82,12 @@ const BookingAppointment: React.FC = () => {
         const storedVehicle = sessionStorage.getItem('autovivo_vehicle');
         if (storedVehicle) {
             const selectedVehicle: string = JSON.parse(storedVehicle);
-            setSelectedVehicle(selectedVehicle ? selectedVehicle : {});
+            setSelectedVehicle(selectedVehicle);
         }   
     }, [])
 
     // Direct Route Guard: Redirect back to home if no vehicle exists
-    if (selectedVehicle) {
+    if (!selectedVehicle) {
         console.log('No vehicle found in sessionStorage. Redirecting to home page.');
         return <Navigate to="/" replace />;
     }
