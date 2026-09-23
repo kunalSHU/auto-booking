@@ -17,9 +17,9 @@ router.post('/email-notification', async (req, res) => {
     console.log(req.body)
 
     // Securely add the CC list here on the server side
+    // Note: ccEmail is NOT part of the Avro schema — handle CC logic in the subscriber instead
     const notificationPayload = {
         ...req.body,
-        ccEmail: INTERNAL_CC_LIST
     };
     const dataBuffer = Buffer.from(JSON.stringify(notificationPayload));
     publishToTopic(emailTopicName, dataBuffer, res);

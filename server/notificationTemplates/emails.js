@@ -9,11 +9,11 @@ const BUSINESS_NAME = "AutoVivo";
 const emailTemplate = {
     customerEmail: {
         subject: "Your AutoVivo Booking is Confirmed",
-        body: (customerName, serviceDate, timeWindow, serviceAddress, notes) => `Hi ${customerName},
+        body: (customerName, serviceDate, timeWindow, serviceAddress, notes, vehicleYear, vehicleMakeModel, vehicleTrim) => `Hi ${customerName},
 Your booking with AutoVivo has been confirmed.
 Booking Details
 • Service: {{ServiceName}}
-• Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}
+• Vehicle: ${vehicleYear} ${vehicleMakeModel} ${vehicleTrim}
 • Date: ${serviceDate}
 • Arrival Window: ${timeWindow}
 • Service Location: ${serviceAddress}
@@ -35,12 +35,12 @@ Thank you for choosing AutoVivo.
     },
     technicianEmail: {
         subject: (serviceDate, timeWindow) => `New Job Assigned – ${serviceDate} - ${timeWindow}`,
-        body: (customerName, customerPhone, serviceDate, timeWindow, serviceAddress, notes) => `Hi {{TechnicianName}},
+        body: (customerName, customerPhone, serviceDate, timeWindow, serviceAddress, notes, vehicleYear, vehicleMakeModel, vehicleTrim) => `Hi {{TechnicianName}},
 You’ve been assigned a new mobile service job.
 Job Info
 • Customer: ${customerName}
 • Phone: ${customerPhone}
-• Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}
+• Vehicle: ${vehicleYear} ${vehicleMakeModel} ${vehicleTrim}
 • Service: {{ServiceName}}
 • Date & Time:  ${serviceDate} at ${timeWindow}
 • Address: ${serviceAddress}
@@ -51,7 +51,7 @@ ${BUSINESS_NAME}`
     },
     adminEmail: {
         subject: (customerName) => `New Booking Received – ${customerName}`,
-        body: (customerName, customerPhone, customerEmail, serviceDate, timeWindow, serviceAddress, notes) => `Hi Admin,
+        body: (customerName, customerPhone, customerEmail, serviceDate, timeWindow, serviceAddress, notes, vehicleYear, vehicleMakeModel, vehicleTrim) => `Hi Admin,
 A new booking has been created.
 Customer Information
 • Customer: ${customerName}
@@ -59,7 +59,7 @@ Customer Information
 • Email: ${customerEmail}
 Booking Details
 • Service: {{ServiceName}}
-• Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}
+• Vehicle: ${vehicleYear} ${vehicleMakeModel} ${vehicleTrim}
 • Date: ${serviceDate}
 • Arrival Window: ${timeWindow}
 • Location: ${serviceAddress}

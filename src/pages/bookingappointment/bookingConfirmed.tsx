@@ -14,6 +14,7 @@ interface IProps {
     address: string;
     notes: string;
     resetStepper: () => void;
+    selectedVehicle: any;
 }
 
 export interface IRedisCache {
@@ -43,6 +44,9 @@ export interface ISMSNotification {
     toNumber: string;
     templateType: string;
     customerName?: string;
+    vehicleYear?: string;
+    vehicleMakeModel?: string;
+    vehicleTrim?: string;
 }
 
 export interface IPii {
@@ -56,12 +60,12 @@ export interface IEmailNotification {
     templateType: string;
     date: string;
     time: string;
-    serviceAddress?: string | null | { string: string };
-    notes?: string | null | { string: string };
-    vehicleYear?: string | null | { string: string };
-    vehicleMake?: string | null | { string: string };
-    vehicleModel?: string | null | { string: string };
-    estimatedPrice?: string | null | { string: string };
+    serviceAddress?: { string: string } | null;
+    notes?: { string: string } | null;
+    vehicleYear?: { string: string } | null;
+    vehicleMakeModel?: { string: string } | null;
+    vehicleTrim?: { string: string } | null;
+    estimatedPrice?: { string: string } | null;
 }
 
     // Helper for the Section Cards
@@ -110,9 +114,9 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             time: props.selectedTime || '',
             serviceAddress: props.address ? { string: props.address } : null,
             notes: props.notes ? { string: props.notes } : null,
-            vehicleYear: null,
-            vehicleMake: null,
-            vehicleModel: null,
+            vehicleYear: props.selectedVehicle?.year ? { string: String(props.selectedVehicle.year) } : null,
+            vehicleMakeModel: props.selectedVehicle?.make && props.selectedVehicle?.model ? { string: `${props.selectedVehicle.make} ${props.selectedVehicle.model}` } : null,
+            vehicleTrim: props.selectedVehicle?.trim ? { string: props.selectedVehicle.trim } : null,
             estimatedPrice: null
         };
 
@@ -140,7 +144,10 @@ const BookingConfirmed: React.FC<IProps> = (props) => {
             date: props.selectedDate,
             time: props.selectedTime,
             templateType: SmsTemplates.customerConfirmationSms,
-            customerName: props.customerName
+            customerName: props.customerName,
+            vehicleYear: props.selectedVehicle?.year,
+            vehicleMakeModel: props.selectedVehicle?.make && props.selectedVehicle?.model ? `${props.selectedVehicle.make} ${props.selectedVehicle.model}` : undefined,
+            vehicleTrim: props.selectedVehicle?.trim
         };
         smsNotificationApiCall(customerConfirmationSms);
     }

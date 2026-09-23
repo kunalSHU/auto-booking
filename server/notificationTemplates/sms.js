@@ -7,17 +7,17 @@ const BUSINESS_NAME = "AutoVivo";
 
 const smsTemplate = {
     customerConfirmationSms: {
-        body: (customerName, serviceDate, timeWindow) => `${BUSINESS_NAME}: Hi ${customerName}, your {{ServiceName}} is confirmed for ${serviceDate} during ${timeWindow}.
-Vehicle: {{VehicleYear}} {{VehicleMake}} {{VehicleModel}}
+        body: (customerName, serviceDate, timeWindow, vehicleYear, vehicleMakeModel, vehicleTrim) => `${BUSINESS_NAME}: Hi ${customerName}, your {{ServiceName}} is confirmed for ${serviceDate} during ${timeWindow}.
+Vehicle: ${vehicleYear} ${vehicleMakeModel} ${vehicleTrim}
 Technician: {{TechnicianName}}
 Manage booking:
 {{ManageBookingLink}}
 `
     },
     adminSms: {
-        body: (customerName, serviceDate, timeWindow) => `New booking 📥
+        body: (customerName, serviceDate, timeWindow, vehicleYear, vehicleMakeModel, vehicleTrim) => `New booking 📥
 ${customerName} | ${serviceDate} ${timeWindow}
-{{VehicleMake}} {{VehicleModel}}
+Vehicle: ${vehicleYear} ${vehicleMakeModel} ${vehicleTrim}
 `
     }
 }

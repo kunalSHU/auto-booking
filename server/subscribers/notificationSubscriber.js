@@ -96,7 +96,7 @@ const sendSmsLogic = async (payload) => {
 
     console.log("Here is the payload: ", payload)
     if (payload.templateType === SmsTemplates.customerConfirmationSms) {
-        payload.message = smsTemplate.customerConfirmationSms.body(payload.customerName, payload.date, payload.time);
+        payload.message = smsTemplate.customerConfirmationSms.body(payload.customerName, payload.date, payload.time, payload.vehicleYear, payload.vehicleMakeModel, payload.vehicleTrim);
     }
 
     // Perform placeholder replacement on the generated message body
@@ -143,15 +143,15 @@ const sendEmailLogic = async (payload) => {
 
     if (payload.templateType === EmailTemplates.adminEmail) {
         payload.subject = emailTemplate.adminEmail.subject(payload.pii.customerName);
-        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.pii.toEmail, payload.date, payload.time, address, notes);
+        payload.message = emailTemplate.adminEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.pii.toEmail, payload.date, payload.time, address, notes, payload.vehicleYear.string, payload.vehicleMakeModel.string, payload.vehicleTrim.string);
         payload.pii.toEmail = "janarthkulenthiranrealtor@gmail.com";
     } else if (payload.templateType === EmailTemplates.technicianEmail) {
         payload.subject = emailTemplate.technicianEmail.subject(payload.date, payload.time);
-        payload.message = emailTemplate.technicianEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.date, payload.time, address, notes);
+        payload.message = emailTemplate.technicianEmail.body(payload.pii.customerName, payload.pii.customerPhone, payload.date, payload.time, address, notes, payload.vehicleYear.string, payload.vehicleMakeModel.string, payload.vehicleTrim.string);
         payload.pii.toEmail = "autotechnicianx@gmail.com";
     } else if (payload.templateType === EmailTemplates.customerEmail) {
         payload.subject = emailTemplate.customerEmail.subject;
-        payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes);
+        payload.message = emailTemplate.customerEmail.body(payload.pii.customerName, payload.date, payload.time, address, notes, payload.vehicleYear.string, payload.vehicleMakeModel.string, payload.vehicleTrim.string);
     }
     return await sendEmail(payload);
 }

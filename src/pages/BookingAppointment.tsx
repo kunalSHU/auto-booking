@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     Box, Typography, Stepper, Step, StepLabel, Stack, Paper, Button, StepConnector, stepConnectorClasses
 } from '@mui/material';
@@ -14,6 +14,7 @@ import AppointmentSummary from './bookingappointment/appointmentSummary';
 import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
 import ScheduleBanner from './bookingappointment/ScheduleBanner'; // Adjust path as needed
+import VehicleInfoCard from './bookingappointment/VehicleInfoCard';
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
@@ -54,6 +55,7 @@ const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [selectedVehicle, setSelectedVehicle] = useState<any>({});
     const [userInformation, setUserInformation] = useState({
         fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: ''
     });
@@ -67,6 +69,11 @@ const BookingAppointment: React.FC = () => {
         setUserInformation({ fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: '' });
         setSelectedTime(null);
     };
+
+    useMemo(() => {
+        const selectedVehicle = JSON.parse(sessionStorage.getItem('autovivo_vehicle') || '[]');
+        setSelectedVehicle(selectedVehicle ? selectedVehicle : {});
+    }, [])
 
     return (
         <>
@@ -98,13 +105,18 @@ const BookingAppointment: React.FC = () => {
                     justifyContent="center"
                     sx={{ width: '100%', maxWidth: '1400px', mx: 'auto' }}
                 >
+                    {/* Vehicle Info Card + Main Step Form Card */}
+                    <Box sx={{ flex: '2 1 800px', width: '100%', minWidth: { xs: '100%', sm: 320 } }}>
+                        {/* Vehicle Info Card */}
+                        {!isViewingSummary && (
+                            <VehicleInfoCard year={selectedVehicle?.year} make={selectedVehicle?.make} model={selectedVehicle?.model} trim={selectedVehicle?.trim} color={selectedVehicle?.color} />
+                        )}
+
                     {/* Main Step Form Card */}
                     <Paper
                         elevation={0}
                         sx={{
-                            flex: '2 1 800px',
                             width: '100%',
-                            minWidth: { xs: '100%', sm: 320 },
                             borderRadius: { xs: '16px', sm: '32px' },
                             border: '1px solid #f0f0f0',
                             boxShadow: '0px 20px 50px rgba(0,0,0,0.04)',
@@ -256,12 +268,13 @@ const BookingAppointment: React.FC = () => {
                                         {activeStep === 1 && <UserAddress handleBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} handleNext={handleNext} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} />}
                                         {activeStep === 2 && <UserInformation nextToReviewBooking={handleNext} onBack={handleBack} userInformation={userInformation} setUserInformation={setUserInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
                                         {activeStep === 3 && <ReviewBooking onBack={handleBack} nextToBookingConfirmed={handleNext} userInformation={userInformation} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} selectedTime={selectedTime} />}
-                                        {activeStep === 4 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName} />}
+                                        {activeStep === 4 && <BookingConfirmed activeStep={activeStep} resetStepper={resetStepper} selectedDate={selectedDate?.format('dddd, MMMM D, YYYY')} notes={userInformation.additionalNotes} selectedTime={selectedTime} email={userInformation.email} address={userInformation.address} phoneNumber={userInformation.phoneNumber} customerName={userInformation.fullName} selectedVehicle={selectedVehicle}/>}
                                     </>
                                 )}
                             </Box>
                         </Box>
                     </Paper>
+                    </Box> {/* end Vehicle Info Card + Main Step Form wrapper */}
 
                     {/* Booking Details Side/Bottom Card */}
                     {!isViewingSummary && (
