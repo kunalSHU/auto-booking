@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Box, Typography, Stepper, Step, StepLabel, Stack, Paper, Button, StepConnector, stepConnectorClasses
 } from '@mui/material';
@@ -15,6 +15,7 @@ import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
 import ScheduleBanner from './bookingappointment/ScheduleBanner'; // Adjust path as needed
 import VehicleInfoCard from './bookingappointment/VehicleInfoCard';
+import { Navigate } from 'react-router-dom';
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
@@ -77,10 +78,19 @@ const BookingAppointment: React.FC = () => {
         setSelectedTime(null);
     };
 
-    useMemo(() => {
-        const selectedVehicle = JSON.parse(sessionStorage.getItem('autovivo_vehicle') || '[]');
-        setSelectedVehicle(selectedVehicle ? selectedVehicle : {});
+    useEffect(() => {
+        const storedVehicle = sessionStorage.getItem('autovivo_vehicle');
+        if (storedVehicle) {
+            const selectedVehicle: string = JSON.parse(storedVehicle);
+            setSelectedVehicle(selectedVehicle ? selectedVehicle : {});
+        }   
     }, [])
+
+    // Direct Route Guard: Redirect back to home if no vehicle exists
+    if (selectedVehicle) {
+        console.log('No vehicle found in sessionStorage. Redirecting to home page.');
+        return <Navigate to="/" replace />;
+    }
 
     return (
         <>
