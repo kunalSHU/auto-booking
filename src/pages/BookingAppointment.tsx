@@ -56,7 +56,7 @@ const BookingAppointment: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
-    const [selectedVehicle, setSelectedVehicle] = useState<any>({});
+    const [selectedVehicle, setSelectedVehicle] = useState<any>(null);
     const [userInformation, setUserInformation] = useState({
         fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: ''
     });
@@ -78,16 +78,16 @@ const BookingAppointment: React.FC = () => {
         setSelectedTime(null);
     };
 
+    const storedVehicle = sessionStorage.getItem('autovivo_vehicle');
     useEffect(() => {
-        const storedVehicle = sessionStorage.getItem('autovivo_vehicle');
         if (storedVehicle) {
             const selectedVehicle: string = JSON.parse(storedVehicle);
             setSelectedVehicle(selectedVehicle);
         }   
-    }, [])
+    }, []);
 
     // Direct Route Guard: Redirect back to home if no vehicle exists
-    if (!selectedVehicle) {
+    if (storedVehicle === "") {
         console.log('No vehicle found in sessionStorage. Redirecting to home page.');
         return <Navigate to="/" replace />;
     }
