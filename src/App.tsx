@@ -5,6 +5,7 @@ import VehiclePage from './pages/VehiclePage';
 import ServiceSelection from './pages/ServiceSelectionPage';
 import { CartProvider } from './context/CartContext';
 import CartSidebar from './Components/CartSidebar';
+import AppointmentSummary from './pages/bookingappointment/appointmentSummary';
 
 const AppContent: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -17,6 +18,7 @@ const AppContent: React.FC = () => {
         <Route path="/select-services" element={<ServiceSelection onCartClick={() => setIsCartOpen(true)} />} />
         {/* <Route path="/" element={<LandingPage />} /> */}
         <Route path="/booking-appointment" element={<BookingAppointment />} />
+        {/* <Route path="/manage-appointment" element={<AppointmentSummary />} /> */}
       </Routes>
     </>
   )

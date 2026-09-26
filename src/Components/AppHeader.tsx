@@ -18,7 +18,7 @@ const AppHeader = () => {
           <a href="/" className="nav-logo" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
             AUTO <span>VIVO.</span>
           </a>
-          <a href="/" className="nav-back" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+          <a href="/" className="nav-back" onClick={(e) => { e.preventDefault(); navigate('/'); sessionStorage.clear(); }}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M10 3L5 8l5 5" />
             </svg>

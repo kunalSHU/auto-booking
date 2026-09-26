@@ -15,7 +15,7 @@ import AppFooter from '../Components/AppFooter';
 import BookingDetails from './bookingappointment/bookingDetails';
 import ScheduleBanner from './bookingappointment/ScheduleBanner'; // Adjust path as needed
 import VehicleInfoCard from './bookingappointment/VehicleInfoCard';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const steps = ['DATE & TIME', 'LOCATION', 'DETAILS', 'REVIEW', 'DONE'];
 
@@ -61,7 +61,7 @@ const BookingAppointment: React.FC = () => {
         fullName: '', email: '', phoneNumber: '', additionalNotes: '', address: ''
     });
     const [isViewingSummary, setIsViewingSummary] = useState(false);
-
+    const navigate = useNavigate();
     const handleNext = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setActiveStep((prev) => prev + 1);
@@ -80,6 +80,7 @@ const BookingAppointment: React.FC = () => {
 
     const storedVehicle = sessionStorage.getItem('autovivo_vehicle');
     useEffect(() => {
+        console.log('Stored vehicle from sessionStorage:', storedVehicle);
         if (storedVehicle) {
             const selectedVehicle: string = JSON.parse(storedVehicle);
             setSelectedVehicle(selectedVehicle);
@@ -87,7 +88,7 @@ const BookingAppointment: React.FC = () => {
     }, []);
 
     // Direct Route Guard: Redirect back to home if no vehicle exists
-    if (storedVehicle === "") {
+    if (!storedVehicle || storedVehicle === "") {
         console.log('No vehicle found in sessionStorage. Redirecting to home page.');
         return <Navigate to="/" replace />;
     }
@@ -156,7 +157,7 @@ const BookingAppointment: React.FC = () => {
                                     {!isViewingSummary && (
                                         <Button
                                             size="small"
-                                            onClick={() => setIsViewingSummary(true)}
+                                            onClick={() => {setIsViewingSummary(true); /*navigate('/manage-appointment');*/}}
                                             sx={{
                                                 color: '#4a7c2c',
                                                 fontWeight: 700,
