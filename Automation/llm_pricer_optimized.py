@@ -194,6 +194,10 @@ def prepare_batch_jsonl_files(vehicle_bucket, batch_file_path):
     with open(batch_file_path, mode="w", encoding="utf-8") as out_f:
         for vehicle_record in vehicle_bucket:
             # Create a unique custom ID for every row so you can map results back later
+            # NOTE: The custom id is very important as it is used to identify the right vehicle + service in the csv file
+            # once openAI returns the data
+            # The returned data will contain custom_id from openAI since we send it
+            # Refer to batch_output.jsonl file
             custom_id = f"task_{vehicle_record.vehicle_id}_{vehicle_record.service_id}"
 
             # Construct the dynamic vehicle & service prompt
