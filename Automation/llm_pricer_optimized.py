@@ -99,7 +99,7 @@ def main(file):
                 # Note the batch api allows for only 50k rows per request so divide the file into buckets of 50k
                 batch_file_path = f"openai_batch_tasks_{file_start}.jsonl"
                 prepare_batch_jsonl_files(vehicle_bucket, batch_file_path)
-                vehicle_bucket = []
+                vehicle_bucket = [] # Flush the bucket for the next 50k records
                 file_start += 1
 
         # For the remainder.
