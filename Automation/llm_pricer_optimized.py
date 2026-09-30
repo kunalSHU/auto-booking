@@ -79,7 +79,7 @@ def main(file):
             vehicle_map[(vehicle_record.vehicle_id, vehicle_record.service_id)] = vehicle_record # Tuple because vehicle_id and service_id are unique combination, map allows for fast retrieval if needed
     print(f"Loaded {len(vehicle_map)} records. Generating OpenAI batch file...")
 
-    # Calling OpenAI api here for batch requests
+    # TODO: Call OpenAI api here for batch requests
     # Execute tasks in parallel and allows for efficiency
     # Using jsonl files since they are ideal for streaming millions of records if needed, uses low memory unlike regular json
     batch_file_path = "openai_batch_tasks.jsonl"
