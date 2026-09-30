@@ -7,6 +7,9 @@ import time
 import csv
 import json  # Added to generate JSONL files
 
+## ---- TO RUN THIS SCRIPT ------ ##
+## python3 llm_pricer_optimized.py /Users/kunalshukla/Downloads/Honda.csv ##
+
 # Reads the .env file and sets OPENAI_API_KEY in process memory
 load_dotenv()
 
