@@ -15,7 +15,11 @@ def parse_batch_input_and_results(input_jsonl, output_jsonl, final_csv):
             if not line.strip():
                 continue
             item = json.loads(line)
-            cid = item.get("custom_id")
+            cid: str = item.get("custom_id")
+
+            # Pattern is task_vehicle_id_service_id
+            vehicle_id = cid.split("_")[1]
+            service_id =  cid.split("_")[2]
 
             messages = item.get("body", {}).get("messages", [])
             user_content = next(
@@ -28,6 +32,7 @@ def parse_batch_input_and_results(input_jsonl, output_jsonl, final_csv):
                 "model": "",
                 "service_category": "",
                 "service_name": "",
+                "trim": ""
             }
 
             for p_line in user_content.split("\n"):
@@ -40,12 +45,15 @@ def parse_batch_input_and_results(input_jsonl, output_jsonl, final_csv):
                         else ""
                     )
                     meta["make"] = v_parts[1] if len(v_parts) > 1 else ""
-                    meta["model"] = (
-                        " ".join(v_parts[2:]) if len(v_parts) > 2 else ""
-                    )
+                    meta["model"] = v_parts[2] if len(v_parts) > 1 else ""
+                    meta["trim"] = v_parts[3] if len(v_parts) > 1 else ""
                 elif p_line.startswith("Service Name:"):
                     meta["service_name"] = p_line.replace(
                         "Service Name:", ""
+                    ).strip()
+                elif p_line.startswith("Region:"):
+                    meta["region"] = p_line.replace(
+                        "Region:", ""
                     ).strip()
                 elif p_line.startswith("Service Category:"):
                     meta["service_category"] = p_line.replace(
@@ -70,10 +78,12 @@ def parse_batch_input_and_results(input_jsonl, output_jsonl, final_csv):
             if choices:
                 parsed = json.loads(choices[0]["message"]["content"])
                 record = {
-                    "custom_id": cid,
+                    "vehicle_id": vehicle_id,
+                    "service_id": service_id,
                     "year": meta.get("year"),
                     "make": meta.get("make"),
                     "model": meta.get("model"),
+                    "trim": meta.get("trim"),
                     "service_category": meta.get("service_category"),
                     "service_name": meta.get("service_name"),
                     "estimation_method": parsed.get("estimation_method"),
